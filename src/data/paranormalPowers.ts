@@ -1,4 +1,4 @@
-import { ParanormalPower } from './dataInterfaces'
+import { ParanormalPower } from '../types'
 
 const paranormalPowers: Array<ParanormalPower> = [
   {

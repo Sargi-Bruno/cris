@@ -1,4 +1,4 @@
-import { Weapon } from './dataInterfaces'
+import { Weapon } from '../types'
 import ammunitions from './ammunitions'
 
 const weapons: Array<Weapon> = [

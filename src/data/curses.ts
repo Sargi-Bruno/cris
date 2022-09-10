@@ -1,4 +1,4 @@
-import { Curse } from './dataInterfaces'
+import { Curse } from '../types'
 
 export const weaponCurses: Array<Curse> = [
   {

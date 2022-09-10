@@ -1,4 +1,4 @@
-import { Class } from './dataInterfaces'
+import { Class } from '../types'
 
 const classes: Array<Class> = [
   {

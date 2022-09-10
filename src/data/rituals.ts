@@ -1,4 +1,4 @@
-import { Ritual } from './dataInterfaces'
+import { Ritual } from '../types'
 
 const rituals: Array<Ritual> = [
   {

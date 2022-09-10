@@ -1,4 +1,4 @@
-import { Protection } from './dataInterfaces'
+import { Protection } from '../types'
 
 const protections: Array<Protection> = [
   {

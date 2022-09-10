@@ -1,4 +1,4 @@
-import { Background } from './dataInterfaces'
+import { Background } from '../types'
 
 const backgrounds: Array<Background> = [
   {
@@ -7,7 +7,7 @@ const backgrounds: Array<Background> = [
     skills: ['Ciências', 'Investigação'],
     power: {
       name: 'Saber é Poder',
-      description: '<p>Quando faz um teste usando Intelecto, você pode gastar 2 PE para receber +5 nesse teste.</p>'
+      description: 'Quando faz um teste usando Intelecto, você pode gastar 2 PE para receber +5 nesse teste.'
     }
   },
   {
@@ -16,7 +16,7 @@ const backgrounds: Array<Background> = [
     skills: ['Intuição', 'Medicina'],
     power: {
       name: 'Técnica Medicinal',
-      description: '<p>Sempre que cura um personagem, você adiciona seu Intelecto no total de PV curados.</p>'
+      description: 'Sempre que cura um personagem, você adiciona seu Intelecto no total de PV curados.'
     }
   },
   {
@@ -25,7 +25,7 @@ const backgrounds: Array<Background> = [
     skills: [],
     power: {
       name: 'Vislumbres do Passado',
-      description: '<p>Uma vez por missão, você pode fazer um teste de Intelecto (DT 10) para reconhecer pessoas ou lugares familiares, que tenha encontrado antes de perder a memória. Se passar, recebe 1d4 PE temporários e, a critério do mestre, uma informação útil.</p>'
+      description: 'Uma vez por missão, você pode fazer um teste de Intelecto (DT 10) para reconhecer pessoas ou lugares familiares, que tenha encontrado antes de perder a memória. Se passar, recebe 1d4 PE temporários e, a critério do mestre, uma informação útil.'
     }
   },
   {
@@ -34,7 +34,7 @@ const backgrounds: Array<Background> = [
     skills: ['Artes', 'Enganação'],
     power: {
       name: 'Magnum Opus',
-      description: '<p>Você é famoso por uma de suas obras. Uma vez por missão, pode determinar que um personagem envolvido em uma cena de interação o reconheça. Você recebe +5 em testes de Presença e de perícias baseadas em Presença contra aquele personagem. A critério do mestre, pode receber esses bônus em outras situações nas quais seria reconhecido.</p>'
+      description: 'Você é famoso por uma de suas obras. Uma vez por missão, pode determinar que um personagem envolvido em uma cena de interação o reconheça. Você recebe +5 em testes de Presença e de perícias baseadas em Presença contra aquele personagem. A critério do mestre, pode receber esses bônus em outras situações nas quais seria reconhecido.'
     }
   },
   {
@@ -43,7 +43,7 @@ const backgrounds: Array<Background> = [
     skills: ['Acrobacia', 'Atletismo'],
     power: {
       name: '110%',
-      description: '<p>Quando faz um teste de perícia usando Força ou Agilidade (exceto Luta e Pontaria) você pode gastar 2 PE para receber +5 nesse teste.</p>'
+      description: 'Quando faz um teste de perícia usando Força ou Agilidade (exceto Luta e Pontaria) você pode gastar 2 PE para receber +5 nesse teste.'
     }
   },
   {
@@ -52,16 +52,7 @@ const backgrounds: Array<Background> = [
     skills: ['Fortitude', 'Profissão (cozinheiro)'],
     power: {
       name: 'Ingrediente Secreto',
-      description: '<p>Em cenas de interlúdio, você pode gastar uma ação para cozinhar um prato gostoso. Cada membro do grupo (incluindo você) que gastar uma ação para se alimentar recebe o benefício de dois pratos (caso o mesmo benefício seja escolhido duas vezes, seus efeitos se acumulam).</p>'
-    }
-  },
-  {
-    name: 'Chef',
-    description: '<p>Você é um cozinheiro amador ou profissional. Talvez trabalhasse em um restaurante, talvez simplesmente gostasse de cozinhar para a família e amigos. Como sua comida fez com que você se envolvesse com o paranormal? Ninguém sabe. Mas os outros agentes adoram quando você vai para a missão!</p>',
-    skills: ['Fortitude', 'Profissão (cozinheiro)'],
-    power: {
-      name: 'Ingrediente Secreto',
-      description: '<p>Em cenas de interlúdio, você pode gastar uma ação para cozinhar um prato gostoso. Cada membro do grupo (incluindo você) que gastar uma ação para se alimentar recebe o benefício de dois pratos (caso o mesmo benefício seja escolhido duas vezes, seus efeitos se acumulam).</p>'
+      description: 'Em cenas de interlúdio, você pode gastar uma ação para cozinhar um prato gostoso. Cada membro do grupo (incluindo você) que gastar uma ação para se alimentar recebe o benefício de dois pratos (caso o mesmo benefício seja escolhido duas vezes, seus efeitos se acumulam).'
     }
   },
   {
@@ -70,7 +61,7 @@ const backgrounds: Array<Background> = [
     skills: ['Crime', 'Furtividade'],
     power: {
       name: 'O Crime Compensa',
-      description: '<p>No final de uma missão, escolha um item encontrado na missão. Em sua próxima missão, você pode incluir esse item em seu inventário sem que ele conte em seu limite de itens por patente.</p>'
+      description: 'No final de uma missão, escolha um item encontrado na missão. Em sua próxima missão, você pode incluir esse item em seu inventário sem que ele conte em seu limite de itens por patente.'
     }
   },
   {
@@ -79,7 +70,7 @@ const backgrounds: Array<Background> = [
     skills: ['Ocultismo', 'Religião'],
     power: {
       name: 'Traços do Outro Lado',
-      description: '<p>Você possui um poder paranormal à sua escolha. Porém, começa o jogo com metade da Sanidade normal para sua classe.</p>'
+      description: 'Você possui um poder paranormal à sua escolha. Porém, começa o jogo com metade da Sanidade normal para sua classe.'
     }
   },
   {
@@ -88,7 +79,7 @@ const backgrounds: Array<Background> = [
     skills: ['Fortitude', 'Sobrevivência'],
     power: {
       name: 'Calejado',
-      description: '<p>Você recebe +1 PV para cada 5% de NEX.</p>'
+      description: 'Você recebe +1 PV para cada 5% de NEX.'
     }
   },
   {
@@ -97,7 +88,7 @@ const backgrounds: Array<Background> = [
     skills: ['Profissão', 'Tecnologia'],
     power: {
       name: 'Ferramentas Favoritas',
-      description: '<p>Um item a sua escolha (exceto armas) conta como uma categoria abaixo (por exemplo, um item de categoria II conta como categoria I para você).</p>'
+      description: 'Um item a sua escolha (exceto armas) conta como uma categoria abaixo (por exemplo, um item de categoria II conta como categoria I para você).'
     }
   },
   {
@@ -106,7 +97,7 @@ const backgrounds: Array<Background> = [
     skills: ['Diplomacia', 'Profissão'],
     power: {
       name: 'Processo Otimizado',
-      description: '<p>Sempre que faz um teste de perícia durante um teste estendido, pode pagar 2 PE para receber +5 nesse teste.</p>'
+      description: 'Sempre que faz um teste de perícia durante um teste estendido, pode pagar 2 PE para receber +5 nesse teste.'
     }
   },
   {
@@ -115,7 +106,7 @@ const backgrounds: Array<Background> = [
     skills: ['Investigação', 'Percepção'],
     power: {
       name: 'Faro para Pistas',
-      description: '<p>Uma vez por cena, quando fizer um teste para procurar pistas, você pode gastar 1 PE para receber +5 nesse teste.</p>'
+      description: 'Uma vez por cena, quando fizer um teste para procurar pistas, você pode gastar 1 PE para receber +5 nesse teste.'
     }
   },
   {
@@ -124,7 +115,7 @@ const backgrounds: Array<Background> = [
     skills: ['Luta', 'Reflexos'],
     power: {
       name: 'Mão Pesada',
-      description: '<p>Você recebe +2 em rolagens de dano com ataques corpo a corpo.</p>'
+      description: 'Você recebe +2 em rolagens de dano com ataques corpo a corpo.'
     }
   },
   {
@@ -133,7 +124,7 @@ const backgrounds: Array<Background> = [
     skills: ['Diplomacia', 'Pilotagem'],
     power: {
       name: 'Patrocinador da Ordem',
-      description: '<p>Seu limite de crédito é sempre considerado um acima do atual.</p>'
+      description: 'Seu limite de crédito é sempre considerado um acima do atual.'
     }
   },
   {
@@ -142,7 +133,7 @@ const backgrounds: Array<Background> = [
     skills: ['Iniciativa', 'Intimidação'],
     power: {
       name: 'Posição de Combate',
-      description: '<p>No primeiro turno de cada cena de ação, você pode gastar 2 PE para receber uma ação de movimento adicional.</p>'
+      description: 'No primeiro turno de cada cena de ação, você pode gastar 2 PE para receber uma ação de movimento adicional.'
     }
   },
   {
@@ -151,7 +142,7 @@ const backgrounds: Array<Background> = [
     skills: ['Pontaria', 'Tática'],
     power: {
       name: 'Para Bellum',
-      description: '<p>Você recebe +2 em rolagens de dano com armas de fogo.</p>'
+      description: 'Você recebe +2 em rolagens de dano com armas de fogo.'
     }
   },
   {
@@ -160,7 +151,7 @@ const backgrounds: Array<Background> = [
     skills: ['Fortitude', 'Profissão'],
     power: {
       name: 'Ferramenta de Trabalho',
-      description: '<p>Escolha uma arma simples ou tática que, a critério do mestre, poderia ser usada como ferramenta em sua profissão (como uma marreta para um pedreiro). Você sabe usar a arma escolhida e recebe +1 em testes de ataque, rolagens de dano e margem de ameaça com ela.</p>'
+      description: 'Escolha uma arma simples ou tática que, a critério do mestre, poderia ser usada como ferramenta em sua profissão (como uma marreta para um pedreiro). Você sabe usar a arma escolhida e recebe +1 em testes de ataque, rolagens de dano e margem de ameaça com ela.'
     }
   },
   {
@@ -169,7 +160,7 @@ const backgrounds: Array<Background> = [
     skills: ['Percepção', 'Pontaria'],
     power: {
       name: 'Patrulha',
-      description: '<p>Você recebe +2 em Defesa.</p>'
+      description: 'Você recebe +2 em Defesa.'
     }
   },
   {
@@ -178,7 +169,7 @@ const backgrounds: Array<Background> = [
     skills: ['Religião', 'Vontade'],
     power: {
       name: 'Acalentar',
-      description: '<p>Você recebe +5 em testes de Religião para acalmar. Além disso, quando acalma uma pessoa, ela recebe um número de pontos de Sanidade igual a 1d6 + a sua Presença.</p>'
+      description: 'Você recebe +5 em testes de Religião para acalmar. Além disso, quando acalma uma pessoa, ela recebe um número de pontos de Sanidade igual a 1d6 + a sua Presença.'
     }
   },
   {
@@ -187,7 +178,7 @@ const backgrounds: Array<Background> = [
     skills: ['Intuição', 'Vontade'],
     power: {
       name: 'Espírito Cívico',
-      description: '<p>Sempre que faz um teste para ajudar, você pode gastar 1 PE para aumentar o bônus concedido em +2.</p>'
+      description: 'Sempre que faz um teste para ajudar, você pode gastar 1 PE para aumentar o bônus concedido em +2.'
     }
   },
   {
@@ -196,7 +187,7 @@ const backgrounds: Array<Background> = [
     skills: ['Investigação', 'Ocultismo'],
     power: {
       name: 'Eu Já Sabia',
-      description: '<p>Você não se abala com entidades ou anomalias. Afinal, sempre soube que isso tudo existia. Você recebe resistência a dano mental igual ao seu Intelecto.</p>'
+      description: 'Você não se abala com entidades ou anomalias. Afinal, sempre soube que isso tudo existia. Você recebe resistência a dano mental igual ao seu Intelecto.'
     }
   },
   {
@@ -205,7 +196,7 @@ const backgrounds: Array<Background> = [
     skills: ['Investigação', 'Tecnologia'],
     power: {
       name: 'Motor de Busca',
-      description: '<p>A critério do Mestre, sempre que tiver acesso a internet, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Tecnologia.</p>'
+      description: 'A critério do Mestre, sempre que tiver acesso a internet, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Tecnologia.'
     }
   },
   {
@@ -214,7 +205,7 @@ const backgrounds: Array<Background> = [
     skills: ['Adestramento', 'Sobrevivência'],
     power: {
       name: 'Desbravador',
-      description: '<p>Quando faz um teste de Adestramento ou Sobrevivência, você pode gastar 2 PE para receber +5 nesse teste. Além disso, você não sofre penalidade em deslocamento por terreno difícil.</p>'
+      description: 'Quando faz um teste de Adestramento ou Sobrevivência, você pode gastar 2 PE para receber +5 nesse teste. Além disso, você não sofre penalidade em deslocamento por terreno difícil.'
     }
   },
   {
@@ -223,7 +214,7 @@ const backgrounds: Array<Background> = [
     skills: ['Crime', 'Enganação'],
     power: {
       name: 'Impostor',
-      description: '<p>Uma vez por cena, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Enganação.</p>'
+      description: 'Uma vez por cena, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Enganação.'
     }
   },
   {
@@ -232,7 +223,7 @@ const backgrounds: Array<Background> = [
     skills: ['Atualidades', 'Investigação'],
     power: {
       name: 'Dedicação',
-      description: '<p>Você recebe +1 PE, e mais 1 PE adicional a cada NEX ímpar (15%, 25%...). Além disso, seu limite de PE por turno aumenta em 1 (em NEX 5% seu limite é 2, em NEX 10% é 3 e assim por diante).</p>'
+      description: 'Você recebe +1 PE, e mais 1 PE adicional a cada NEX ímpar (15%, 25%...). Além disso, seu limite de PE por turno aumenta em 1 (em NEX 5% seu limite é 2, em NEX 10% é 3 e assim por diante).'
     }
   },
   {
@@ -241,7 +232,7 @@ const backgrounds: Array<Background> = [
     skills: ['Reflexos', 'Vontade'],
     power: {
       name: 'Cicatrizes Psicológicas',
-      description: '<p>Você recebe +1 de Sanidade para cada 5% de NEX.</p>'
+      description: 'Você recebe +1 de Sanidade para cada 5% de NEX.'
     }
   },
 ]

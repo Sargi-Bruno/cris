@@ -15,6 +15,7 @@
   },
   "plugins": [],
   "rules": {
-    "vue/max-attributes-per-line": "off"
+    "vue/max-attributes-per-line": "off",
+    "vue/no-v-html": "off"
   }
 }

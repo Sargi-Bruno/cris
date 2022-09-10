@@ -124,3 +124,71 @@ export interface Ritual {
   save?: string,
   effect?: string,
 }
+
+export interface Skill {
+  name: string,
+  description: string,
+  attribute: string,
+  finalBonus: number,
+  trainingBonus: number,
+  otherBonus: number,
+  loadPenalty: boolean,
+  onlyTrained: boolean,
+}
+
+export interface Attack {
+  name: string,
+  damage: string,
+  save?: string,
+  misc: string,
+}
+
+export interface Character {
+  name: string,
+  player: string,
+  attributes: {
+    str: number,
+    dex: number,
+    int: number,
+    con: number,
+    pre: number,
+  },
+  backgroundName: string,
+  className: string,
+  nex: string,
+  movement: number,
+  maxPv: number,
+  currentPv: number,
+  maxPe: number,
+  currentPe: number,
+  maxSan: number,
+  currentSan: number,
+  defense: number,
+  protectionDefense: number,
+  bonusDefense: number,
+  currentProtection: string,
+  resistances: string,
+  skills: Array<Skill>,
+  attacks: Array<Attack>,
+  powers: Array<Power>,
+  rituals: Array<Ritual>,
+  ritualsDc: number,
+  patent: string,
+  prestigePoints: number,
+  inventory: Array<Weapon | Protection | Misc>,
+  itemsLimit: {
+    I: string,
+    II: string,
+    III: string,
+    IV: string
+  },
+  creditsLimit: string,
+  maxLoad: number,
+  currentLoad: number,
+  description: {
+    physical: string,
+    personal: string,
+    history: string,
+    goal: string,
+  }
+}

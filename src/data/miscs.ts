@@ -1,4 +1,4 @@
-import { Misc } from './dataInterfaces'
+import { Misc } from '../types'
 
 const miscs: Array<Misc> = [
   {

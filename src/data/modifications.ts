@@ -1,4 +1,4 @@
-import { Modification } from './dataInterfaces'
+import { Modification } from '../types'
 
 export const weaponModifications: Array<Modification> = [
   {

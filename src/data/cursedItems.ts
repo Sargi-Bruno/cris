@@ -1,4 +1,4 @@
-import { CursedItem } from './dataInterfaces'
+import { CursedItem } from '../types'
 
 const cursedItems: Array<CursedItem> = [
   {
