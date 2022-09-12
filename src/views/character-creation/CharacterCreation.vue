@@ -3,10 +3,17 @@ import { ref } from 'vue'
 import CharacterCreationStepper from '../../components/CharacterCreationStepper.vue'
 import ChooseAttributes from './ChooseAttributes.vue'
 import ChooseBackground from './ChooseBackground/ChooseBackground.vue'
-import ChooseClass from './ChooseClass.vue'
+import ChooseClass from './ChooseClass/ChooseClass.vue'
 import ChooseDescription from './ChooseDescription.vue'
-import { Character } from '../../types'
-import characterDefaultValue from './characterDefaultValue'
+import { Character, Background, Class } from '../../types'
+import { 
+  characterDefaultValue,
+  changeAttribute,
+  addBackground,
+  removeBackground,
+  addClass,
+  removeClass
+} from './characterCreationUtils'
 
 const componentOptions = [
   ChooseAttributes,
@@ -21,11 +28,23 @@ const character= ref<Character>(characterDefaultValue)
 const handleNavigation = (value: number) => currentStep.value = value
 
 const handleChangeAttribute = (payload: { value: number, attribute: 'str' | 'dex' | 'int' | 'con' | 'pre' }) => {
-  if(payload.value > 3) payload.value = 3
+  changeAttribute(character.value, payload)
+}
 
-  if(payload.value < 0) payload.value = 0
+const handleAddBackground = (background: Background) => {
+  addBackground(character.value, background)
+}
 
-  character.value.attributes[payload.attribute] = payload.value
+const handleRemoveBackground = (background: Background) => {
+  removeBackground(character.value, background)
+}
+
+const handleAddClass = (charClass: Class) => {
+  addClass(character.value, charClass)
+}
+
+const handleRemoveClass = (charClass: Class) => {
+  removeClass(character.value, charClass)
 }
 </script>
 
@@ -39,6 +58,10 @@ const handleChangeAttribute = (payload: { value: number, attribute: 'str' | 'dex
       :is="componentOptions[currentStep]"
       :character="character"
       @handle-change-attribute="handleChangeAttribute"
+      @handle-add-background="handleAddBackground"
+      @handle-remove-background="handleRemoveBackground"
+      @handle-add-class="handleAddClass"
+      @handle-remove-class="handleRemoveClass"
     />
   </KeepAlive>
 </template>

@@ -3,8 +3,8 @@ import { Class } from '../types'
 const classes: Array<Class> = [
   {
     name: 'Combatente',
-    shortDescription: '<p>Treinado para lutar com todo tipo de armas, e com a força e a coragem para encarar os perigos de frente, É o tipo de agente que prefere abordagens mais diretas e costuma atirar primeiro e perguntar depois.</p>',
-    description: '<p>Treinado para lutar com todo tipo de armas, e com a força e a coragem para encarar os perigos de frente, É o tipo de agente que prefere abordagens mais diretas e costuma atirar primeiro e perguntar depois.</p><p>Do mercenário especialista em armas de fogo até o perito em espadas, combatentes apresentam uma gama enorme de habilidades e técnicas especiais que aprimoram sua eficiência no campo de batalha, tornando-os membros essenciais em qualquer missão de extermínio.</p><p>Além de treinar seu corpo, o combatente também é perito em liderar seus aliados em batalha e cuidar de seu equipamento de combate, sempre preparado para assumir a linha de frente quando a coisa fica feia.</p><p><span>Combatentes Famosos:</span>Senhor Veríssimo,Joui Jouki, Gal, Antônio “Balu” Pontevedra,Tristan Monteiro e Ryder Staten.</p>',
+    shortDescription: 'Treinado para lutar com todo tipo de armas, e com a força e a coragem para encarar os perigos de frente, É o tipo de agente que prefere abordagens mais diretas e costuma atirar primeiro e perguntar depois.',
+    description: '<p>Do mercenário especialista em armas de fogo até o perito em espadas, combatentes apresentam uma gama enorme de habilidades e técnicas especiais que aprimoram sua eficiência no campo de batalha, tornando-os membros essenciais em qualquer missão de extermínio.</p><p>Além de treinar seu corpo, o combatente também é perito em liderar seus aliados em batalha e cuidar de seu equipamento de combate, sempre preparado para assumir a linha de frente quando a coisa fica feia.</p><p><span>Combatentes Famosos: </span>Senhor Veríssimo, Joui Jouki, Gal, Antônio “Balu” Pontevedra, Tristan Monteiro e Ryder Staten.</p>',
     initialPv: 20,
     levelPv: 4,
     initialPe: 2,
@@ -16,12 +16,12 @@ const classes: Array<Class> = [
       optionSkils: [['Luta', 'Pontaria'], ['Fortitude', 'Reflexos']],
       quantity: 1
     },
-    proficiencies: ['Armas Simples', 'Armas Táticas', 'Proteções Leves'],
+    proficiencies: ['Armas simples', 'Armas táticas', 'Proteções leves'],
     proficienciesGradeQuantity: 1,
     abilities: [
       {
         name: 'Ataque Especial',
-        description: '<p>Quando faz um ataque, você pode gastar 2 PE para receber +5 no teste de ataque ou na rolagem de dano. Conforme avança de NEX, você pode gastar +1 PE para receber mais bônus de +5. Você pode aplicar cada bônus de +5 em ataque ou dano. Por exemplo, em NEX 55%, você pode gastar 4 PE para receber +5 no teste de ataque e +10 na rolagem de dano.</p>'
+        description: 'Quando faz um ataque, você pode gastar 2 PE para receber +5 no teste de ataque ou na rolagem de dano. Conforme avança de NEX, você pode gastar +1 PE para receber mais bônus de +5. Você pode aplicar cada bônus de +5 em ataque ou dano. Por exemplo, em NEX 55%, você pode gastar 4 PE para receber +5 no teste de ataque e +10 na rolagem de dano.'
       }
     ],
     powers: [
@@ -113,11 +113,11 @@ const classes: Array<Class> = [
           },
           {
             name: 'Técnica Secreta',
-            description: '<p>A categoria da arma favorita passa a ser reduzida em II. Quando faz um ataque com ela, você pode gastar 2 PE para executar um dos efeitos abaixo como parte do ataque. Você pode adicionar mais efeitos gastando +2 PE por efeito adicional.</p><p><span><em>Amplo.</em></span> O ataque pode atingir um alvo adicional em seu alcance e adjacente ao original (use o mesmo teste de ataque para ambos).</p><p><span><em>Destruidor.</em></span>Aumenta o multiplicador de crítico da arma em +1.</p>'
+            description: '<p>A categoria da arma favorita passa a ser reduzida em II. Quando faz um ataque com ela, você pode gastar 2 PE para executar um dos efeitos abaixo como parte do ataque. Você pode adicionar mais efeitos gastando +2 PE por efeito adicional.</p><p><span><em>Amplo.</em></span> O ataque pode atingir um alvo adicional em seu alcance e adjacente ao original (use o mesmo teste de ataque para ambos).</p><p><span><em>Destruidor.</em></span> Aumenta o multiplicador de crítico da arma em +1.</p>'
           },
           {
             name: 'Técnica Sublime',
-            description: '<p>A categoria da arma favorita passa a ser reduzida em III e você adiciona os seguintes efeitos à lista de sua Técnica Secreta:</p><p><span>Letal.</span>Aumenta a margem de ameaça em +2. Você pode escolher este efeito duas vezes para aumentar a margem de ameaça em +5.</p><p><span><em>Perfurante.</em></span> Ignora até 5 pontos de resistência a dano de qualquer tipo do alvo.</p>'
+            description: '<p>A categoria da arma favorita passa a ser reduzida em III e você adiciona os seguintes efeitos à lista de sua Técnica Secreta:</p><p><span>Letal.</span> Aumenta a margem de ameaça em +2. Você pode escolher este efeito duas vezes para aumentar a margem de ameaça em +5.</p><p><span><em>Perfurante.</em></span> Ignora até 5 pontos de resistência a dano de qualquer tipo do alvo.</p>'
           },
           {
             name: 'Máquina de Matar',
@@ -215,7 +215,7 @@ const classes: Array<Class> = [
       },
       {
         name: 'Tropa de Choque',
-        description: '<p>ocê é duro na queda. Treinou seu corpo para resistir a traumas f ísicos, tornando-o praticamente inquebrável, e por isso não teme se colocar entre seus aliados e o perigo.</p>',
+        description: '<p>Você é duro na queda. Treinou seu corpo para resistir a traumas f ísicos, tornando-o praticamente inquebrável, e por isso não teme se colocar entre seus aliados e o perigo.</p>',
         abilities: [
           {
             name: 'Casca Grossa',
@@ -261,8 +261,8 @@ const classes: Array<Class> = [
   },
   {
     name: 'Especialista',
-    shortDescription: '<p>Um agente que confia mais em esperteza do que em força bruta. Um especialista se vale de conhecimento técnico, raciocínio rápido ou mesmo lábia para resolver mistérios e enfrentar o paranormal.</p>',
-    description: '<p>Um agente que confia mais em esperteza do que em força bruta. Um especialista se vale de conhecimento técnico, raciocínio rápido ou mesmo lábia para resolver mistérios e enfrentar o paranormal.</p><p>Cientistas, inventores, pesquisadores e técnicos de vários tipos são exemplos de especialistas, que são tão variados quanto as áreas do conhecimento e da tecnologia. Alguns ainda preferem estudar engenharia social e se tornam excelentes espiões infiltrados, ou mesmo estudam técnicas especiais de combate como artes marciais e tiro a distância, aliando conhecimento técnico e habilidade.</p><p>O que une todos os especialistas é sua incrível capacidade de aprender e improvisar usando seu intelecto e conhecimento avançado, que pode tirar o grupo todo dos mais diversos tipos de enrascadas.</p><p><span>Especialistas Famosos:</span>Aaron, Arthur Cervero, Rubens Naluti, Elizabeth Webber, Samuel Norte, Chizue Akechi.</p>',
+    shortDescription: 'Um agente que confia mais em esperteza do que em força bruta. Um especialista se vale de conhecimento técnico, raciocínio rápido ou mesmo lábia para resolver mistérios e enfrentar o paranormal.',
+    description: '<p>Cientistas, inventores, pesquisadores e técnicos de vários tipos são exemplos de especialistas, que são tão variados quanto as áreas do conhecimento e da tecnologia. Alguns ainda preferem estudar engenharia social e se tornam excelentes espiões infiltrados, ou mesmo estudam técnicas especiais de combate como artes marciais e tiro a distância, aliando conhecimento técnico e habilidade.</p><p>O que une todos os especialistas é sua incrível capacidade de aprender e improvisar usando seu intelecto e conhecimento avançado, que pode tirar o grupo todo dos mais diversos tipos de enrascadas.</p><p><span>Especialistas Famosos: </span>Aaron, Arthur Cervero, Rubens Naluti, Elizabeth Webber, Samuel Norte, Chizue Akechi.</p>',
     initialPv: 16,
     levelPv: 3,
     initialPe: 3,
@@ -274,16 +274,16 @@ const classes: Array<Class> = [
       optionSkils: [],
       quantity: 7
     },
-    proficiencies: ['Armas Simples', 'Proteções Leves'],
+    proficiencies: ['Armas simples', 'Proteções leves'],
     proficienciesGradeQuantity: 5,
     abilities: [
       {
         name: 'Eclético',
-        description: '<p>Quando faz um teste de uma perícia, você pode gastar 2 PE para receber os benefícios de ser treinado nesta perícia.</p>'
+        description: 'Quando faz um teste de uma perícia, você pode gastar 2 PE para receber os benefícios de ser treinado nesta perícia.'
       },
       {
         name: 'Perito',
-        description: '<p>Escolha duas perícias nas quais você é treinado (exceto Luta e Pontaria). Quando faz um teste de uma dessas perícias, você pode gastar 2 PE para somar +1d6 no resultado do teste. Conforme avança de NEX, você pode gastar +1 PE para aumentar o dado de bônus. Por exemplo, em NEX 55%, pode gastar 4 PE para receber +1d12 no teste.</p>'
+        description: 'Escolha duas perícias nas quais você é treinado (exceto Luta e Pontaria). Quando faz um teste de uma dessas perícias, você pode gastar 2 PE para somar +1d6 no resultado do teste. Conforme avança de NEX, você pode gastar +1 PE para aumentar o dado de bônus. Por exemplo, em NEX 55%, pode gastar 4 PE para receber +1d12 no teste.'
       },
     ],
     powers: [
@@ -395,7 +395,7 @@ const classes: Array<Class> = [
       },
       {
         name: 'Médico de Campo',
-        description: '<p>Você é treinado em técnicas de primeiros socorros e tratamento de emergência, o que torna você um membro valioso para qualquer grupo de agentes. Ao contrário dos profissionais de saúde convencionais, você está acostumado com o campo de batalha e sabe tomar decisões rápidas no meio do caos.</p><p><span>Especial:</span>para escolher esta trilha, você precisa ser treinado em Medicina.</p>',
+        description: '<p>Você é treinado em técnicas de primeiros socorros e tratamento de emergência, o que torna você um membro valioso para qualquer grupo de agentes. Ao contrário dos profissionais de saúde convencionais, você está acostumado com o campo de batalha e sabe tomar decisões rápidas no meio do caos.</p><p><span>Especial: </span>para escolher esta trilha, você precisa ser treinado em Medicina.</p>',
         abilities: [
           {
             name: 'Paramédico',
@@ -485,7 +485,7 @@ const classes: Array<Class> = [
   },
   {
     name: 'Ocultista',
-    shortDescription: '<p>O Outro Lado é misterioso, perigoso e, de certa forma, cativante. Muitos estudiosos das entidades se perdem em seus reinos obscuros em busca de poder, mas existem aqueles que visam compreender e dominar os mistérios paranormais para usá-los para combater o próprio Outro Lado. Esse tipo de agente não é apenas um conhecedor do oculto, como também possui talento para se conectar com elementos paranormais.</p>',
+    shortDescription: 'O Outro Lado é misterioso, perigoso e, de certa forma, cativante. Muitos estudiosos das entidades se perdem em seus reinos obscuros em busca de poder, mas existem aqueles que visam compreender e dominar os mistérios paranormais para usá-los para combater o próprio Outro Lado. Esse tipo de agente não é apenas um conhecedor do oculto, como também possui talento para se conectar com elementos paranormais.',
     description: '<p>Ao contrário da crendice popular, ocultistas não são intrinsecamente malignos. Seria como dizer que o cientista que inventou a pólvora é culpado pelo assassino que disparou o revólver. Para a Ordem, o Paranormal é uma força que pode ser usada para os mais diversos propósitos, de acordo com a intenção de seu usuário.</p><p>Ocultistas aplicam seu conhecimento acadêmico e suas capacidades de conjuração de rituais em missões para investigar e combater o Paranormal em todas as suas formas, principalmente quando munição convencional não é o suficiente para lidar com a tarefa.</p><p><span>Ocultistas Famosos:</span> Agatha Volkomenn, Dante, Arnaldo Fritz, Marc Menet, Kian.</p>',
     initialPv: 12,
     levelPv: 2,
@@ -498,12 +498,12 @@ const classes: Array<Class> = [
       optionSkils: [],
       quantity: 3
     },
-    proficiencies: ['Armas Simples'],
+    proficiencies: ['Armas simples'],
     proficienciesGradeQuantity: 3,
     abilities: [
       {
         name: 'Escolhido pelo Outro Lado',
-        description: '<p>Você teve uma experiência paranormal e foi marcado pelo Outro Lado, absorvendo o conhecimento e poder necessários para realizar rituais. Você pode lançar rituais de 1º círculo. À medida que aumenta seu NEX, pode lançar rituais de círculos maiores (2º círculo em NEX 25%, 3º círculo em NEX 55% e 4º círculo em NEX 85%). Você começa com três rituais de 1º círculo. Sempre que avança de NEX, aprende um ritual de qualquer círculo que possa lançar. Esses rituais não contam no seu limite de rituais conhecidos.</p>'
+        description: 'Você teve uma experiência paranormal e foi marcado pelo Outro Lado, absorvendo o conhecimento e poder necessários para realizar rituais. Você pode lançar rituais de 1º círculo. À medida que aumenta seu NEX, pode lançar rituais de círculos maiores (2º círculo em NEX 25%, 3º círculo em NEX 55% e 4º círculo em NEX 85%). Você começa com três rituais de 1º círculo. Sempre que avança de NEX, aprende um ritual de qualquer círculo que possa lançar. Esses rituais não contam no seu limite de rituais conhecidos.'
       },
     ],
     powers: [
@@ -685,7 +685,7 @@ const classes: Array<Class> = [
       },
     ],
     table: [
-      'Escolhido pelo Outro Lado (1º círculo',
+      'Escolhido pelo Outro Lado (1º círculo)',
       'Habilidade de trilha',
       'Poder de ocultista',
       'Aumento de atributo',

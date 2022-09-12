@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { PropType, ref } from 'vue'
-import { Background } from '../../../types'
-import DividerComp from '../../../components/DividerComp.vue'
+import { Power } from '../types'
+import DividerComp from './DividerComp.vue'
 
 const props = defineProps({
-  background: {
-    type: Object as PropType<Background>,
+  power: {
+    type: Object as PropType<Power>,
     required: true
-  }
+  },
+  onlyShow: Boolean
 })
 
 const emit = defineEmits(['handleAdd'])
@@ -15,7 +16,7 @@ const emit = defineEmits(['handleAdd'])
 const showMore = ref(false)
 
 const handleAdd = () => {
-  emit('handleAdd', props.background)
+  emit('handleAdd', props.power)
 }
 </script>
 
@@ -29,36 +30,22 @@ const handleAdd = () => {
         class="show-more"
         :class="{ rotate: showMore }"
       >
-        <img src="../../../assets/show-more-icon.svg" alt="ver mais">
+        <img src="../assets/show-more-icon.svg" alt="ver mais">
       </div>
       <h3 class="title">
-        {{ background.name }}
+        {{ power.name }}
       </h3>
-      <button class="button button-primary" @click.stop="handleAdd">
-        Escolher
-      </button>
+      <div v-if="!onlyShow">
+        <button class="button button-primary" @click.stop="handleAdd">
+          <img src="../assets/add-icon.svg" alt="adicionar">
+        </button>
+      </div>
     </div>
     <Transition name="fadeHeight" mode="out-in">
       <div v-if="showMore">
         <DividerComp />
         <div class="content">
-          <div v-html="background.description" />
-          <div v-if="background.skills.length > 0">
-            <p>
-              <span>Perícias treinadas. </span>
-              {{ background.skills[0] }} e {{ background.skills[1] }}.
-            </p>
-          </div>
-          <div v-else>
-            <p>
-              <span>Perícias treinadas. </span>
-              Duas à escolha do mestre.
-            </p>
-          </div>
-          <p>
-            <span>{{ background.power.name }}. </span>
-            {{ background.power.description }}
-          </p>
+          <div v-html="power.description" />
         </div>
       </div>
     </Transition>

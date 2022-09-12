@@ -1,9 +1,9 @@
-interface Power {
+export interface Power {
   name: string,
   description: string,
 }
 
-interface Path {
+export interface Path {
   name: string,
   description: string,
   abilities: Array<Power>,

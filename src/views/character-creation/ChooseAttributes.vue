@@ -25,7 +25,7 @@ const handleChangeAttribute = (e: Event, attribute: string) => {
       </p>
     </div>
     <div class="image-container">
-      <img src="../../assets/attributes.webp" alt="atributos">
+      <img class="att-image" src="../../assets/attributes.webp" alt="atributos">
       <input 
         type="number" 
         class="input str"
@@ -78,6 +78,9 @@ const handleChangeAttribute = (e: Event, attribute: string) => {
 }
 .image-container {
   position: relative;
+}
+.att-image {
+  pointer-events: none;
 }
 .input {
   text-align: center;

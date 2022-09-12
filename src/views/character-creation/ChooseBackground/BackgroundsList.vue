@@ -52,8 +52,7 @@ const backgroundsFiltered = computed(() => {
 <style scoped>
 .text-container {
   width: 70%;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 }
 .text-container p:last-of-type {
   margin-bottom: 2rem;

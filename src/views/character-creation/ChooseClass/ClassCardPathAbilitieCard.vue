@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import { PropType, ref } from 'vue'
-import { Background } from '../../../types'
+import { Power } from '../../../types'
 import DividerComp from '../../../components/DividerComp.vue'
 
-const props = defineProps({
-  background: {
-    type: Object as PropType<Background>,
+defineProps({
+  abilitie: {
+    type: Object as PropType<Power>,
+    required: true
+  },
+  suffix: {
+    type: String,
     required: true
   }
 })
 
-const emit = defineEmits(['handleAdd'])
-
 const showMore = ref(false)
-
-const handleAdd = () => {
-  emit('handleAdd', props.background)
-}
 </script>
 
 <template>
@@ -32,33 +30,14 @@ const handleAdd = () => {
         <img src="../../../assets/show-more-icon.svg" alt="ver mais">
       </div>
       <h3 class="title">
-        {{ background.name }}
+        {{ suffix + abilitie.name }}
       </h3>
-      <button class="button button-primary" @click.stop="handleAdd">
-        Escolher
-      </button>
     </div>
     <Transition name="fadeHeight" mode="out-in">
       <div v-if="showMore">
         <DividerComp />
         <div class="content">
-          <div v-html="background.description" />
-          <div v-if="background.skills.length > 0">
-            <p>
-              <span>Perícias treinadas. </span>
-              {{ background.skills[0] }} e {{ background.skills[1] }}.
-            </p>
-          </div>
-          <div v-else>
-            <p>
-              <span>Perícias treinadas. </span>
-              Duas à escolha do mestre.
-            </p>
-          </div>
-          <p>
-            <span>{{ background.power.name }}. </span>
-            {{ background.power.description }}
-          </p>
+          <div v-html="abilitie.description" />
         </div>
       </div>
     </Transition>
@@ -87,12 +66,6 @@ const handleAdd = () => {
   margin-top: 0;
   margin-bottom: 0;
   margin-left: .75rem;
-}
-.button {
-  margin-left: auto;
-}
-.button:hover {
-  filter: brightness(90%);
 }
 .content {
   margin-left: 1rem;
