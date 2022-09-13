@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { Class } from '../../../types'
-import DividerComp from '../../../components/DividerComp.vue'
+import DividerView from '../../../components/DividerView.vue'
 import ClassCardFeatures from './ClassCardFeatures.vue'
 import ClassCardTable from './ClassCardTable.vue'
 import ClassCardAbilities from './ClassCardAbilities.vue'
@@ -24,13 +24,13 @@ const handleAddClass = () => {
 
 <template>
   <div 
-    class="card"
-    :class="onlyView ? 'view' : 'card'"
+    class="card-gray"
+    :class="onlyView ? 'only-view' : 'choose-card'"
   >
     <div class="header">
       <h1>{{ charClass.name }}</h1>
     </div>
-    <DividerComp no-margin />
+    <DividerView no-margin />
     <div class="card-content">
       <p class="short-description">
         {{ charClass.shortDescription }}
@@ -64,20 +64,12 @@ const handleAddClass = () => {
 </template>
 
 <style scoped>
-.card {
+.choose-card {
   width: 23rem;
-  box-shadow: 0 5px 10px rgb(0 0 0 / 12%);
-  border-radius: 4px;
-  background-color: var(--color-dark-gray);
-  padding: .5rem;
   margin-bottom: 1rem;
 }
-.view {
+.only-view {
   width: fit-content;
-  box-shadow: 0 5px 10px rgb(0 0 0 / 12%);
-  border-radius: 4px;
-  background-color: var(--color-dark-gray);
-  padding: .5rem;
   margin-bottom: 1rem;
 }
 .header h1 {

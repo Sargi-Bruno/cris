@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PropType, ref } from 'vue'
 import { Power } from '../types'
-import DividerComp from './DividerComp.vue'
+import DividerView from './DividerView.vue'
 
 const props = defineProps({
   power: {
@@ -43,7 +43,7 @@ const handleAdd = () => {
     </div>
     <Transition name="fadeHeight" mode="out-in">
       <div v-if="showMore">
-        <DividerComp />
+        <DividerView />
         <div class="content">
           <div v-html="power.description" />
         </div>
@@ -77,6 +77,7 @@ const handleAdd = () => {
 }
 .button {
   margin-left: auto;
+  height: 2rem;
 }
 .button:hover {
   filter: brightness(90%);

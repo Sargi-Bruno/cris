@@ -24,7 +24,7 @@ const handleRemoveBackground = () => {
     >
       Mudar Origem
     </button>
-    <div class="card">
+    <div class="card-gray">
       <h1 class="title">
         {{ background.name }}
       </h1>
@@ -61,11 +61,6 @@ const handleRemoveBackground = () => {
   display: block;
   margin-left: auto;
   margin-bottom: 2rem;
-}
-.card {
-  box-shadow: 0 5px 10px rgb(0 0 0 / 12%);
-  border-radius: 4px;
-  background-color: var(--color-dark-gray);
 }
 .title {
   margin-top: 0;

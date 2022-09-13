@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import CharacterCreationStepper from '../../components/CharacterCreationStepper.vue'
-import ChooseAttributes from './ChooseAttributes.vue'
+import ChooseAttributes from './ChooseAttributes/ChooseAttributes.vue'
 import ChooseBackground from './ChooseBackground/ChooseBackground.vue'
 import ChooseClass from './ChooseClass/ChooseClass.vue'
-import ChooseDescription from './ChooseDescription.vue'
+import ChooseDescription from './ChooseDescription/ChooseDescription.vue'
 import { Character, Background, Class } from '../../types'
 import { 
   characterDefaultValue,
@@ -12,7 +12,8 @@ import {
   addBackground,
   removeBackground,
   addClass,
-  removeClass
+  removeClass,
+  updateDescription
 } from './characterCreationUtils'
 
 const componentOptions = [
@@ -46,6 +47,10 @@ const handleAddClass = (charClass: Class) => {
 const handleRemoveClass = (charClass: Class) => {
   removeClass(character.value, charClass)
 }
+
+const handleUpdateDescription = (payload: { value: string, key:  'physical' | 'personal' | 'history' | 'goal'}) => {
+  updateDescription(character.value, payload)
+}
 </script>
 
 <template>
@@ -62,6 +67,7 @@ const handleRemoveClass = (charClass: Class) => {
       @handle-remove-background="handleRemoveBackground"
       @handle-add-class="handleAddClass"
       @handle-remove-class="handleRemoveClass"
+      @handle-update-description="handleUpdateDescription"
     />
   </KeepAlive>
 </template>

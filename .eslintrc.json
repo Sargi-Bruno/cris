@@ -16,6 +16,7 @@
   "plugins": [],
   "rules": {
     "vue/max-attributes-per-line": "off",
-    "vue/no-v-html": "off"
+    "vue/no-v-html": "off",
+    "vue/html-self-closing": "off"
   }
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PropType, ref } from 'vue'
 import { Background } from '../../../types'
-import DividerComp from '../../../components/DividerComp.vue'
+import DividerView from '../../../components/DividerView.vue'
 
 const props = defineProps({
   background: {
@@ -20,7 +20,7 @@ const handleAdd = () => {
 </script>
 
 <template>
-  <div class="card">
+  <div class="card-gray">
     <div
       class="header"
       @click="showMore = !showMore"
@@ -40,7 +40,7 @@ const handleAdd = () => {
     </div>
     <Transition name="fadeHeight" mode="out-in">
       <div v-if="showMore">
-        <DividerComp />
+        <DividerView />
         <div class="content">
           <div v-html="background.description" />
           <div v-if="background.skills.length > 0">
@@ -66,11 +66,6 @@ const handleAdd = () => {
 </template>
 
 <style scoped>
-.card {
-  box-shadow: 0 5px 10px rgb(0 0 0 / 12%);
-  border-radius: 4px;
-  background-color: var(--color-dark-gray);
-}
 .header {
   padding: .5rem;
   display: flex;
@@ -90,6 +85,7 @@ const handleAdd = () => {
 }
 .button {
   margin-left: auto;
+  height: 2rem;
 }
 .button:hover {
   filter: brightness(90%);

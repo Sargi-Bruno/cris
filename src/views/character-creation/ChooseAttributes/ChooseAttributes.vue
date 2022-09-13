@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { Character } from '../../types'
+import { Character } from '../../../types'
 
 defineProps<{character: Character}>()
 
 const emit = defineEmits(['handleChangeAttribute'])
 
-const handleChangeAttribute = (e: Event, attribute: string) => {
+const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con' | 'pre') => {
   const payload = {
     value: (e.target as HTMLInputElement).valueAsNumber,
     attribute
@@ -25,7 +25,7 @@ const handleChangeAttribute = (e: Event, attribute: string) => {
       </p>
     </div>
     <div class="image-container">
-      <img class="att-image" src="../../assets/attributes.webp" alt="atributos">
+      <img class="att-image" src="../../../assets/attributes.webp" alt="atributos">
       <input 
         type="number" 
         class="input str"
@@ -92,6 +92,10 @@ const handleChangeAttribute = (e: Event, attribute: string) => {
   border-left: none;
   border-right: none;
   border-bottom: 1px solid var(--color-white);
+}
+.input:hover {
+  color: var(--color-primary);
+  border-bottom: 1px solid var(--color-primary);
 }
 .input:focus {
   outline: none;

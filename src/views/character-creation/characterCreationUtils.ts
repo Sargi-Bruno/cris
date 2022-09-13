@@ -96,3 +96,7 @@ export const removeClass = (character: Character, charClass: Class) => {
     character.powers.splice(index, 1)
   }
 }
+
+export const updateDescription = (character: Character, payload: { value: string, key:  'physical' | 'personal' | 'history' | 'goal'}) => {
+  character.description[payload.key] = payload.value
+}

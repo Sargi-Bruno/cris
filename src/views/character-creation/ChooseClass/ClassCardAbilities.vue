@@ -22,7 +22,7 @@ const powerAbilitie = {
 </script>
 
 <template>
-  <div class="abilities">
+  <div class="abilities card-black">
     <h3>HABILIDADES DE {{ charClass.name.toUpperCase() }}</h3>
     <div v-for="abilitie in charClass.abilities" :key="abilitie.name">
       <div class="abilitie">
@@ -46,9 +46,6 @@ const powerAbilitie = {
 <style scoped>
 .abilities {
   margin-top: 1rem;
-  background-color: var(--color-smoky-black);
-  border-radius: 4px;
-  padding: .5rem;
 }
 .abilities h3 {
   margin: 0;

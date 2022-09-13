@@ -59,7 +59,6 @@ const backgroundsFiltered = computed(() => {
 }
 .background-container {
   margin-top: 2rem;
-  margin-bottom: 25rem;
 }
 .background {
   margin-bottom: 1rem;

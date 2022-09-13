@@ -8,6 +8,7 @@
   --color-primary: #A347FF;
   --color-secondary: #7000AC;
   --color-smoky-black: #121212;
+  --color-black: #0a0a0a;
   --color-dark-gray: rgba(255, 255, 255, 0.05);
   --color-white: #fff;
   --color-gray: rgba(255, 255, 255, 0.7);
@@ -19,11 +20,9 @@ html, body {
   font-family: 'Roboto', sans-serif;
   background-color: var(--color-smoky-black);
   line-height: 1.6;
-  overflow-y: auto;
-  scrollbar-gutter: stable;
 }
 
-#app {
+.main-content {
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -45,7 +44,7 @@ p span {
 }
 
 .button-primary {
-  height: 2rem;
+  height: 2.25rem;
   background-color: var(--color-primary);
   color: var(--color-white);
   border-radius: 2px;
@@ -68,6 +67,34 @@ input[type=number] {
   -moz-appearance:textfield;
 }
 
+.card-gray {
+  box-shadow: 0 5px 10px rgb(0 0 0 / 12%);
+  border-radius: 4px;
+  background-color: var(--color-dark-gray);
+  padding: .5rem;
+}
+
+.card-black {
+  background-color: var(--color-smoky-black);
+  border-radius: 4px;
+  padding: .5rem;
+}
+
+.textarea {
+  width: 100%;
+  background-color: var(--color-dark-gray);
+  color: var(--color-white);
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  padding: 1rem;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.textarea:focus {
+  outline: none;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -79,4 +106,22 @@ input[type=number] {
 ::-webkit-scrollbar-thumb {
   background: var(--color-dark-gray);
   border-radius: 4px;
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+.toast-enter-active {
+  transition: all 0.3s ease;
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+.toast-leave-active {
+  transition: all 0.3s ease;
 }

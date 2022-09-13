@@ -14,7 +14,7 @@ const suffix = ['NEX 10% - ', 'NEX 40% - ', 'NEX 65% - ', 'NEX 99% - ']
 </script>
 
 <template>
-  <div class="paths-container">
+  <div class="paths-container card-black">
     <h3 class="path-title">
       TRILHAS DE {{ charClass.name.toUpperCase() }}
     </h3>
@@ -35,9 +35,6 @@ const suffix = ['NEX 10% - ', 'NEX 40% - ', 'NEX 65% - ', 'NEX 99% - ']
 <style scoped>
 .paths-container {
   margin-top: 1rem;
-  background-color: var(--color-smoky-black);
-  border-radius: 4px;
-  padding: .5rem;
 }
 .path-title {
   margin: 0;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PropType, ref } from 'vue'
 import { Power } from '../../../types'
-import DividerComp from '../../../components/DividerComp.vue'
+import DividerView from '../../../components/DividerView.vue'
 
 defineProps({
   abilitie: {
@@ -18,7 +18,7 @@ const showMore = ref(false)
 </script>
 
 <template>
-  <div class="card">
+  <div class="card-gray">
     <div
       class="header"
       @click="showMore = !showMore"
@@ -35,7 +35,7 @@ const showMore = ref(false)
     </div>
     <Transition name="fadeHeight" mode="out-in">
       <div v-if="showMore">
-        <DividerComp />
+        <DividerView />
         <div class="content">
           <div v-html="abilitie.description" />
         </div>
@@ -45,11 +45,6 @@ const showMore = ref(false)
 </template>
 
 <style scoped>
-.card {
-  box-shadow: 0 5px 10px rgb(0 0 0 / 12%);
-  border-radius: 4px;
-  background-color: var(--color-dark-gray);
-}
 .header {
   padding: .5rem;
   display: flex;

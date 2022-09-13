@@ -13,7 +13,7 @@ const labels = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '5
 </script>
 
 <template>
-  <div class="table-content">
+  <div class="table-content card-black">
     <table class="table">
       <thead>
         <tr>
@@ -42,8 +42,6 @@ const labels = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '5
 <style scoped>
 .table-content {
   margin-top: 1rem;
-  background-color: var(--color-smoky-black);
-  border-radius: 4px;
   padding: .5rem .5rem 1rem .5rem;
 }
 .center {

@@ -13,7 +13,17 @@ const router = createRouter({
       path: '/agente',
       name: 'character-creation',
       component: () => import('../views/character-creation/CharacterCreation.vue')
-    }
+    },
+    {
+      path: '/ficha',
+      name: 'character-sheet',
+      component: () => import('../views/character-sheet/CharacterSheet.vue')
+    },
+    {
+      path: '/contato',
+      name: 'contact',
+      component: () => import('../views/contact/ContactView.vue')
+    },
   ]
 })
 

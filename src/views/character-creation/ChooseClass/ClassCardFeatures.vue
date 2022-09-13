@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { Class } from '../../../types'
-import DividerComp from '../../../components/DividerComp.vue'
+import DividerView from '../../../components/DividerView.vue'
 
 const props = defineProps({
   charClass: {
@@ -30,13 +30,13 @@ const renderProficiences = () => {
 </script>
 
 <template>
-  <div class="features">
+  <div class="features card-black">
     <h3>CARACTERÍSTICAS</h3>
     <div class="feat-card">
       <div>
         <h4>PONTOS DE VIDA INICIAIS</h4><span class="main"> {{ charClass.initialPv }}+VIGOR</span>
       </div>
-      <DividerComp no-margin />
+      <DividerView no-margin />
       <div>
         <h6>A cada novo nível de exposição</h6><span class="sub"> {{ charClass.levelPv }} PV (+Vig)</span>
       </div>
@@ -45,7 +45,7 @@ const renderProficiences = () => {
       <div>
         <h4>PONTOS DE ESFORÇO INICIAIS</h4><span class="main">{{ charClass.initialPe }}+PRESENÇA</span>
       </div>
-      <DividerComp no-margin />
+      <DividerView no-margin />
       <div>
         <h6>A cada novo nível de exposição</h6><span class="sub">{{ charClass.levelPe }} PE (+Pre)</span>
       </div>
@@ -54,14 +54,14 @@ const renderProficiences = () => {
       <div>
         <h4>SANIDADE INICIAL</h4><span class="main">{{ charClass.initialSan }}</span>
       </div>
-      <DividerComp no-margin />
+      <DividerView no-margin />
       <div>
         <h6>A cada novo nível de exposição</h6><span class="sub">{{ charClass.levelSan }} SAN</span>
       </div>
     </div>
     <div class="feat-card">
       <h4>PERÍCIAS TREINADAS</h4>
-      <DividerComp no-margin />
+      <DividerView no-margin />
       <div v-if="charClass.trainedSkills.optionSkils.length > 0">
         <h6>
           {{ charClass.trainedSkills.optionSkils[0][0] }} ou {{ charClass.trainedSkills.optionSkils[0][1] }} (uma das duas) e {{ charClass.trainedSkills.optionSkils[1][0] }} ou {{ charClass.trainedSkills.optionSkils[1][1] }} (uma das duas), mais uma quantidade de perícias à sua escolha igual a {{ charClass.trainedSkills.quantity }} + Intelecto.
@@ -80,18 +80,13 @@ const renderProficiences = () => {
     </div>
     <div class="feat-card">
       <h4>PROFICIÊNCIAS</h4>
-      <DividerComp no-margin />
+      <DividerView no-margin />
       <h6>{{ renderProficiences() }}</h6>
     </div>
   </div>
 </template>
 
 <style scoped>
-.features {
-  background-color: var(--color-smoky-black);
-  border-radius: 4px;
-  padding: .5rem;
-} 
 .features h3 {
   margin-top: 0;
   margin-bottom: .75rem;
