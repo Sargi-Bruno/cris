@@ -67,6 +67,26 @@ watch(toastAlive, () => {
     >
       Finalizar
     </button>
+    <div class="inputs-row">
+      <div class="input-container">
+        <h3>Personagem</h3>
+        <input 
+          type="text" 
+          class="input-primary"
+          placeholder="Nome do personagem"
+          :value="character.name"
+        >
+      </div>
+      <div class="input-container">
+        <h3>Jogador</h3>
+        <input 
+          type="text" 
+          class="input-primary"
+          placeholder="Nome do jogador"
+          :value="character.player"
+        >
+      </div>
+    </div>
     <div class="textarea-container">
       <h3>Aparência</h3>
       <textarea
@@ -142,6 +162,14 @@ watch(toastAlive, () => {
   height: 2.25rem;
   width: 6rem;
   font-size: 16px;
+}
+.inputs-row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+.input-container h3 {
+  margin: 0;
 }
 .textarea-container {
   margin-bottom: 1rem;

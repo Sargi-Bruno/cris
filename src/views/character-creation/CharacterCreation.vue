@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import CharacterCreationStepper from '../../components/CharacterCreationStepper.vue'
+import StepperView from '../../components/StepperView.vue'
 import ChooseAttributes from './ChooseAttributes/ChooseAttributes.vue'
 import ChooseBackground from './ChooseBackground/ChooseBackground.vue'
 import ChooseClass from './ChooseClass/ChooseClass.vue'
@@ -21,6 +21,13 @@ const componentOptions = [
   ChooseBackground,
   ChooseClass,
   ChooseDescription
+]
+
+const stepperOptions = [
+  { label: 'Atributos', value: 0 },
+  { label: 'Origem', value: 1 },
+  { label: 'Classe', value: 2 },
+  { label: 'Toques Finais', value: 3 }
 ]
 
 const currentStep = ref(0)
@@ -54,12 +61,13 @@ const handleUpdateDescription = (payload: { value: string, key:  'physical' | 'p
 </script>
 
 <template>
-  <CharacterCreationStepper
+  <StepperView
     :current-step="currentStep"
+    :stepper-options="stepperOptions"
     @handle-navigation="handleNavigation"
   />
   <KeepAlive>
-    <component 
+    <component
       :is="componentOptions[currentStep]"
       :character="character"
       @handle-change-attribute="handleChangeAttribute"

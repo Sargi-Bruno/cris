@@ -65,6 +65,7 @@ const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con
   display: flex;
   justify-content: center;
   margin-top: 4rem;
+  margin-bottom: .5rem;
 }
 .text-container {
   width: 40%;
