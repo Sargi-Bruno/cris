@@ -1,0 +1,359 @@
+<script setup lang="ts">
+import { Character } from '../../../types'
+
+defineProps<{character: Character}>()
+</script>
+
+<template>
+  <div class="info-view">
+    <div class="info-container">
+      <h3 class="info-container-title">
+        ORIGEM
+      </h3>
+      <div>
+        <h3>{{ character.backgroundName }}</h3>
+      </div>
+    </div>
+    <div class="info-container">
+      <h3 class="info-container-title">
+        CLASSE
+      </h3>
+      <div>
+        <h3>{{ character.className }}</h3>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="nex-container">
+        <h3>NEX</h3>
+        <div class="nex-dropdown">
+          <h4>5</h4>
+          <span>%</span>
+        </div>
+        <div class="pe-container">
+          <div class="pe">
+            <input class="small-size input" type="number">
+          </div>
+          <h4>PE / RODADA</h4>
+        </div>
+      </div>
+      <div class="desl-container">
+        <h3>DESL</h3>
+        <div class="desl-input-container">
+          <input class="input" type="number">
+          <h4>m /</h4>
+          <input class="input" type="number">
+          <h4>q</h4>
+        </div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-block-container">
+        <div class="info-block-header">
+          <input class="small-size input" type="number">
+          <h3>PV</h3>
+          <h4>PONTOS DE VIDA</h4>
+        </div>
+        <div>
+          <div class="info-block-content">
+            <h4>Atuais</h4>
+            <input class="input" type="number">
+          </div>
+        </div>
+      </div>
+      <div class="info-block-container second">
+        <div class="info-block-header">
+          <input class="small-size input" type="number">
+          <h3>PE</h3>
+          <div class="second-subtitle">
+            <h4>PONTOS DE ESFORÇO</h4>
+          </div>
+        </div>
+        <div>
+          <div class="info-block-content">
+            <h4>Atuais</h4>
+            <input class="input" type="number">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="defense-container">
+        <div class="defense-img-container">
+          <img class="defense-img" src="../../../assets/shield-icon.png" alt="defense">
+          <div class="defense-value">
+            <h3>10</h3>
+          </div>
+        </div>
+        <div class="defense-content">
+          <div class="defense-text">
+            <h3>DEFESA</h3>
+            <h4>= 10 + AGI + </h4>
+          </div>
+          <div class="defense-input">
+            <input class="input" type="number">
+            <h5>Equip.</h5>
+          </div>
+          <h4 class="defense-plus">
+            +
+          </h4>
+          <div class="defense-input">
+            <input class="input" type="number">
+            <h5>Outros.</h5>
+          </div>
+        </div>
+      </div>
+      <div class="info-block-container second">
+        <div class="info-block-header">
+          <input class="small-size input" type="number">
+          <div>
+            <h3>SAN</h3>
+            <h4>SANIDADE</h4>
+          </div>
+        </div>
+        <div>
+          <div class="info-block-content">
+            <h4>Atuais</h4>
+            <input class="input" type="number">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-line">
+      <h3>PROTEÇÃO</h3>
+      <input class="input" type="text">
+    </div>
+    <div class="info-line">
+      <h3>RESISTÊNCIAS</h3>
+      <input class="input" type="text">
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.info-view {
+  margin: 0 auto;
+}
+.info-container {
+  display: flex;
+  align-items: center;
+  margin-left: 2rem;
+  gap: 2rem;
+}
+.info-container div {
+  display: flex;
+  align-items: center;
+  width: 16rem;
+  height: 2.5rem;
+  border: 1px solid var(--color-white);
+  padding-left: .5rem;
+}
+.info-container div h3 {
+  font-size: 14px;
+}
+.info-container-title {
+  width: 3rem;
+  font-size: 14px;
+  color: var(--color-off-white);
+}
+.small-size {
+  width: 3.25rem;
+  height: 2.25rem;
+}
+.input {
+  color: var(--color-white);
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid var(--color-white);
+  font-size: 14px;
+  font-weight: bold;
+}
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 2rem;
+  margin-bottom: .5rem;
+}
+.nex-container {
+  display: flex;
+  align-items: center;
+}
+.nex-container h3 {
+  font-size: 14px;
+  width: 3rem;
+  color: var(--color-off-white);
+  margin: 0;
+}
+.nex-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .25rem;
+  width: 3.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--color-white);
+  cursor: pointer;
+}
+.nex-dropdown h4 {
+  color: var(--color-white);
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+}
+.nex-dropdown span {
+  color: var(--color-white);
+  font-weight: bold;
+}
+.pe-container h4 {
+  font-size: 10px;
+  color: var(--color-off-white);
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: .5rem;
+}
+.pe input {
+  margin-top: 1rem;
+  margin-left: .5rem;
+}
+.desl-container {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+.desl-container h3 {
+  font-size: 14px;
+  margin-left: .5rem;
+  width: 3rem;
+  color: var(--color-off-white);
+  margin: 0;
+}
+.desl-input-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-white);
+  height: 2.25rem;
+  width: 8rem;
+  padding-left: .5rem;
+}
+.desl-input-container input {
+  height: 2rem;
+  width: 1.75rem;
+  border: none;
+  text-align: center;
+}
+.info-block-container {
+  margin-top: .25rem;
+}
+.info-block-header {
+  display: flex;
+  align-items: center;
+}
+.info-block-header h3 {
+  margin: 0;
+  margin-left: .5rem;
+  font-size: 16px;
+  color: var(--color-off-white);
+}
+.info-block-header h4 {
+  width: 2.5rem;
+  font-size: 10px;
+  margin: 0;
+  margin-left: .25rem;
+  color: var(--color-off-white);
+}
+.info-block-content {
+  display: flex;
+  align-items: center;
+  margin-left: .5rem;
+}
+.info-block-content h4 {
+  margin: 0;
+  color: var(--color-off-white);
+  font-size: 10px;
+}
+.info-block-content input {
+  width: 5rem;
+  height: 2rem;
+  border: none;
+  border-bottom: 1px solid var(--color-white);
+}
+.second {
+  margin-right: 2.5rem;
+}
+.second-subtitle h4 {
+  width: 4rem;
+}
+.defense-container {
+  display: flex;
+  margin-top: 1rem;
+}
+.defense-img-container {
+  position: relative;
+}
+.defense-img {
+  height: 4rem;
+}
+.defense-value {
+  position: absolute;
+  top: 15px;
+  left: 30%;
+}
+.defense-value h3 {
+  margin: 0;
+}
+.defense-content {
+  display: flex;
+  margin-top: .5rem;
+}
+.defense-content h3, h4, h5 {
+  margin: 0;
+}
+.defense-text {
+  margin-left: .5rem;
+}
+.defense-text h3 {
+  font-size: 16px;
+  color: var(--color-off-white);
+}
+.defense-text h4 {
+  font-size: 10px;
+  color: var(--color-off-white);
+}
+.defense-input {
+  margin-top: 1.25rem;
+}
+.defense-input input {
+  width: 2rem;
+  height: 1rem;
+  border: none;
+  border-bottom: 1px solid var(--color-white);
+}
+.defense-input h5 {
+  font-size: 10px;
+  color: var(--color-off-white);
+}
+.defense-plus {
+  margin-top: 1.5rem;
+  font-size: 10px;
+  color: var(--color-off-white);
+}
+.info-line {
+  margin-left: 2rem;
+  display: flex;
+}
+.info-line h3 {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-off-white);
+}
+.info-line input {
+  border: none;
+  border-bottom: 1px solid var(--color-white);
+  margin-left: .5rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  text-align: left;
+  width: 100%;
+  font-weight: normal;
+}
+</style>

@@ -1,0 +1,10 @@
+:root {
+  --color-primary: #A347FF;
+  --color-secondary: #7000AC;
+  --color-smoky-black: #121212;
+  --color-black: #0a0a0a;
+  --color-dark-gray: rgba(255, 255, 255, 0.05);
+  --color-white: #fff;
+  --color-gray: rgba(255, 255, 255, 0.1);
+  --color-off-white: rgba(255, 255, 255, 0.6);
+}

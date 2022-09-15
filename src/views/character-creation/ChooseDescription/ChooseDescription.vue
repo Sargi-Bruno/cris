@@ -9,9 +9,9 @@ const props = defineProps<{character: Character}>()
 const emit = defineEmits(['handleUpdateDescription'])
 
 const router = useRouter()
-const backgroundError = ref(false)
-const classError = ref(false)
+const errorMessage = ref('')
 const toastAlive = ref(false)
+const toastTimeout = ref<number>()
 
 const handleUpdateDescription = (e: Event, key: 'physical' | 'personal' | 'history' | 'goal') => {
   const payload = {
@@ -24,12 +24,12 @@ const handleUpdateDescription = (e: Event, key: 'physical' | 'personal' | 'histo
 
 const handleFinishCreation = () => {
   if(props.character.backgroundName === '') {
-    backgroundError.value = true
+    errorMessage.value = 'Escolha uma origem'
     toastAlive.value = true
     return
   }
   if(props.character.className === '') {
-    classError.value = true
+    errorMessage.value = 'Escolha uma classe'
     toastAlive.value = true
     return
   }
@@ -46,9 +46,14 @@ const placeholder = {
 
 watch(toastAlive, () => {
   if(toastAlive.value === true) {
-    setTimeout(() => toastAlive.value = false, 3000)
+    toastTimeout.value = setTimeout(() => toastAlive.value = false, 3000)
   }
 })
+
+const dismissToast = () => {
+  toastAlive.value = false
+  clearTimeout(toastTimeout.value)
+}
 </script>
 
 <template>
@@ -133,18 +138,10 @@ watch(toastAlive, () => {
     </div>
     <transition name="toast">
       <ToastNotification
-        v-if="backgroundError && toastAlive"
-        value="Escolha uma origem"
+        v-if="toastAlive"
+        :value="errorMessage"
         type="error"
-        @dismiss="backgroundError = false"
-      />
-    </transition>
-    <transition name="toast">
-      <ToastNotification
-        v-if="classError && toastAlive"
-        value="Escolha uma classe"
-        type="error"
-        @dismiss="classError = false"
+        @dismiss="dismissToast"
       />
     </transition>
   </div>

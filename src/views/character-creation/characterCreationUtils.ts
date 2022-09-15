@@ -65,7 +65,7 @@ export const addBackground = (character: Character, background: Background) => {
 
   for(const skillName of background.skills) {
     const index = character.skills.findIndex((skill) => skill.name === skillName)
-    character.skills[index].trainingBonus += 5
+    character.skills[index].trainingDegree = 'T'
   }
 }
 
@@ -76,7 +76,7 @@ export const removeBackground = (character: Character, background: Background) =
 
   for(const skillName of background.skills) {
     const index = character.skills.findIndex((skill) => skill.name === skillName)
-    character.skills[index].trainingBonus -= 5
+    character.skills[index].trainingDegree = 'D'
   }
 }
 
