@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SheetStats from './sheet-stats/SheetStats.vue'
-import SkillsView from './Skills/SkillsView.vue'
+import SkillsView from './sheet-skills/SkillsView.vue'
+import SheetTabView from './sheet-tab/SheetTabView.vue'
 import { characterDefaultValue } from './characterSheetUtils'
 
 const character = characterDefaultValue
@@ -19,7 +20,9 @@ const character = characterDefaultValue
       />
     </div>
     <div class="sheet-tab">
-      <!-- Ataques, Habilidades & Rituais, Inventário, Descrição -->
+      <SheetTabView
+        :character="character"
+      />
     </div>
   </div>
 </template>
@@ -27,12 +30,17 @@ const character = characterDefaultValue
 <style scoped>
 .character-sheet {
   display: flex;
-  margin-top: 3rem;
+  justify-content: space-between;
+  margin-top: 2.25rem;
+  margin-bottom: 2.25rem;
 }
 .sheet-stats {
   border: 1px solid white;
 }
 .sheet-skills {
+  border: 1px solid white;
+}
+.sheet-tab {
   border: 1px solid white;
 }
 </style>

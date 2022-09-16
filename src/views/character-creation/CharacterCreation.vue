@@ -16,18 +16,18 @@ import {
   updateDescription
 } from './characterCreationUtils'
 
-const componentOptions = [
-  ChooseAttributes,
-  ChooseBackground,
-  ChooseClass,
-  ChooseDescription
-]
-
 const stepperOptions = [
   { label: 'Atributos', value: 0 },
   { label: 'Origem', value: 1 },
   { label: 'Classe', value: 2 },
   { label: 'Toques Finais', value: 3 }
+]
+
+const componentOptions = [
+  ChooseAttributes,
+  ChooseBackground,
+  ChooseClass,
+  ChooseDescription
 ]
 
 const currentStep = ref(0)
