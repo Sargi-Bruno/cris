@@ -1,21 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Background } from '../../../types'
 import CurrentBackground from './CurrentBackground.vue'
 import BackgroundsList from './BackgroundsList.vue'
 
-const chosenBackground = ref<Background | null>(null)
+defineProps<{chosenBackground: Background | null}>()
 
 const emit = defineEmits(['handleAddBackground', 'handleRemoveBackground'])
 
 const handleAddBackground = (background: Background) => {
-  chosenBackground.value = background
+  
   emit('handleAddBackground', background)
 }
 
-const handleRemoveBackground = (background: Background) => {
-  chosenBackground.value = null
-  emit('handleRemoveBackground', background)
+const handleRemoveBackground = () => {
+  emit('handleRemoveBackground')
 }
 </script>
 

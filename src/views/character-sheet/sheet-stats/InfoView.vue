@@ -24,14 +24,16 @@ defineProps<{character: Character}>()
     </div>
     <div class="info-row">
       <div class="nex-container">
-        <h3>NEX</h3>
-        <div class="nex-dropdown">
-          <h4>5</h4>
+        <h3 class="nex-title">
+          NEX
+        </h3>
+        <button class="sheet-dropdown-button nex-dropdown">
+          <h3>5</h3>
           <span>%</span>
-        </div>
+        </button>
         <div class="pe-container">
           <div class="pe">
-            <input class="small-size input" type="number">
+            <h3>1</h3>
           </div>
           <h4>PE / RODADA</h4>
         </div>
@@ -39,9 +41,9 @@ defineProps<{character: Character}>()
       <div class="desl-container">
         <h3>DESL</h3>
         <div class="desl-input-container">
-          <input class="input" type="number">
+          <input class="sheet-input" type="number">
           <h4>m /</h4>
-          <input class="input" type="number">
+          <input class="sheet-input" type="number">
           <h4>q</h4>
         </div>
       </div>
@@ -49,20 +51,23 @@ defineProps<{character: Character}>()
     <div class="info-row">
       <div class="info-block-container">
         <div class="info-block-header">
-          <input class="small-size input" type="number">
+          <input class="sheet-input-size sheet-input" type="number">
           <h3>PV</h3>
           <h4>PONTOS DE VIDA</h4>
         </div>
         <div>
           <div class="info-block-content">
             <h4>Atuais</h4>
-            <input class="input" type="number">
+            <input 
+              class="sheet-input" 
+              type="number"
+            >
           </div>
         </div>
       </div>
       <div class="info-block-container second">
         <div class="info-block-header">
-          <input class="small-size input" type="number">
+          <input class="sheet-input-size sheet-input" type="number">
           <h3>PE</h3>
           <div class="second-subtitle">
             <h4>PONTOS DE ESFORÇO</h4>
@@ -71,7 +76,7 @@ defineProps<{character: Character}>()
         <div>
           <div class="info-block-content">
             <h4>Atuais</h4>
-            <input class="input" type="number">
+            <input class="sheet-input" type="number">
           </div>
         </div>
       </div>
@@ -90,21 +95,21 @@ defineProps<{character: Character}>()
             <h4>= 10 + AGI + </h4>
           </div>
           <div class="defense-input">
-            <input class="input" type="number">
+            <input class="sheet-input" type="number">
             <h5>Equip.</h5>
           </div>
           <h4 class="defense-plus">
             +
           </h4>
           <div class="defense-input">
-            <input class="input" type="number">
+            <input class="sheet-input" type="number">
             <h5>Outros.</h5>
           </div>
         </div>
       </div>
       <div class="info-block-container second">
         <div class="info-block-header">
-          <input class="small-size input" type="number">
+          <input class="sheet-input-size sheet-input" type="number">
           <div>
             <h3>SAN</h3>
             <h4>SANIDADE</h4>
@@ -113,18 +118,18 @@ defineProps<{character: Character}>()
         <div>
           <div class="info-block-content">
             <h4>Atuais</h4>
-            <input class="input" type="number">
+            <input class="sheet-input" type="number">
           </div>
         </div>
       </div>
     </div>
     <div class="info-line">
       <h3>PROTEÇÃO</h3>
-      <input class="input" type="text">
+      <input class="sheet-input" type="text">
     </div>
     <div class="info-line">
       <h3>RESISTÊNCIAS</h3>
-      <input class="input" type="text">
+      <input class="sheet-input" type="text">
     </div>
   </div>
 </template>
@@ -155,18 +160,6 @@ defineProps<{character: Character}>()
   font-size: 14px;
   color: var(--color-off-white);
 }
-.small-size {
-  width: 3.25rem;
-  height: 2.25rem;
-}
-.input {
-  color: var(--color-white);
-  text-align: center;
-  background-color: transparent;
-  border: 1px solid var(--color-white);
-  font-size: 14px;
-  font-weight: bold;
-}
 .info-row {
   display: flex;
   align-items: center;
@@ -178,31 +171,22 @@ defineProps<{character: Character}>()
   display: flex;
   align-items: center;
 }
-.nex-container h3 {
+.nex-title {
   font-size: 14px;
   width: 3rem;
   color: var(--color-off-white);
   margin: 0;
 }
 .nex-dropdown {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   gap: .25rem;
   width: 3.25rem;
-  height: 2.25rem;
-  border: 1px solid var(--color-white);
-  cursor: pointer;
-}
-.nex-dropdown h4 {
-  color: var(--color-white);
-  font-size: 14px;
-  font-weight: bold;
-  margin: 0;
 }
 .nex-dropdown span {
   color: var(--color-white);
   font-weight: bold;
+}
+.nex-dropdown:hover span {
+  color: var(--color-primary);
 }
 .pe-container h4 {
   font-size: 10px;
@@ -211,9 +195,23 @@ defineProps<{character: Character}>()
   margin-bottom: 0;
   margin-left: .5rem;
 }
-.pe input {
+.pe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 1rem;
   margin-left: .5rem;
+  width: 3.25rem;
+  height: 2.25rem;
+  background-color: transparent;
+  border: 1px solid var(--color-white);
+}
+.pe h3 {
+  text-align: center;
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--color-white);
 }
 .desl-container {
   display: flex;

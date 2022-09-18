@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Class } from '../../../types'
 import CurrentClass from './CurrentClass.vue'
 import ClassList from './ClassList.vue'
 
-const chosenClass = ref<Class | null>(null)
+defineProps<{chosenClass: Class | null}>()
 
 const emit = defineEmits(['handleAddClass', 'handleRemoveClass'])
 
 const handleAddClass = (charClass: Class) => {
-  chosenClass.value = charClass
   emit('handleAddClass', charClass)
 }
 
-const handleRemoveClass = (charClass: Class) => {
-  chosenClass.value = null
-  emit('handleRemoveClass', charClass)
+const handleRemoveClass = () => {
+  emit('handleRemoveClass')
 }
 </script>
 

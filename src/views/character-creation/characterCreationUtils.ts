@@ -59,7 +59,9 @@ export const changeAttribute = (character: Character, payload: { value: number, 
   character.attributes[payload.attribute] = payload.value
 }
 
-export const addBackground = (character: Character, background: Background) => {
+export const addBackground = (character: Character, background: Background | null) => {
+  if(background === null) return
+
   character.backgroundName = background.name
   character.powers.push(background.power)
 
@@ -69,31 +71,13 @@ export const addBackground = (character: Character, background: Background) => {
   }
 }
 
-export const removeBackground = (character: Character, background: Background) => {
-  character.backgroundName = ''
-  const powerIndex = character.powers.findIndex((power) => power.name === background.power.name)
-  character.powers.splice(powerIndex, 1)
+export const addClass = (character: Character, charClass: Class | null) => {
+  if(charClass === null) return
 
-  for(const skillName of background.skills) {
-    const index = character.skills.findIndex((skill) => skill.name === skillName)
-    character.skills[index].trainingDegree = 'D'
-  }
-}
-
-export const addClass = (character: Character, charClass: Class) => {
   character.className = charClass.name
 
   for(const abilitie of charClass.abilities) {
     character.powers.push(abilitie)
-  }
-}
-
-export const removeClass = (character: Character, charClass: Class) => {
-  character.className = ''
-
-  for(const abilitie of charClass.abilities) {
-    const index = character.powers.findIndex((power) => power.name === abilitie.name)
-    character.powers.splice(index, 1)
   }
 }
 

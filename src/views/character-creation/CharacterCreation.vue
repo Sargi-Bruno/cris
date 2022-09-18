@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import StepperView from '../../components/StepperView.vue'
 import ChooseAttributes from './ChooseAttributes/ChooseAttributes.vue'
 import ChooseBackground from './ChooseBackground/ChooseBackground.vue'
 import ChooseClass from './ChooseClass/ChooseClass.vue'
 import ChooseDescription from './ChooseDescription/ChooseDescription.vue'
+import ToastNotification from '../../components/ToastNotification.vue'
 import { Character, Background, Class } from '../../types'
 import { 
   characterDefaultValue,
   changeAttribute,
   addBackground,
-  removeBackground,
   addClass,
-  removeClass,
   updateDescription
 } from './characterCreationUtils'
 
@@ -30,8 +30,14 @@ const componentOptions = [
   ChooseDescription
 ]
 
+const router = useRouter()
 const currentStep = ref(0)
 const character= ref<Character>(characterDefaultValue)
+const chosenBackground = ref<Background | null>(null)
+const chosenClass = ref<Class | null>(null)
+const errorMessage = ref('')
+const toastAlive = ref(false)
+const toastTimeout = ref<number>()
 
 const handleNavigation = (value: number) => currentStep.value = value
 
@@ -40,23 +46,52 @@ const handleChangeAttribute = (payload: { value: number, attribute: 'str' | 'dex
 }
 
 const handleAddBackground = (background: Background) => {
-  addBackground(character.value, background)
+  chosenBackground.value = background
 }
 
-const handleRemoveBackground = (background: Background) => {
-  removeBackground(character.value, background)
+const handleRemoveBackground = () => {
+  chosenBackground.value = null
 }
 
 const handleAddClass = (charClass: Class) => {
-  addClass(character.value, charClass)
+  chosenClass.value = charClass
 }
 
-const handleRemoveClass = (charClass: Class) => {
-  removeClass(character.value, charClass)
+const handleRemoveClass = () => {
+  chosenClass.value = null
 }
 
 const handleUpdateDescription = (payload: { value: string, key:  'physical' | 'personal' | 'history' | 'goal'}) => {
   updateDescription(character.value, payload)
+}
+
+const handleFinishCreation = () => {
+  if(chosenBackground.value === null) {
+    errorMessage.value = 'Escolha uma origem'
+    toastAlive.value = true
+    return
+  }
+  if(chosenClass.value === null) {
+    errorMessage.value = 'Escolha uma classe'
+    toastAlive.value = true
+    return
+  }
+
+  addClass(character.value, chosenClass.value)
+  addBackground(character.value, chosenBackground.value)
+
+  router.push({ name: 'character-sheet' })
+}
+
+watch(toastAlive, () => {
+  if(toastAlive.value === true) {
+    toastTimeout.value = setTimeout(() => toastAlive.value = false, 3000)
+  }
+})
+
+const dismissToast = () => {
+  toastAlive.value = false
+  clearTimeout(toastTimeout.value)
 }
 </script>
 
@@ -70,12 +105,23 @@ const handleUpdateDescription = (payload: { value: string, key:  'physical' | 'p
     <component
       :is="componentOptions[currentStep]"
       :character="character"
+      :chosen-background="chosenBackground"
+      :chosen-class="chosenClass"
       @handle-change-attribute="handleChangeAttribute"
       @handle-add-background="handleAddBackground"
       @handle-remove-background="handleRemoveBackground"
       @handle-add-class="handleAddClass"
       @handle-remove-class="handleRemoveClass"
       @handle-update-description="handleUpdateDescription"
+      @handle-finish-creation="handleFinishCreation"
     />
   </KeepAlive>
+  <transition name="toast">
+    <ToastNotification
+      v-if="toastAlive"
+      :value="errorMessage"
+      type="error"
+      @dismiss="dismissToast"
+    />
+  </transition>
 </template>

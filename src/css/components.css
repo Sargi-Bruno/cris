@@ -75,3 +75,23 @@
   border-radius: 4px;
   border: solid 3px transparent;
 }
+
+.sheet-input-size {
+  width: 3.25rem;
+  height: 2.25rem;
+}
+
+.sheet-input {
+  color: var(--color-white);
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid var(--color-white);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.sheet-subtitle {
+  font-size: 14px;
+  color: var(--color-off-white);
+  margin: 0;
+}
