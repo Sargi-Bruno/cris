@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { Character } from '../../../types'
+import SheetDropdown from '../../../components/SheetDropdown.vue'
 
 defineProps<{character: Character}>()
+
+const nexOptions = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%']
+const nexValue = ref('5%')
 </script>
 
 <template>
@@ -24,13 +29,12 @@ defineProps<{character: Character}>()
     </div>
     <div class="info-row">
       <div class="nex-container">
-        <h3 class="nex-title">
-          NEX
-        </h3>
-        <button class="sheet-dropdown-button nex-dropdown">
-          <h3>5</h3>
-          <span>%</span>
-        </button>
+        <SheetDropdown
+          title="NEX"
+          :value="nexValue"
+          :options="nexOptions"
+          @update-value="(option) => nexValue = option"
+        />
         <div class="pe-container">
           <div class="pe">
             <h3>1</h3>
@@ -170,23 +174,6 @@ defineProps<{character: Character}>()
 .nex-container {
   display: flex;
   align-items: center;
-}
-.nex-title {
-  font-size: 14px;
-  width: 3rem;
-  color: var(--color-off-white);
-  margin: 0;
-}
-.nex-dropdown {
-  gap: .25rem;
-  width: 3.25rem;
-}
-.nex-dropdown span {
-  color: var(--color-white);
-  font-weight: bold;
-}
-.nex-dropdown:hover span {
-  color: var(--color-primary);
 }
 .pe-container h4 {
   font-size: 10px;

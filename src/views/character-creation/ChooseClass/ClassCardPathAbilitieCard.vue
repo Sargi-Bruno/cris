@@ -7,10 +7,6 @@ defineProps({
   abilitie: {
     type: Object as PropType<Power>,
     required: true
-  },
-  suffix: {
-    type: String,
-    required: true
   }
 })
 
@@ -30,7 +26,7 @@ const showMore = ref(false)
         <img src="../../../assets/show-more-icon.svg" alt="ver mais">
       </div>
       <h3 class="title">
-        {{ suffix + abilitie.name }}
+        {{ abilitie.name }}
       </h3>
     </div>
     <Transition name="fadeHeight" mode="out-in">

@@ -3,7 +3,8 @@ defineProps({
   value: {
     type: String,
     required: true
-  }
+  },
+  dark: Boolean
 })
 
 const emit = defineEmits(['update'])
@@ -14,7 +15,7 @@ const update = (e: Event) => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" :class="{ 'dark': dark }">
     <img class="icon" src="../assets/search-icon.png" alt="buscar">
     <input 
       class="input" 
@@ -32,6 +33,9 @@ const update = (e: Event) => {
   align-items: center;
   background-color: var(--color-dark-gray);
   border-radius: 4px;
+}
+.dark {
+  background-color: var(--color-smoky-black);
 }
 .icon {
   margin-left: .25rem;

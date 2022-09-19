@@ -9,7 +9,10 @@ defineProps<{character: Character}>()
 defineEmits(['handleOpenItemsModal'])
 
 const patentOptions = ['Recruta', 'Operador', 'Agente especial', 'Oficial de operações', 'Agente de elite']
+const creditOptions = ['Baixo', 'Médio', 'Alto', 'Ilimitado']
+
 const patentValue = ref('Recruta')
+const creditValue = ref('Baixo')
 </script>
   
 <template>
@@ -61,16 +64,13 @@ const patentValue = ref('Recruta')
         </div>
       </div>
       <div class="inventory-row inventory-row-gap">
-        <div class="input-container">
-          <h4 class="sheet-subtitle">
-            LIMITE DE CRÉDITO
-          </h4>
-          <button 
-            class="credit-dropdown sheet-dropdown-button"
-          >
-            <h3>Baixo</h3>
-          </button>
-        </div>
+        <SheetDropdown
+          title="LIMITE DE CRÉDITO"
+          :value="creditValue"
+          button-width="8rem"
+          :options="creditOptions"
+          @update-value="(option) => creditValue = option"
+        />
         <div class="input-container">
           <h4 class="sheet-subtitle">
             CARGA MÁX.

@@ -95,3 +95,43 @@
   color: var(--color-off-white);
   margin: 0;
 }
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-content {
+  background-color: var(--color-light-black);
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.modal-body {
+  overflow-y: scroll;
+  max-height: 32rem;
+  padding-right: .5rem;
+}
+.modal-body::-webkit-scrollbar {
+  width: 10px;
+}
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+  border: solid 3px transparent;
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background: var(--color-smoky-black);
+  border-radius: 4px;
+  border: solid 3px transparent;
+}

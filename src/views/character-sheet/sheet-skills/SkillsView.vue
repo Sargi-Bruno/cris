@@ -1,7 +1,17 @@
 <script setup lang="ts">
-import { Character } from '../../../types'
+import { Character, Skill } from '../../../types'
+import SkillsDropdown from './SkillsDropdown.vue'
 
 defineProps<{character: Character}>()
+
+const emit = defineEmits(['handleOpenSkillModal'])
+
+const attrOptions = ['AGI', 'FOR', 'INT', 'PRE', 'VIG']
+const trainingOptions = ['D', 'T', 'V', 'E']
+
+const handleOpenSkill = (skill: Skill) => {
+  emit('handleOpenSkillModal', skill)
+}
 </script>
 
 <template>
@@ -22,18 +32,27 @@ defineProps<{character: Character}>()
         </tr>
       </thead>
       <tbody>
-        <tr v-for="skill in character.skills" :key="skill.name">
+        <tr v-for="(skill, i) in character.skills" :key="skill.name">
           <td>
-            <button class="naked-button left">
+            <button 
+              class="naked-button left"
+              @click="handleOpenSkill(skill)"
+            >
               {{ skill.name }}<span v-if="skill.onlyTrained">*</span><span v-if="skill.loadPenalty">+</span>
             </button>
           </td>
-          <td>
-            <span>( </span>
-            <button class="naked-button gray">
-              {{ skill.attribute }}
-            </button>
-            <span> )</span>
+          <td v-if="i > (character.skills.length - 7)">
+            <SkillsDropdown 
+              :value="skill.attribute" 
+              :options="attrOptions"
+              up 
+            />
+          </td>
+          <td v-else>
+            <SkillsDropdown 
+              :value="skill.attribute" 
+              :options="attrOptions"
+            />
           </td>
           <td>
             <span>( </span>
@@ -42,13 +61,25 @@ defineProps<{character: Character}>()
             </button>
             <span> )</span>
           </td>
-          <td>
-            <button class="underline-button">
-              {{ skill.trainingDegree }}
-            </button>
+          <td v-if="i > (character.skills.length - 7)">
+            <SkillsDropdown 
+              :value="skill.trainingDegree" 
+              :options="trainingOptions"
+              underline
+              up 
+            />
+          </td>
+          <td v-else>
+            <SkillsDropdown 
+              :value="skill.trainingDegree" 
+              :options="trainingOptions"
+              underline
+            />
           </td>
           <td>
-            <input type="number" class="underline-input" value="0">
+            <div class="input-container">
+              <input type="number" class="underline-input" value="0">
+            </div>
           </td>
         </tr>
       </tbody>
@@ -75,6 +106,7 @@ defineProps<{character: Character}>()
   width: 3.25rem;
 }
 .skills-table td {
+  min-width: 3.25rem;
   text-align: center;
 }
 .skills-table td span {
@@ -83,6 +115,11 @@ defineProps<{character: Character}>()
 .left {
   width: 6.25rem;
   text-align: left;
+}
+.input-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 .naked-button {
   background-color: transparent;
@@ -99,19 +136,6 @@ defineProps<{character: Character}>()
 .naked-button:hover span {
   color: var(--color-primary);
 }
-.underline-button {
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid var(--color-white);
-  color: var(--color-white);
-  padding: 0;
-  font-size: 14px;
-  cursor: pointer;
-  width: 2rem;
-}
-.underline-button:hover {
-  color: var(--color-primary);
-}
 .underline-input {
   background-color: transparent;
   border: none;
@@ -119,11 +143,8 @@ defineProps<{character: Character}>()
   color: var(--color-white);
   padding: 0;
   font-size: 14px;
-  width: 2rem;
+  width: 2.25rem;
   text-align: center;
-}
-.gray {
-  color: var(--color-off-white);
 }
 .table-caption {
   margin: 0;

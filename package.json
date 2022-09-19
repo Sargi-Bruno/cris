@@ -12,6 +12,7 @@
   "dependencies": {
     "@vueuse/core": "^9.2.0",
     "vue": "^3.2.37",
+    "vue-final-modal": "^3.4.4",
     "vue-router": "4"
   },
   "devDependencies": {

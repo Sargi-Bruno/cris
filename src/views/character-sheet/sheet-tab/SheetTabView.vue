@@ -10,6 +10,8 @@ import DescriptionTab from './DescriptionTab.vue'
 
 defineProps<{character: Character}>()
 
+defineEmits(['handleOpenAbilitiesModal'])
+
 const tabOptions = [
   { label: 'ATAQUES', value: 0 },
   { label: 'HABILIDADES', value: 1 },
@@ -44,6 +46,7 @@ const handleNavigation = (value: number) => currentTab.value = value
       <component
         :is="componentOptions[currentTab]"
         :character="character"
+        @handle-open-abilities-modal="$emit('handleOpenAbilitiesModal')"
       />
     </KeepAlive>
   </div>

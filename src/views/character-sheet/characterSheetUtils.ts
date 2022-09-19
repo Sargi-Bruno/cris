@@ -12,7 +12,7 @@ export const characterDefaultValue: Character = {
     pre: 1,
   },
   backgroundName: 'T.I.',
-  className: 'Especialista',
+  className: 'Combatente',
   nex: '5%',
   movement: 9,
   maxPv: 0,

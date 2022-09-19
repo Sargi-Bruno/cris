@@ -9,8 +9,6 @@ defineProps({
     required: true
   }
 })
-
-const suffix = ['NEX 10% - ', 'NEX 40% - ', 'NEX 65% - ', 'NEX 99% - ']
 </script>
 
 <template>
@@ -23,8 +21,8 @@ const suffix = ['NEX 10% - ', 'NEX 40% - ', 'NEX 65% - ', 'NEX 99% - ']
         <h3>{{ path.name }}</h3>
         <div v-html="path.description" />
         <div class="abilities">
-          <div v-for="(abilitie, index) in path.abilities" :key="abilitie.name">
-            <ClassCardPathAbilitieCard :abilitie="abilitie" :suffix="suffix[index]" />
+          <div v-for="(abilitie) in path.abilities" :key="abilitie.name">
+            <ClassCardPathAbilitieCard :abilitie="abilitie" />
           </div>
         </div>
       </div>

@@ -35,8 +35,8 @@ const handleAdd = () => {
       <h3 class="title">
         {{ power.name }}
       </h3>
-      <div v-if="!onlyShow">
-        <button class="button button-primary" @click.stop="handleAdd">
+      <div v-if="!onlyShow" class="button-container">
+        <button class="button-primary" @click.stop="handleAdd">
           <img src="../assets/add-icon.svg" alt="adicionar">
         </button>
       </div>
@@ -75,12 +75,14 @@ const handleAdd = () => {
   margin-bottom: 0;
   margin-left: .75rem;
 }
-.button {
+.button-container {
   margin-left: auto;
-  height: 2rem;
 }
-.button:hover {
-  filter: brightness(90%);
+.button-container button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
 }
 .content {
   margin-left: 1rem;

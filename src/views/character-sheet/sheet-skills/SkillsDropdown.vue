@@ -3,14 +3,6 @@ import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
 defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  buttonWidth: {
-    type: String,
-    default: '3.25rem'
-  },
   value: {
     type: String,
     required: true
@@ -18,7 +10,9 @@ defineProps({
   options: {
     type: Array<string>,
     required: true
-  }
+  },
+  up: Boolean,
+  underline: Boolean
 })
 
 const emit = defineEmits(['updateValue'])
@@ -35,20 +29,20 @@ const handleUpdateValue = (option: string) => {
 </script>
 
 <template>
-  <div ref="dropdown" class="dropdown-container">
-    <h4 class="sheet-subtitle">
-      {{ title }}
-    </h4>
+  <div ref="dropdown">
     <div class="dropdown-button-container">
+      <span v-if="!underline" class="span">(</span>
       <button
         class="dropdown-button"
+        :class="{ 'dropdown-underline': underline }"
         @click="open = !open"
       >
         {{ value }}
       </button>
+      <span v-if="!underline" class="span">)</span>
       <div 
         class="dropdown-content"
-        :class="{ 'dropdown-content-active': open }"
+        :class="[{'dropdown-content-active': open}, up ? 'dropdown-position-up' : 'dropdown-position-down']"
       >
         <div v-for="(option, i) in options" :key="i">
           <button 
@@ -64,39 +58,36 @@ const handleUpdateValue = (option: string) => {
 </template>
 
 <style scoped>
-.dropdown-container {
-  display: flex;
-  align-items: center;
-  gap: .5rem
-}
 .dropdown-button-container {
-  width: v-bind(buttonWidth);
+  display: flex;
+  justify-content: center;
+  width: 100%;
   position: relative;
 }
-.dropdown-button {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.25rem;
-  border: 1px solid var(--color-white);
-  cursor: pointer;
-  background-color: transparent;
-  font-size: 14px;
-  margin: 0;
+.span {
   color: var(--color-white);
+}
+.dropdown-button {
+  width: 2.25rem;
+  background-color: transparent;
+  border: none;
+  color: var(--color-white);
+  padding: 0;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+}
+.dropdown-underline {
+  border-bottom: 1px solid var(--color-white);
 }
 .dropdown-button:hover {
   color: var(--color-primary);
 }
 .dropdown-content {
   z-index: 1;
-  width: inherit;
-  max-height: 12.5rem;
-  overflow-y: scroll;
+  width: 3.25rem;
   position: absolute;
   left: 0;
-  top: calc(100% + .25rem);
   padding: .5rem;
   border-radius: 4px;
   background-color: var(--color-light-black);
@@ -105,22 +96,16 @@ const handleUpdateValue = (option: string) => {
   transform: translateY(-10px);
   transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
 }
+.dropdown-position-up {
+  bottom: calc(100% + .25rem);
+}
+.dropdown-position-down {
+  top: calc(100% + .25rem);
+}
 .dropdown-content-active {
   transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
-}
-.dropdown-content::-webkit-scrollbar {
-  width: 4px;
-}
-.dropdown-content::-webkit-scrollbar-track {
-  background: transparent;
-  border: solid 3px transparent;
-}
-.dropdown-content::-webkit-scrollbar-thumb {
-  background: var(--color-smoky-black);
-  border-radius: 4px;
-  border: solid 3px transparent;
 }
 .dropdown-content-button {
   width: 100%;
@@ -130,6 +115,7 @@ const handleUpdateValue = (option: string) => {
   background-color: transparent;
   border: none;
   height: 2.25rem;
+  text-align: center;
 }
 .dropdown-content-button:hover {
   color: var(--color-primary);
