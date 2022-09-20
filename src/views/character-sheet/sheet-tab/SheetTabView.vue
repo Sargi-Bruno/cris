@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+import { ref } from 'vue'
 import { Character } from '../../../types'
 import TabNav from '../../../components/TabNav.vue'
 import AttacksTab from './AttacksTab.vue'
@@ -10,7 +10,14 @@ import DescriptionTab from './DescriptionTab.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleOpenAbilitiesModal'])
+defineEmits([
+  'handleOpenAbilitiesModal', 
+  'handleOpenRitualsModal', 
+  'handleOpenItemsModal', 
+  'handleAddAttack', 
+  'handleRemoveAttack',
+  'handleAddPower'
+])
 
 const tabOptions = [
   { label: 'ATAQUES', value: 0 },
@@ -47,6 +54,10 @@ const handleNavigation = (value: number) => currentTab.value = value
         :is="componentOptions[currentTab]"
         :character="character"
         @handle-open-abilities-modal="$emit('handleOpenAbilitiesModal')"
+        @handle-open-rituals-modal="$emit('handleOpenRitualsModal')"
+        @handle-open-items-modal="$emit('handleOpenItemsModal')"
+        @handle-add-attack="$emit('handleAddAttack')"
+        @handle-remove-attack="(position: number) => $emit('handleRemoveAttack', position)"
       />
     </KeepAlive>
   </div>
@@ -59,6 +70,6 @@ const handleNavigation = (value: number) => currentTab.value = value
   padding-right: .5rem;
 }
 .tab-nav-container {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 </style>

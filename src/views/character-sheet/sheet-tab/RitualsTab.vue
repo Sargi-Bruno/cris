@@ -20,13 +20,17 @@ defineEmits(['handleOpenRitualsModal'])
         <RitualCard :ritual="ritual" />
       </div>
     </div>
-    <div v-else>
+    <div v-else class="no-content">
       <h3>Você ainda não possue rituais</h3>
     </div>
   </div>
 </template>
   
 <style scoped>
+.no-content h3 {
+  text-align: center;
+  margin-top: 10rem;
+}
 .add-button {
   display: block;
   margin-left: auto;

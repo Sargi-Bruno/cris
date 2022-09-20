@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Character } from '../../../../types'
+import { Character, Power } from '../../../../types'
 import TabNav from '../../../../components/TabNav.vue'
 import ClassAbilities from './ClassAbilities.vue'
 import ParanormalPowers from './ParanormalPowers.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleCloseModal'])
+const emit = defineEmits(['handleCloseModal', 'handleAddPower'])
 
 const componentOptions = [ClassAbilities, ParanormalPowers]
 
@@ -25,6 +25,8 @@ const tabOptions = [
 const currentTab = ref(0)
 
 const handleNavigation = (value: number) => currentTab.value = value
+
+const handleAddPower = (power: Power) => emit('handleAddPower', power)
 </script>
 
 <template>
@@ -49,6 +51,7 @@ const handleNavigation = (value: number) => currentTab.value = value
         <component
           :is="componentOptions[currentTab]"
           :character="character"
+          @handle-add-power="handleAddPower"
         />
       </KeepAlive>
     </div>
@@ -57,7 +60,7 @@ const handleNavigation = (value: number) => currentTab.value = value
 
 <style scoped>
 .modal-width {
-  width: 53rem;
+  width: 60rem;
 }
 .modal-height {
   height: 32rem;

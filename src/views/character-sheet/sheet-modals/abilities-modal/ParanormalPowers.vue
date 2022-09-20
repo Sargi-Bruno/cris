@@ -1,35 +1,33 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Character, Power } from '../../../../types'
+import { Power } from '../../../../types'
 import paranormalPowers from '../../../../data/paranormalPowers'
 import TabNav from '../../../../components/TabNav.vue'
 import PowerCard from '../../../../components/PowerCard.vue'
-
-defineProps<{character: Character}>()
 
 const emit = defineEmits(['handleAddPower'])
 
 const tabOptions = [
   {
-    label: 'Varia',
+    label: 'Conhecimento',
     value: 0,
   },
   {
-    label: 'Conhecimento',
+    label: 'Energia',
     value: 1,
   },
   {
-    label: 'Energia',
+    label: 'Morte',
     value: 2,
   },
   {
-    label: 'Morte',
+    label: 'Sangue',
     value: 3,
   },
   {
-    label: 'Sangue',
+    label: 'Varia',
     value: 4,
-  },
+  }
 ]
 
 const currentTab = ref(0)

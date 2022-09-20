@@ -1,4 +1,4 @@
-import { Character } from "../../types"
+import { Character, Attack } from "../../types"
 import Skills from "../../data/skills"
 
 export const characterDefaultValue: Character = {
@@ -49,4 +49,17 @@ export const characterDefaultValue: Character = {
     history: '',
     goal: '',
   }
+}
+
+export const attackDefaultValue: Attack = {
+  name: '',
+  attackBonus: 0,
+  damage: '0',
+  extraDamage: '0',
+  criticalRange: 20,
+  criticalMult: 2,
+  damageType: '',
+  range: '',
+  skillUsed: 'Luta',
+  damageAttribute: 'Força'
 }

@@ -76,7 +76,6 @@ export interface Weapon {
   description: string,
   proficiencie: string,
   type: string,
-  rangeType?: string,
   handling: string,
   damage: string,
   secondaryDamage?: string,
@@ -118,11 +117,11 @@ export interface Ritual {
   element: string,
   execution: string,
   range: string,
-  target?: string,
-  duration?: string,
   area?: string,
-  save?: string,
+  target?: string,
   effect?: string,
+  duration?: string,
+  save?: string,
 }
 
 export interface Skill {
@@ -138,9 +137,15 @@ export interface Skill {
 
 export interface Attack {
   name: string,
+  attackBonus: number,
   damage: string,
-  save?: string,
-  misc: string,
+  extraDamage: string,
+  criticalRange: number,
+  criticalMult: number,
+  damageType: string,
+  range: string,
+  skillUsed: string,
+  damageAttribute: string
 }
 
 export interface Character {

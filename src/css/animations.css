@@ -15,3 +15,14 @@
 .toast-leave-active {
   transition: all 0.3s ease;
 }
+
+.card-enter-active,
+.card-leave-active {
+  transition: all 0.25s ease-in-out;
+  max-height: 999px;
+}
+.card-enter-from,
+.card-leave-to {
+  opacity: 0;
+  max-height: 0px;
+}

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Skill } from '../../types'
+import { Skill, Power } from '../../types'
 import SheetStats from './sheet-stats/SheetStats.vue'
 import SkillsView from './sheet-skills/SkillsView.vue'
 import SheetTabView from './sheet-tab/SheetTabView.vue'
-import { characterDefaultValue } from './characterSheetUtils'
+import { characterDefaultValue, attackDefaultValue } from './characterSheetUtils'
 import AbilitiesModal from './sheet-modals/abilities-modal/AbilitiesModal.vue'
 import AttackModal from './sheet-modals/attack-modal/AttackModal.vue'
 import InventoryModal from './sheet-modals/inventory-modal/InventoryModal.vue'
@@ -20,21 +20,44 @@ const modals = {
   skill: 4
 }
 
-const character = characterDefaultValue
+const character = ref(characterDefaultValue)
 
 const showModal = ref(false)
 const currentModal = ref(0)
 const currentSkill = ref<Skill>()
+
+const handleOpenSkillModal = (skill: Skill) => {
+  currentSkill.value = skill
+  currentModal.value = modals.skill
+  showModal.value = true
+}
 
 const handleOpenAbilitiesModal = () => {
   currentModal.value = modals.abilities
   showModal.value = true
 }
 
-const handleOpenSkillModal = (skill: Skill) => {
-  currentSkill.value = skill
-  currentModal.value = modals.skill
+const handleOpenRitualsModal = () => {
+  currentModal.value = modals.rituals
   showModal.value = true
+}
+
+const handleOpenItemsModal = () => {
+  currentModal.value = modals.inventory
+  showModal.value = true
+}
+
+const handleAddAttack = () => {
+  character.value.attacks.push(attackDefaultValue)
+}
+
+const handleRemoveAttack = (position: number) => {
+  character.value.attacks.splice(position, 1)
+}
+
+const handleAddPower = (power: Power) => {
+  // add toast
+  character.value.powers.push(power)
 }
 </script>
 
@@ -55,6 +78,10 @@ const handleOpenSkillModal = (skill: Skill) => {
       <SheetTabView
         :character="character"
         @handle-open-abilities-modal="handleOpenAbilitiesModal"
+        @handle-open-rituals-modal="handleOpenRitualsModal"
+        @handle-open-items-modal="handleOpenItemsModal"
+        @handle-add-attack="handleAddAttack"
+        @handle-remove-attack="handleRemoveAttack"
       />
     </div>
     <vue-final-modal 
@@ -66,6 +93,7 @@ const handleOpenSkillModal = (skill: Skill) => {
         :character="character"
         :skill="currentSkill"
         @handle-close-modal="showModal = false"
+        @handle-add-power="handleAddPower"
       />
     </vue-final-modal>
   </div>
@@ -78,18 +106,13 @@ const handleOpenSkillModal = (skill: Skill) => {
   margin-top: 2.25rem;
   margin-bottom: 2.25rem;
 }
-.sheet-stats {
-  border: 1px solid white;
-}
-.sheet-skills {
-  border: 1px solid white;
-}
-.sheet-tab {
-  border: 1px solid white;
-}
 :deep(.modal-container) {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.sheet-tab {
+  max-height: 56.25rem;
+  overflow-y: scroll;
 }
 </style>

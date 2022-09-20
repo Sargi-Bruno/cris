@@ -14,6 +14,7 @@ defineProps<{character: Character}>()
           type="text" 
           class="sheet-input-title"
           placeholder="Nome do personagem"
+          autocomplete="nope"
           :value="character.name"
         >
         <h3>PERSONAGEM</h3>
@@ -23,6 +24,7 @@ defineProps<{character: Character}>()
           type="text" 
           class="sheet-input-title"
           placeholder="Nome do jogador"
+          autocomplete="nope"
           :value="character.player"
         >
         <h3>JOGADOR</h3>

@@ -5,6 +5,7 @@ import PowerCard from '../../../components/PowerCard.vue'
 defineProps<{character: Character}>()
 
 defineEmits(['handleOpenAbilitiesModal'])
+
 </script>
 
 <template>
@@ -17,16 +18,22 @@ defineEmits(['handleOpenAbilitiesModal'])
     </button>
     <div v-if="character.powers.length > 0">
       <div v-for="(power, index) in character.powers" :key="index">
-        <PowerCard :power="power" />
+        <PowerCard 
+          :power="power"
+        />
       </div>
     </div>
-    <div v-else>
+    <div v-else class="no-content">
       <h3>Você ainda não possue habilidades</h3>
     </div>
   </div>
 </template>
 
 <style scoped>
+.no-content h3 {
+  text-align: center;
+  margin-top: 10rem;
+}
 .add-button {
   display: block;
   margin-left: auto;

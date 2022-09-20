@@ -19,17 +19,18 @@ const showMore = ref(false)
       class="header"
       @click="showMore = !showMore"
     >
-      <div 
+      <button 
         class="show-more"
         :class="{ rotate: showMore }"
+        @click.stop="showMore = !showMore"
       >
         <img src="../../../assets/show-more-icon.svg" alt="ver mais">
-      </div>
+      </button>
       <h3 class="title">
         {{ abilitie.name }}
       </h3>
     </div>
-    <Transition name="fadeHeight" mode="out-in">
+    <Transition name="card" mode="out-in">
       <div v-if="showMore">
         <DividerView />
         <div class="content">
@@ -49,9 +50,16 @@ const showMore = ref(false)
 }
 .show-more {
   transition: 0.3s ease-in-out;
+  cursor: pointer;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+}
+.show-more img {
+  transition: all 300ms;
 }
 .rotate {
-  rotate: 180deg;
+  transform: rotate(-180deg);
 }
 .title {
   margin-top: 0;
@@ -62,15 +70,5 @@ const showMore = ref(false)
   margin-left: 1rem;
   margin-right: 1rem;
   padding-bottom: .1rem;
-}
-.fadeHeight-enter-active,
-.fadeHeight-leave-active {
-  transition: all 0.25s ease-in-out;
-  max-height: 999px;
-}
-.fadeHeight-enter-from,
-.fadeHeight-leave-to {
-  opacity: 0;
-  max-height: 0px;
 }
 </style>

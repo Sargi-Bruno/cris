@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { PropType, ref } from 'vue'
-import { Power } from '../types'
+import { Protection } from '../types'
 import DividerView from './DividerView.vue'
 
 const props = defineProps({
-  power: {
-    type: Object as PropType<Power>,
+  procetion: {
+    type: Object as PropType<Protection>,
     required: true
   },
   onlyShow: Boolean
@@ -16,7 +16,7 @@ const emit = defineEmits(['handleAdd'])
 const showMore = ref(false)
 
 const handleAdd = () => {
-  emit('handleAdd', props.power)
+  emit('handleAdd', props.procetion)
 }
 </script>
 
@@ -33,9 +33,24 @@ const handleAdd = () => {
       >
         <img src="../assets/show-more-icon.svg" alt="ver mais">
       </button>
-      <h3 class="title">
-        {{ power.name }}
-      </h3>
+      <div>
+        <div class="first-row">
+          <h3 class="title">
+            {{ procetion.name }}
+          </h3>
+        </div>
+        <div class="item-info-container">
+          <div class="item-info">
+            <h3>Defesa: <span>+{{ procetion.defense }}</span></h3>
+          </div>
+          <div class="item-info">
+            <h3>Categoria: <span>{{ procetion.category }}</span></h3>
+          </div>
+          <div class="item-info">
+            <h3>Espaços: <span>{{ procetion.slots }}</span></h3>
+          </div>
+        </div>
+      </div>
       <div v-if="!onlyShow" class="button-container">
         <button class="button-primary" @click.stop="handleAdd">
           <img src="../assets/add-icon.svg" alt="adicionar">
@@ -46,7 +61,7 @@ const handleAdd = () => {
       <div v-if="showMore">
         <DividerView />
         <div class="content">
-          <div v-html="power.description" />
+          <div v-html="procetion.description" />
         </div>
       </div>
     </Transition>
@@ -79,6 +94,10 @@ const handleAdd = () => {
 .rotate {
   transform: rotate(-180deg);
 }
+.first-row {
+  display: flex;
+  align-items: flex-end;
+}
 .title {
   margin-top: 0;
   margin-bottom: 0;
@@ -92,6 +111,23 @@ const handleAdd = () => {
   align-items: center;
   justify-content: center;
   height: 2rem;
+}
+.item-info-container {
+  display: flex;
+  margin-left: .75rem;
+}
+.item-info {
+  margin-right: 1rem;
+}
+.item-info h3 {
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--color-primary);
+  margin: 0;
+}
+.item-info span {
+  color: var(--color-white);
+  font-size: 14px;
 }
 .content {
   margin-left: 1rem;

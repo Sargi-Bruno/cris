@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Character } from '../../../types'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
-import ItemCard from '../../../components/ItemCard.vue'
 import { ref } from 'vue'
 
 defineProps<{character: Character}>()
@@ -31,7 +30,7 @@ const creditValue = ref('Baixo')
         <SheetDropdown
           title="PATENTE"
           :value="patentValue"
-          button-width="12rem"
+          button-width="10rem"
           :options="patentOptions"
           @update-value="(option) => patentValue = option"
         />
@@ -67,7 +66,7 @@ const creditValue = ref('Baixo')
         <SheetDropdown
           title="LIMITE DE CRÉDITO"
           :value="creditValue"
-          button-width="8rem"
+          button-width="6rem"
           :options="creditOptions"
           @update-value="(option) => creditValue = option"
         />
@@ -94,16 +93,20 @@ const creditValue = ref('Baixo')
     </button>
     <div v-if="character.inventory.length > 0">
       <div v-for="(item, index) in character.inventory" :key="index">
-        <ItemCard :item="item" />
+        <!-- <ItemCard :item="item" /> -->
       </div>
     </div>
-    <div v-else>
+    <div v-else class="no-content">
       <h3>Você ainda não possue itens</h3>
     </div>
   </div>
 </template>
   
 <style scoped>
+.no-content h3 {
+  text-align: center;
+  margin-top: 10rem;
+}
 .add-button {
   display: block;
   margin-left: auto;
