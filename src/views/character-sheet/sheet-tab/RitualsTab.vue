@@ -4,7 +4,7 @@ import RitualCard from '../../../components/RitualCard.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleOpenRitualsModal'])
+defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual'])
 </script>
   
 <template>
@@ -15,9 +15,19 @@ defineEmits(['handleOpenRitualsModal'])
     >
       Adicionar
     </button>
-    <div v-if="character.rituals.length > 0">
-      <div v-for="(ritual, index) in character.rituals" :key="index">
-        <RitualCard :ritual="ritual" />
+    <div v-if="character.rituals.length > 0" class="sheet-cards-container">
+      <div 
+        v-for="ritual in character.rituals" 
+        :key="ritual.id"
+        class="sheet-card-list"
+      >
+        <RitualCard 
+          :id="ritual.id"
+          :ritual="ritual"
+          only-show
+          sheet
+          @handle-remove="(id: string) => $emit('handleRemoveRitual', id)"
+        />
       </div>
     </div>
     <div v-else class="no-content">
@@ -34,5 +44,11 @@ defineEmits(['handleOpenRitualsModal'])
 .add-button {
   display: block;
   margin-left: auto;
-} 
+}
+.sheet-cards-container {
+  margin-top: 1rem;
+}
+.sheet-card-list {
+  margin-bottom: .5rem;
+}
 </style>

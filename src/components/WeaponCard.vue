@@ -8,15 +8,29 @@ const props = defineProps({
     type: Object as PropType<Weapon>,
     required: true
   },
-  onlyShow: Boolean
+  id: {
+    type: String,
+    default: ''
+  },
+  onlyShow: Boolean,
+  sheet: Boolean
 })
 
-const emit = defineEmits(['handleAdd'])
+const emit = defineEmits(['handleAdd', 'handleRemove'])
 
 const showMore = ref(false)
+const check = ref(false)
+
+const handleCheck = () => {
+  check.value = !check.value
+}
 
 const handleAdd = () => {
   emit('handleAdd', props.weapon)
+}
+
+const handleRemove = () => {
+  emit('handleRemove', props.id)
 }
 </script>
 
@@ -26,24 +40,24 @@ const handleAdd = () => {
       class="header"
       @click="showMore = !showMore"
     >
-      <div 
+      <button 
         class="show-more"
         :class="{ rotate: showMore }"
         @click.stop="showMore = !showMore"
       >
         <img src="../assets/show-more-icon.svg" alt="ver mais">
-      </div>
+      </button>
       <div>
         <div class="first-row">
-          <h3 class="title">
+          <h3 class="title" :class="{ 'sheet-title': sheet}">
             {{ weapon.name }}
           </h3>
-          <div class="item-info-category">
+          <div v-if="!sheet" class="item-info-category">
             <h3><b>{{ weapon.proficiencie }}</b> - <i>{{ weapon.type }} - {{ weapon.handling }}</i></h3>
           </div>
         </div>
         <div class="item-info-container">
-          <div class="item-info">
+          <div v-if="!sheet" class="item-info">
             <h3>Categoria: <span>{{ weapon.category }}</span></h3>
           </div>
           <div class="item-info">
@@ -60,14 +74,16 @@ const handleAdd = () => {
               <span v-else>x{{ weapon.criticalMult }}</span>
             </h3>
           </div>
-          <div v-if="weapon.range !== '-'" class="item-info">
-            <h3>Alcance: <span>{{ weapon.range }}</span></h3>
-          </div>
-          <div class="item-info">
-            <h3>Tipo: <span>{{ weapon.damageType }}</span></h3>
-          </div>
-          <div class="item-info">
-            <h3>Espaços: <span>{{ weapon.slots }}</span></h3>
+          <div v-if="!sheet" class="flex-row">
+            <div v-if="weapon.range !== '-'" class="item-info">
+              <h3>Alcance: <span>{{ weapon.range }}</span></h3>
+            </div>
+            <div class="item-info">
+              <h3>Tipo: <span>{{ weapon.damageType }}</span></h3>
+            </div>
+            <div class="item-info">
+              <h3>Espaços: <span>{{ weapon.slots }}</span></h3>
+            </div>
           </div>
         </div>
       </div>
@@ -76,14 +92,45 @@ const handleAdd = () => {
           <img src="../assets/add-icon.svg" alt="adicionar">
         </button>
       </div>
+      <div v-if="sheet" class="button-container">
+        <button 
+          class="checkbox-button"
+          @click.stop="handleCheck"
+        >
+          <img
+            src="../assets/done-icon-primary.svg" 
+            alt="equipar"
+            class="checkbox-img"
+            :class="{ 'checkbox-img-fade': !check }"
+          >
+        </button>
+      </div>
     </div>
     <Transition name="card" mode="out-in">
       <div v-if="showMore">
         <DividerView />
         <div class="content">
+          <div v-if="sheet" class="only-sheet-content-container">
+            <div class="item-info-category-sheet">
+              <h3><b>{{ weapon.proficiencie }}</b> - <i>{{ weapon.type }} - {{ weapon.handling }}</i></h3>
+            </div>
+            <div class="item-info">
+              <h3>Categoria: <span>{{ weapon.category }}</span></h3>
+            </div>
+            <div v-if="weapon.range !== '-'" class="item-info">
+              <h3>Alcance: <span>{{ weapon.range }}</span></h3>
+            </div>
+            <div class="item-info">
+              <h3>Tipo: <span>{{ weapon.damageType }}</span></h3>
+            </div>
+            <div class="item-info">
+              <h3>Espaços: <span>{{ weapon.slots }}</span></h3>
+            </div>
+          </div>
           <div
             v-if="weapon.ammunition"
             class="item-ammunition"
+            :class="{ 'sheet-content': sheet}"
           >
             <h3>{{ weapon.ammunition.name }}</h3>
             <div class="item-info">
@@ -93,7 +140,14 @@ const handleAdd = () => {
               <h3>Espaços: <span>{{ weapon.ammunition.slots }}</span></h3>
             </div>
           </div>
-          <div v-html="weapon.description" />
+          <div :class="{ 'sheet-content': sheet}" v-html="weapon.description" />
+          <button
+            v-if="sheet"
+            class="button-remove card-remove-button"
+            @click.stop="handleRemove"
+          >
+            Remover
+          </button>
         </div>
       </div>
     </Transition>
@@ -157,6 +211,11 @@ const handleAdd = () => {
   font-weight: normal;
   font-size: 11px;
 }
+.item-info-category-sheet h3 {
+  margin: 0;
+  font-weight: normal;
+  font-size: 11px;
+}
 .item-info {
   margin-right: 1rem;
 }
@@ -178,11 +237,51 @@ const handleAdd = () => {
 .item-ammunition {
   display: flex;
   margin-top: 1rem;
-  margin-left: 3rem;
 }
 .item-ammunition h3 {
   margin: 0;
   margin-right: 1rem;
   font-size: 16px;
+}
+.sheet-title {
+  font-size: 14px;
+}
+.sheet-content :deep(p) {
+  font-size: 14px;
+}
+.sheet-content h3 {
+  font-size: 14px;
+}
+.sheet-content h3 span {
+  font-size: 14px;
+}
+.card-remove-button {
+  margin-bottom: .5rem;
+}
+.only-sheet-content-container {
+  margin-top: 1rem;
+}
+.flex-row {
+  display: flex;
+}
+.checkbox-button {
+  background-color: transparent;
+  border: 1px solid var(--color-white);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: .5rem;
+  padding: 0;
+  width: 2rem;
+}
+.checkbox-button:hover {
+  border: 1px solid var(--color-primary);
+}
+.checkbox-img {
+  height: 1.5rem;
+  opacity: 1;
+  transition: opacity 150ms;
+}
+.checkbox-img-fade {
+  opacity: 0;
 }
 </style>

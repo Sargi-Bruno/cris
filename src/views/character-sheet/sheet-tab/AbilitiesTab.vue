@@ -4,7 +4,7 @@ import PowerCard from '../../../components/PowerCard.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleOpenAbilitiesModal'])
+defineEmits(['handleOpenAbilitiesModal', 'handleRemovePower'])
 
 </script>
 
@@ -16,10 +16,18 @@ defineEmits(['handleOpenAbilitiesModal'])
     >
       Adicionar
     </button>
-    <div v-if="character.powers.length > 0">
-      <div v-for="(power, index) in character.powers" :key="index">
+    <div v-if="character.powers.length > 0" class="sheet-cards-container">
+      <div 
+        v-for="power in character.powers" 
+        :key="power.id"
+        class="sheet-card-list"
+      >
         <PowerCard 
+          :id="power.id"
           :power="power"
+          only-show
+          sheet
+          @handle-remove="(id: string) => $emit('handleRemovePower', id)"
         />
       </div>
     </div>
@@ -38,4 +46,10 @@ defineEmits(['handleOpenAbilitiesModal'])
   display: block;
   margin-left: auto;
 } 
+.sheet-cards-container {
+  margin-top: 1rem;
+}
+.sheet-card-list {
+  margin-bottom: .5rem;
+}
 </style>

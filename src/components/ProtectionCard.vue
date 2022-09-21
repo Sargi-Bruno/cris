@@ -8,15 +8,29 @@ const props = defineProps({
     type: Object as PropType<Protection>,
     required: true
   },
-  onlyShow: Boolean
+  id: {
+    type: String,
+    default: ''
+  },
+  onlyShow: Boolean,
+  sheet: Boolean
 })
 
-const emit = defineEmits(['handleAdd'])
+const emit = defineEmits(['handleAdd', 'handleRemove'])
 
 const showMore = ref(false)
+const check = ref(false)
+
+const handleCheck = () => {
+  check.value = !check.value
+}
 
 const handleAdd = () => {
   emit('handleAdd', props.procetion)
+}
+
+const handleRemove = () => {
+  emit('handleRemove', props.id)
 }
 </script>
 
@@ -35,7 +49,7 @@ const handleAdd = () => {
       </button>
       <div>
         <div class="first-row">
-          <h3 class="title">
+          <h3 class="title" :class="{ 'sheet-title': sheet}">
             {{ procetion.name }}
           </h3>
         </div>
@@ -43,11 +57,13 @@ const handleAdd = () => {
           <div class="item-info">
             <h3>Defesa: <span>+{{ procetion.defense }}</span></h3>
           </div>
-          <div class="item-info">
-            <h3>Categoria: <span>{{ procetion.category }}</span></h3>
-          </div>
-          <div class="item-info">
-            <h3>Espaços: <span>{{ procetion.slots }}</span></h3>
+          <div v-if="!sheet" class="flex-row">
+            <div class="item-info">
+              <h3>Categoria: <span>{{ procetion.category }}</span></h3>
+            </div>
+            <div class="item-info">
+              <h3>Espaços: <span>{{ procetion.slots }}</span></h3>
+            </div>
           </div>
         </div>
       </div>
@@ -56,12 +72,40 @@ const handleAdd = () => {
           <img src="../assets/add-icon.svg" alt="adicionar">
         </button>
       </div>
+      <div v-if="sheet" class="button-container">
+        <button 
+          class="checkbox-button"
+          @click.stop="handleCheck"
+        >
+          <img
+            src="../assets/done-icon-primary.svg" 
+            alt="equipar"
+            class="checkbox-img"
+            :class="{ 'checkbox-img-fade': !check }"
+          >
+        </button>
+      </div>
     </div>
     <Transition name="card" mode="out-in">
       <div v-if="showMore">
         <DividerView />
         <div class="content">
-          <div v-html="procetion.description" />
+          <div v-if="sheet" class="only-sheet-content-container">
+            <div class="item-info">
+              <h3>Categoria: <span>{{ procetion.category }}</span></h3>
+            </div>
+            <div class="item-info">
+              <h3>Espaços: <span>{{ procetion.slots }}</span></h3>
+            </div>
+          </div>
+          <div :class="{ 'sheet-content': sheet}" v-html="procetion.description" />
+          <button
+            v-if="sheet"
+            class="button-remove card-remove-button"
+            @click.stop="handleRemove"
+          >
+            Remover
+          </button>
         </div>
       </div>
     </Transition>
@@ -133,5 +177,43 @@ const handleAdd = () => {
   margin-left: 1rem;
   margin-right: 1rem;
   padding-bottom: .1rem;
+}
+.sheet-title {
+  font-size: 14px;
+}
+.sheet-content :deep(p) {
+  font-size: 14px;
+}
+.sheet-content h3 {
+  font-size: 14px;
+}
+.card-remove-button {
+  margin-bottom: .5rem;
+}
+.only-sheet-content-container {
+  margin-top: 1rem;
+}
+.flex-row {
+  display: flex;
+}
+.checkbox-button {
+  background-color: transparent;
+  border: 1px solid var(--color-white);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: .5rem;
+  padding: 0;
+  width: 2rem;
+}
+.checkbox-button:hover {
+  border: 1px solid var(--color-primary);
+}
+.checkbox-img {
+  height: 1.5rem;
+  opacity: 1;
+  transition: opacity 150ms;
+}
+.checkbox-img-fade {
+  opacity: 0;
 }
 </style>

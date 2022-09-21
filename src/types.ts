@@ -1,6 +1,7 @@
 export interface Power {
   name: string,
   description: string,
+  id?: string
 }
 
 export interface Path {
@@ -13,12 +14,14 @@ export interface ParanormalPower {
   name: string,
   description: string,
   element: string,
+  id?: string
 }
 
 export interface Modification {
   name: string,
   description: string,
   itemType: string,
+  id?: string
 }
 
 export interface Curse {
@@ -26,12 +29,14 @@ export interface Curse {
   description: string,
   element: string,
   itemType: string,
+  id?: string
 }
 
 export interface CursedItem {
   name: string,
   description: string,
   element: string,
+  id?: string
 }
 
 export interface Ammunition {
@@ -39,6 +44,7 @@ export interface Ammunition {
   description: string,
   category: string,
   slots: number | string,
+  id?: string
 }
 
 export interface Background {
@@ -46,6 +52,7 @@ export interface Background {
   description: string,
   skills: Array<string>,
   power: Power,
+  id?: string
 }
 
 export interface Class {
@@ -69,6 +76,7 @@ export interface Class {
   powers: Array<Power>,
   paths: Array<Path>,
   table: Array<string>,
+  id?: string
 }
 
 export interface Weapon {
@@ -88,6 +96,8 @@ export interface Weapon {
   ammunition?: Ammunition,
   mods?: Array<Modification>,
   curses?: Array<Curse>,
+  id?: string
+  itemType: string,
 }
 
 export interface Protection {
@@ -98,6 +108,8 @@ export interface Protection {
   slots: number | string,
   mods?: Array<Modification>,
   curses?: Array<Curse>,
+  id?: string
+  itemType: string,
 }
 
 export interface Misc {
@@ -108,6 +120,8 @@ export interface Misc {
   tag: string,
   mods?: Array<Modification>,
   curses?: Array<Curse>,
+  id?: string
+  itemType: string,
 }
 
 export interface Ritual {
@@ -122,6 +136,7 @@ export interface Ritual {
   effect?: string,
   duration?: string,
   save?: string,
+  id?: string
 }
 
 export interface Skill {
@@ -133,6 +148,7 @@ export interface Skill {
   otherBonus: number,
   loadPenalty: boolean,
   onlyTrained: boolean,
+  id?: string
 }
 
 export interface Attack {
@@ -146,6 +162,7 @@ export interface Attack {
   range: string,
   skillUsed: string,
   damageAttribute: string
+  id?: string
 }
 
 export interface Character {
@@ -196,4 +213,5 @@ export interface Character {
     history: string,
     goal: string,
   }
+  id?: string
 }

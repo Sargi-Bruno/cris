@@ -28,31 +28,7 @@ const tabOptions = [
   }
 ]
 
-// const secondaryTabOptions = [
-//   {
-//     label: '1º Círculo',
-//     circle: '1',
-//     value: 0
-//   },
-//   {
-//     label: '2º Círculo',
-//     circle: '2',
-//     value: 1
-//   },
-//   {
-//     label: '3º Círculo',
-//     circle: '3',
-//     value: 2
-//   },
-//   {
-//     label: '4º Círculo',
-//     circle: '4',
-//     value: 3
-//   }
-// ]
-
 const currentTab = ref(0)
-// const currentSecondaryTab = ref(0)
 const searchText = ref('')
 
 const handleAddItem = (item: Weapon | Protection | Misc) => emit('handleAddItem', item)
@@ -95,14 +71,6 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[]>(() => {
           :tab-options="tabOptions"
           @handle-navigation="(value: number) => currentTab = value"
         />
-        <!-- <div class="secondary-tab-container">
-          <TabNav
-            :current-tab="currentSecondaryTab"
-            :tab-options="secondaryTabOptions"
-            secondary
-            @handle-navigation="(value: number) => currentSecondaryTab = value"
-          />
-        </div> -->
         <div
           v-if="currentTab !== 1"
           class="search-container"
@@ -122,19 +90,19 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[]>(() => {
             :key="item.name"
             class="class-abilitie-card"
           >
-            <div v-if="currentTab === 0">
+            <div v-if="item.itemType === 'weapon'">
               <WeaponCard
                 :weapon="(item as Weapon)"
                 @handle-add="handleAddItem"
               />
             </div>
-            <div v-if="currentTab === 1">
+            <div v-if="item.itemType === 'protection'">
               <ProtectionCard
                 :procetion="(item as Protection)"
                 @handle-add="handleAddItem"
               />
             </div>
-            <div v-if="currentTab === 2">
+            <div v-if="item.itemType === 'misc'">
               <MiscCard
                 :misc="(item as Misc)"
                 @handle-add="handleAddItem"

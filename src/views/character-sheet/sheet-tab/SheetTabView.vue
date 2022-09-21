@@ -16,7 +16,9 @@ defineEmits([
   'handleOpenItemsModal', 
   'handleAddAttack', 
   'handleRemoveAttack',
-  'handleAddPower'
+  'handleRemovePower',
+  'handleRemoveRitual',
+  'handleRemoveItem'
 ])
 
 const tabOptions = [
@@ -57,7 +59,10 @@ const handleNavigation = (value: number) => currentTab.value = value
         @handle-open-rituals-modal="$emit('handleOpenRitualsModal')"
         @handle-open-items-modal="$emit('handleOpenItemsModal')"
         @handle-add-attack="$emit('handleAddAttack')"
-        @handle-remove-attack="(position: number) => $emit('handleRemoveAttack', position)"
+        @handle-remove-attack="(id: string) => $emit('handleRemoveAttack', id)"
+        @handle-remove-power="(id: string) => $emit('handleRemovePower', id)"
+        @handle-remove-ritual="(id: string) => $emit('handleRemoveRitual', id)"
+        @handle-remove-item="(id: string) => $emit('handleRemoveItem', id)"
       />
     </KeepAlive>
   </div>

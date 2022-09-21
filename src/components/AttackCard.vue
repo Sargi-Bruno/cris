@@ -9,9 +9,9 @@ defineProps({
     type: Object as PropType<Attack>,
     required: true
   },
-  position: {
-    type: Number,
-    required: true
+  id: {
+    type: String,
+    default: ''
   }
 })
 
@@ -98,14 +98,14 @@ const showMore = ref(false)
               />
             </div>
           </div>
-        </div>
-        <div class="footer">
-          <button 
-            class="button-remove"
-            @click.stop="$emit('handleRemoveAttack', position)"
-          >
-            Remover
-          </button>
+          <div class="footer">
+            <button 
+              class="button-remove"
+              @click.stop="$emit('handleRemoveAttack', id)"
+            >
+              Remover
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -176,11 +176,13 @@ const showMore = ref(false)
 }
 .content {
   margin-top: .5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 .content-row {
   display: flex;
-  justify-content: space-around;
   margin-top: 1.5rem;
+  gap: 3rem;
 }
 .dropdown-container {
   display: flex;
@@ -194,9 +196,6 @@ const showMore = ref(false)
 }
 .footer {
   display: flex;
-  margin-top: 1.5rem;
-}
-.footer button {
-  margin-left: 1rem;
+  margin-top: 1.25rem;
 }
 </style>

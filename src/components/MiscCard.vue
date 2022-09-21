@@ -8,15 +8,24 @@ const props = defineProps({
     type: Object as PropType<Misc>,
     required: true
   },
-  onlyShow: Boolean
+  id: {
+    type: String,
+    default: ''
+  },
+  onlyShow: Boolean,
+  sheet: Boolean
 })
 
-const emit = defineEmits(['handleAdd'])
+const emit = defineEmits(['handleAdd', 'handleRemove'])
 
 const showMore = ref(false)
 
 const handleAdd = () => {
   emit('handleAdd', props.misc)
+}
+
+const handleRemove = () => {
+  emit('handleRemove', props.id)
 }
 </script>
 
@@ -35,10 +44,10 @@ const handleAdd = () => {
       </button>
       <div>
         <div class="first-row">
-          <h3 class="title">
+          <h3 class="title" :class="{ 'sheet-title': sheet}">
             {{ misc.name }}
           </h3>
-          <div class="item-info-category">
+          <div v-if="!sheet" class="item-info-category">
             <h3><i>{{ misc.tag }}</i></h3>
           </div>
         </div>
@@ -61,7 +70,17 @@ const handleAdd = () => {
       <div v-if="showMore">
         <DividerView />
         <div class="content">
-          <div v-html="misc.description" />
+          <div v-if="sheet" class="item-info-category-sheet">
+            <h3><i>{{ misc.tag }}</i></h3>
+          </div>
+          <div :class="{ 'sheet-content': sheet}" v-html="misc.description" />
+          <button
+            v-if="sheet"
+            class="button-remove card-remove-button"
+            @click.stop="handleRemove"
+          >
+            Remover
+          </button>
         </div>
       </div>
     </Transition>
@@ -142,5 +161,25 @@ const handleAdd = () => {
   margin-left: 1rem;
   margin-right: 1rem;
   padding-bottom: .1rem;
+}
+.sheet-title {
+  font-size: 14px;
+}
+.sheet-content :deep(p) {
+  font-size: 14px;
+}
+.sheet-content h3 {
+  font-size: 14px;
+}
+.card-remove-button {
+  margin-bottom: .5rem;
+}
+.item-info-category-sheet {
+  margin-top: 1rem;
+}
+.item-info-category-sheet h3 {
+  margin: 0;
+  font-weight: normal;
+  font-size: 11px;
 }
 </style>

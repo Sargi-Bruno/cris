@@ -36,14 +36,14 @@ defineEmits(['handleAddAttack', 'handleRemoveAttack'])
         </h3>
       </div>
       <div 
-        v-for="(attack, index) in character.attacks" 
-        :key="index"
+        v-for="attack in character.attacks" 
+        :key="attack.id"
         class="align-card"
       >
         <AttackCard 
+          :id="attack.id"
           :attack="attack"
-          :position="index"
-          @handle-remove-attack="(position:number) => $emit('handleRemoveAttack', position)"
+          @handle-remove-attack="(id: string) => $emit('handleRemoveAttack', id)"
         />
       </div>
     </div>

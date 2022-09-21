@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Skill, Power } from '../../types'
+import { ref, watch } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
+import { Skill, Power, Ritual, Weapon, Protection, Misc } from '../../types'
+import ToastNotification from '../../components/ToastNotification.vue'
 import SheetStats from './sheet-stats/SheetStats.vue'
 import SkillsView from './sheet-skills/SkillsView.vue'
 import SheetTabView from './sheet-tab/SheetTabView.vue'
@@ -10,6 +12,13 @@ import AttackModal from './sheet-modals/attack-modal/AttackModal.vue'
 import InventoryModal from './sheet-modals/inventory-modal/InventoryModal.vue'
 import RitualsModal from './sheet-modals/rituals-modal/RitualsModal.vue'
 import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
+
+interface Toast {
+  message: string,
+  type: string,
+  alive: boolean,
+  timeout: number
+}
 
 const modalOptions = [AbilitiesModal, AttackModal, InventoryModal, RitualsModal, SkillModal]
 const modals = {
@@ -21,6 +30,13 @@ const modals = {
 }
 
 const character = ref(characterDefaultValue)
+
+const toast = ref<Toast>({
+  message: '',
+  type: '',
+  alive: false,
+  timeout: 0
+})
 
 const showModal = ref(false)
 const currentModal = ref(0)
@@ -48,16 +64,67 @@ const handleOpenItemsModal = () => {
 }
 
 const handleAddAttack = () => {
-  character.value.attacks.push(attackDefaultValue)
+  const aux = {...attackDefaultValue}
+  aux.id = uuidv4()
+  character.value.attacks.push(aux)
 }
 
-const handleRemoveAttack = (position: number) => {
-  character.value.attacks.splice(position, 1)
+const handleRemoveAttack = (id: string) => {
+  const index = character.value.attacks.findIndex((e) => e.id === id)
+  character.value.attacks.splice(index, 1)
+}
+
+const handleShowInfoToast = (toast: Toast, name: string) => {
+  toast.message = `${name} adicionado`
+  toast.type = 'info'
+  toast.alive = true
 }
 
 const handleAddPower = (power: Power) => {
-  // add toast
-  character.value.powers.push(power)
+  const aux = {...power}
+  aux.id = uuidv4()
+  character.value.powers.push(aux)
+  handleShowInfoToast(toast.value, aux.name)
+}
+
+const handleRemovePower = (id: string) => {
+  const index = character.value.powers.findIndex((e) => e.id === id)
+  character.value.powers.splice(index, 1)
+}
+
+const handleAddRitual = (ritual: Ritual) => {
+  const aux = {...ritual}
+  aux.id = uuidv4()
+  character.value.rituals.push(aux)
+  handleShowInfoToast(toast.value, aux.name)
+}
+
+const handleRemoveRitual = (id: string) => {
+  const index = character.value.rituals.findIndex((e) => e.id === id)
+  character.value.rituals.splice(index, 1)
+}
+
+const handleAddItem = (item: Weapon | Protection | Misc) => {
+  const aux = {...item}
+  aux.id = uuidv4()
+  character.value.inventory.push(aux)
+  handleShowInfoToast(toast.value, aux.name)
+}
+
+const handleRemoveItem = (id: string) => {
+  const index = character.value.inventory.findIndex((e) => e.id === id)
+  character.value.inventory.splice(index, 1)
+}
+
+watch(() => toast.value.alive, () => {
+  if(toast.value.alive === true) {
+    toast.value.timeout = setTimeout(() => toast.value.alive = false, 3000)
+  }
+})
+
+const dismissToast = () => {
+  toast.value.alive = false
+  clearTimeout(toast.value.timeout)
 }
 </script>
 
@@ -82,6 +149,9 @@ const handleAddPower = (power: Power) => {
         @handle-open-items-modal="handleOpenItemsModal"
         @handle-add-attack="handleAddAttack"
         @handle-remove-attack="handleRemoveAttack"
+        @handle-remove-power="handleRemovePower"
+        @handle-remove-ritual="handleRemoveRitual"
+        @handle-remove-item="handleRemoveItem"
       />
     </div>
     <vue-final-modal 
@@ -94,8 +164,18 @@ const handleAddPower = (power: Power) => {
         :skill="currentSkill"
         @handle-close-modal="showModal = false"
         @handle-add-power="handleAddPower"
+        @handle-add-ritual="handleAddRitual"
+        @handle-add-item="handleAddItem"
       />
     </vue-final-modal>
+    <transition name="toast">
+      <ToastNotification
+        v-if="toast.alive"
+        :value="toast.message"
+        :type="toast.type"
+        @dismiss="dismissToast"
+      />
+    </transition>
   </div>
 </template>
 
@@ -112,7 +192,9 @@ const handleAddPower = (power: Power) => {
   align-items: center;
 }
 .sheet-tab {
+  max-width: 31.25rem;
   max-height: 56.25rem;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 </style>

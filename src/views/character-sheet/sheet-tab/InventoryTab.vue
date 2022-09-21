@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { Character } from '../../../types'
-import SheetDropdown from '../../../components/SheetDropdown.vue'
 import { ref } from 'vue'
+import { Character, Weapon, Protection, Misc } from '../../../types'
+import SheetDropdown from '../../../components/SheetDropdown.vue'
+import WeaponCard from '../../../components/WeaponCard.vue'
+import ProtectionCard from '../../../components/ProtectionCard.vue'
+import MiscCard from '../../../components/MiscCard.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleOpenItemsModal'])
+defineEmits(['handleOpenItemsModal', 'handleRemoveItem'])
 
 const patentOptions = ['Recruta', 'Operador', 'Agente especial', 'Oficial de operações', 'Agente de elite']
 const creditOptions = ['Baixo', 'Médio', 'Alto', 'Ilimitado']
@@ -32,7 +35,7 @@ const creditValue = ref('Baixo')
           :value="patentValue"
           button-width="10rem"
           :options="patentOptions"
-          @update-value="(option) => patentValue = option"
+          @update-value="(option: string) => patentValue = option"
         />
       </div>
       <div class="inventory-row">
@@ -68,7 +71,7 @@ const creditValue = ref('Baixo')
           :value="creditValue"
           button-width="6rem"
           :options="creditOptions"
-          @update-value="(option) => creditValue = option"
+          @update-value="(option: string) => creditValue = option"
         />
         <div class="input-container">
           <h4 class="sheet-subtitle">
@@ -91,9 +94,39 @@ const creditValue = ref('Baixo')
     >
       Adicionar
     </button>
-    <div v-if="character.inventory.length > 0">
-      <div v-for="(item, index) in character.inventory" :key="index">
-        <!-- <ItemCard :item="item" /> -->
+    <div v-if="character.inventory.length > 0" class="sheet-cards-container">
+      <div 
+        v-for="item in character.inventory" 
+        :key="item.id"
+        class="sheet-card-list"
+      >
+        <div v-if="item.itemType === 'weapon'">
+          <WeaponCard
+            :id="item.id"
+            :weapon="(item as Weapon)"
+            only-show
+            sheet
+            @handle-remove="$emit('handleRemoveItem', item.id)"
+          />
+        </div>
+        <div v-if="item.itemType === 'protection'">
+          <ProtectionCard
+            :id="item.id"
+            :procetion="(item as Protection)"
+            only-show
+            sheet
+            @handle-remove="$emit('handleRemoveItem', item.id)"
+          />
+        </div>
+        <div v-if="item.itemType === 'misc'">
+          <MiscCard
+            :id="item.id"
+            :misc="(item as Misc)"
+            only-show
+            sheet
+            @handle-remove="$emit('handleRemoveItem', item.id)"
+          />
+        </div>
       </div>
     </div>
     <div v-else class="no-content">
@@ -123,10 +156,10 @@ const creditValue = ref('Baixo')
   align-items: center;
   gap: .5rem
 }
-.patent-dropdown {
-  width: 12rem;
+.sheet-cards-container {
+  margin-top: 1rem;
 }
-.credit-dropdown {
-  width: 8rem;
+.sheet-card-list {
+  margin-bottom: .5rem;
 }
 </style>

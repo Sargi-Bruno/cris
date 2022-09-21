@@ -8,10 +8,15 @@ const props = defineProps({
     type: Object as PropType<Ritual>,
     required: true
   },
-  onlyShow: Boolean
+  id: {
+    type: String,
+    default: ''
+  },
+  onlyShow: Boolean,
+  sheet: Boolean
 })
 
-const emit = defineEmits(['handleAdd'])
+const emit = defineEmits(['handleAdd', 'handleRemove'])
 
 const elementColors = {
   conhecimento: '#ff8c00',
@@ -36,6 +41,10 @@ const currentTextElementColor = computed(() => {
 const handleAdd = () => {
   emit('handleAdd', props.ritual)
 }
+
+const handleRemove = () => {
+  emit('handleRemove', props.id)
+}
 </script>
 
 <template>
@@ -51,7 +60,7 @@ const handleAdd = () => {
       >
         <img src="../assets/show-more-icon.svg" alt="ver mais">
       </button>
-      <h3 class="title">
+      <h3 class="title" :class="{ 'sheet-title': sheet}">
         {{ ritual.name }}
       </h3>
       <div v-if="!onlyShow" class="button-container">
@@ -63,7 +72,7 @@ const handleAdd = () => {
     <Transition name="card" mode="out-in">
       <div v-if="showMore">
         <DividerView />
-        <div class="ritual-info-container">
+        <div class="ritual-info-container" :class="{ 'sheet-content': sheet}">
           <div class="ritual-circle">
             <h3>{{ ritual.element.toUpperCase() }} {{ ritual.circle }}</h3>
           </div>
@@ -105,7 +114,14 @@ const handleAdd = () => {
           </div>
         </div>
         <div class="content">
-          <div v-html="ritual.description" />
+          <div :class="{ 'sheet-content': sheet}" v-html="ritual.description" />
+          <button
+            v-if="sheet"
+            class="button-remove card-remove-button"
+            @click.stop="handleRemove"
+          >
+            Remover
+          </button>
         </div>
       </div>
     </Transition>
@@ -185,5 +201,20 @@ const handleAdd = () => {
   margin-left: 1rem;
   margin-right: 1rem;
   padding-bottom: .1rem;
+}
+.sheet-title {
+  font-size: 14px;
+}
+.sheet-content :deep(p) {
+  font-size: 14px;
+}
+.sheet-content h3 {
+  font-size: 14px;
+}
+.sheet-content h3 span {
+  font-size: 14px;
+}
+.card-remove-button {
+  margin-bottom: .5rem;
 }
 </style>

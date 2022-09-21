@@ -10,8 +10,7 @@ defineProps({
   options: {
     type: Array<string>,
     required: true
-  },
-  up: Boolean
+  }
 })
 
 const emit = defineEmits(['updateValue'])
@@ -38,7 +37,7 @@ const handleUpdateValue = (option: string) => {
       </button>
       <div 
         class="dropdown-content"
-        :class="[{'dropdown-content-active': open}, up ? 'dropdown-position-up' : 'dropdown-position-down']"
+        :class="{'dropdown-content-active': open}"
       >
         <div v-for="(option, i) in options" :key="i">
           <button 

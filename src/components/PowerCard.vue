@@ -8,15 +8,24 @@ const props = defineProps({
     type: Object as PropType<Power>,
     required: true
   },
-  onlyShow: Boolean
+  id: {
+    type: String,
+    default: ''
+  },
+  onlyShow: Boolean,
+  sheet: Boolean
 })
 
-const emit = defineEmits(['handleAdd'])
+const emit = defineEmits(['handleAdd', 'handleRemove'])
 
 const showMore = ref(false)
 
 const handleAdd = () => {
   emit('handleAdd', props.power)
+}
+
+const handleRemove = () => {
+  emit('handleRemove', props.id)
 }
 </script>
 
@@ -33,7 +42,7 @@ const handleAdd = () => {
       >
         <img src="../assets/show-more-icon.svg" alt="ver mais">
       </button>
-      <h3 class="title">
+      <h3 class="title" :class="{ 'sheet-title': sheet}">
         {{ power.name }}
       </h3>
       <div v-if="!onlyShow" class="button-container">
@@ -46,7 +55,14 @@ const handleAdd = () => {
       <div v-if="showMore">
         <DividerView />
         <div class="content">
-          <div v-html="power.description" />
+          <div :class="{ 'sheet-content': sheet}" v-html="power.description" />
+          <button 
+            v-if="sheet"
+            class="button-remove card-remove-button"
+            @click.stop="handleRemove"
+          >
+            Remover
+          </button>
         </div>
       </div>
     </Transition>
@@ -84,6 +100,12 @@ const handleAdd = () => {
   margin-bottom: 0;
   margin-left: .75rem;
 }
+.sheet-title {
+  font-size: 14px;
+}
+.sheet-content :deep(p) {
+  font-size: 14px;
+}
 .button-container {
   margin-left: auto;
 }
@@ -97,5 +119,8 @@ const handleAdd = () => {
   margin-left: 1rem;
   margin-right: 1rem;
   padding-bottom: .1rem;
+}
+.card-remove-button {
+  margin-bottom: .5rem;
 }
 </style>

@@ -6,6 +6,7 @@ const protections: Array<Protection> = [
     defense: 5,
     category: 'I',
     slots: 2,
+    itemType: 'protection',
     description: '<p>Jaqueta de couro pesada ou um colete de kevlar. Essa proteção é tipicamente usada or seguranças e policiais.</p>'
   },
   {
@@ -13,6 +14,7 @@ const protections: Array<Protection> = [
     defense: 10,
     category: 'II',
     slots: 5,
+    itemType: 'protection',
     description: '<p>Equipamento usado por forças especiais da polícia e pelo exército. Consiste de capacete, ombreiras, joelheiras e caneleiras, além de um colete com várias camadas de kevlar. Fornece resistência a balístico, corte, impacto e perfuração 2. No entanto, por ser desconfortável e volumosa, impõe –5 em testes de perícias que sofrem penalidade de carga.</p>'
   },
   {
@@ -20,6 +22,7 @@ const protections: Array<Protection> = [
     defense: 2,
     category: '0',
     slots: 2,
+    itemType: 'protection',
     description: '<p>Um escudo medieval ou moderno, como aqueles usados por tropas de choque. Para efeitos de proficiência, conta como proteção pesada. Precisa ser empunhado em uma mão e fornece Defesa +2.</p>'
   }
 ]
