@@ -6,6 +6,8 @@ import AttributesRoll from './AttributesRoll.vue'
 
 defineProps<{character: Character}>()
 
+defineEmits(['handleChangeAttribute'])
+
 const edit = ref(false)
 </script>
 
@@ -19,6 +21,7 @@ const edit = ref(false)
     </button>
     <AttributesEdit 
       :character="character"
+      @handle-change-attribute="(payload) => $emit('handleChangeAttribute', payload)"
     />
   </div>
   <div v-else>

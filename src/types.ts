@@ -96,8 +96,9 @@ export interface Weapon {
   ammunition?: Ammunition,
   mods?: Array<Modification>,
   curses?: Array<Curse>,
-  id?: string
+  id?: string,
   itemType: string,
+  equipped?: boolean,
 }
 
 export interface Protection {
@@ -108,8 +109,9 @@ export interface Protection {
   slots: number | string,
   mods?: Array<Modification>,
   curses?: Array<Curse>,
-  id?: string
+  id?: string,
   itemType: string,
+  equipped?: boolean,
 }
 
 export interface Misc {
@@ -120,8 +122,9 @@ export interface Misc {
   tag: string,
   mods?: Array<Modification>,
   curses?: Array<Curse>,
-  id?: string
+  id?: string,
   itemType: string,
+  equipped?: boolean,
 }
 
 export interface Ritual {
@@ -148,7 +151,7 @@ export interface Skill {
   otherBonus: number,
   loadPenalty: boolean,
   onlyTrained: boolean,
-  id?: string
+  id?: string,
 }
 
 export interface Attack {
@@ -161,8 +164,9 @@ export interface Attack {
   damageType: string,
   range: string,
   skillUsed: string,
-  damageAttribute: string
-  id?: string
+  damageAttribute: string,
+  id?: string,
+  itemId?: string,
 }
 
 export interface Character {
@@ -185,7 +189,6 @@ export interface Character {
   currentPe: number,
   maxSan: number,
   currentSan: number,
-  defense: number,
   protectionDefense: number,
   bonusDefense: number,
   currentProtection: string,
@@ -215,3 +218,31 @@ export interface Character {
   }
   id?: string
 }
+
+const characterStringKeysList = ['name', 'player'] as const
+
+export type CharacterStringKeys = typeof characterStringKeysList[number]
+
+const characterNumberKeysList = ['movement', 'maxPv', 'currentPv', 'maxPe', 'currentPe', 'maxSan', 'currentSan', 'protectionDefense', 'bonusDefense'] as const
+
+export type CharacterNumberKeys = typeof characterNumberKeysList[number]
+
+const characterDropdownKeysList = ['nex'] as const
+
+export type CharacterDropdownKeys = typeof characterDropdownKeysList[number]
+
+const attrList = ['str', 'dex', 'int', 'con', 'pre'] as const
+
+export type AttrKeys = typeof attrList[number]
+
+const attackStringKeyList = ['name', 'damage', 'extraDamage'] as const
+
+export type AttackStringKeys = typeof attackStringKeyList[number]
+
+const attackNumberKeyList = ['attackBonus', 'criticalRange', 'criticalMult'] as const
+
+export type AttackNumberKeys = typeof attackNumberKeyList[number]
+
+const attackDropdownKeyList = ['damageType', 'range', 'skillUsed', 'damageAttribute'] as const
+
+export type AttackDropdownKeys = typeof attackDropdownKeyList[number]

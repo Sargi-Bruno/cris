@@ -8,9 +8,21 @@ import RitualsTab from './RitualsTab.vue'
 import InventoryTab from './InventoryTab.vue'
 import DescriptionTab from './DescriptionTab.vue'
 
+interface PayloadEvent {
+  e: Event,
+  id: string,
+  key: string,
+}
+
+interface PayloadValue {
+  value: string,
+  id: string,
+  key: string,
+}
+
 defineProps<{character: Character}>()
 
-defineEmits([
+const emit = defineEmits([
   'handleOpenAbilitiesModal', 
   'handleOpenRitualsModal', 
   'handleOpenItemsModal', 
@@ -18,7 +30,11 @@ defineEmits([
   'handleRemoveAttack',
   'handleRemovePower',
   'handleRemoveRitual',
-  'handleRemoveItem'
+  'handleRemoveItem',
+  'handleEquipItem',
+  'handleChangeAttackText', 
+  'handleChangeAttackNumber', 
+  'handleChangeAttackDropdown'
 ])
 
 const tabOptions = [
@@ -40,6 +56,12 @@ const componentOptions = [
 const currentTab = ref(0)
 
 const handleNavigation = (value: number) => currentTab.value = value
+
+const handleChangeAttackText = (payload: PayloadEvent) => emit('handleChangeAttackText', payload)
+
+const handleChangeAttackNumber = (payload: PayloadEvent) => emit('handleChangeAttackNumber', payload)
+
+const handleChangeAttackDropdown = (payload: PayloadValue) => emit('handleChangeAttackDropdown', payload)
 </script>
 
 <template>
@@ -63,6 +85,10 @@ const handleNavigation = (value: number) => currentTab.value = value
         @handle-remove-power="(id: string) => $emit('handleRemovePower', id)"
         @handle-remove-ritual="(id: string) => $emit('handleRemoveRitual', id)"
         @handle-remove-item="(id: string) => $emit('handleRemoveItem', id)"
+        @handle-equip-item="(id: string) => $emit('handleEquipItem', id)"
+        @handle-change-attack-text="handleChangeAttackText"
+        @handle-change-attack-number="handleChangeAttackNumber"
+        @handle-change-attack-dropdown="handleChangeAttackDropdown"
       />
     </KeepAlive>
   </div>

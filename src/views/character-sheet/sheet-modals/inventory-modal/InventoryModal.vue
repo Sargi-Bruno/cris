@@ -98,7 +98,7 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[]>(() => {
             </div>
             <div v-if="item.itemType === 'protection'">
               <ProtectionCard
-                :procetion="(item as Protection)"
+                :protection="(item as Protection)"
                 @handle-add="handleAddItem"
               />
             </div>

@@ -8,7 +8,7 @@ import MiscCard from '../../../components/MiscCard.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleOpenItemsModal', 'handleRemoveItem'])
+defineEmits(['handleOpenItemsModal', 'handleRemoveItem', 'handleEquipItem'])
 
 const patentOptions = ['Recruta', 'Operador', 'Agente especial', 'Oficial de operações', 'Agente de elite']
 const creditOptions = ['Baixo', 'Médio', 'Alto', 'Ilimitado']
@@ -106,16 +106,18 @@ const creditValue = ref('Baixo')
             :weapon="(item as Weapon)"
             only-show
             sheet
-            @handle-remove="$emit('handleRemoveItem', item.id)"
+            @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+            @handle-equip="(id: string) => $emit('handleEquipItem', id)"
           />
         </div>
         <div v-if="item.itemType === 'protection'">
           <ProtectionCard
             :id="item.id"
-            :procetion="(item as Protection)"
+            :protection="(item as Protection)"
             only-show
             sheet
-            @handle-remove="$emit('handleRemoveItem', item.id)"
+            @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+            @handle-equip="(id: string) => $emit('handleEquipItem', id)"
           />
         </div>
         <div v-if="item.itemType === 'misc'">
@@ -124,7 +126,7 @@ const creditValue = ref('Baixo')
             :misc="(item as Misc)"
             only-show
             sheet
-            @handle-remove="$emit('handleRemoveItem', item.id)"
+            @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
           />
         </div>
       </div>

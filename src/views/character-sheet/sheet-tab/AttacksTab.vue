@@ -4,7 +4,7 @@ import AttackCard from '../../../components/AttackCard.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleAddAttack', 'handleRemoveAttack'])
+defineEmits(['handleAddAttack', 'handleRemoveAttack', 'handleChangeAttackText', 'handleChangeAttackNumber', 'handleChangeAttackDropdown'])
 </script>
   
 <template>
@@ -44,6 +44,9 @@ defineEmits(['handleAddAttack', 'handleRemoveAttack'])
           :id="attack.id"
           :attack="attack"
           @handle-remove-attack="(id: string) => $emit('handleRemoveAttack', id)"
+          @handle-change-attack-text="payload => $emit('handleChangeAttackText', payload)"
+          @handle-change-attack-number="payload => $emit('handleChangeAttackNumber', payload)"
+          @handle-change-attack-dropdown="payload => $emit('handleChangeAttackDropdown', payload)"
         />
       </div>
     </div>

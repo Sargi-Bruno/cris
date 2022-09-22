@@ -18,7 +18,8 @@ defineProps({
   options: {
     type: Array<string>,
     required: true
-  }
+  },
+  bold: Boolean
 })
 
 const emit = defineEmits(['updateValue'])
@@ -42,6 +43,7 @@ const handleUpdateValue = (option: string) => {
     <div class="dropdown-button-container">
       <button
         class="dropdown-button"
+        :class="{ 'bold': bold }"
         @click="open = !open"
       >
         {{ value }}
@@ -53,6 +55,7 @@ const handleUpdateValue = (option: string) => {
         <div v-for="(option, i) in options" :key="i">
           <button 
             class="dropdown-content-button"
+            :class="{ 'bold': bold }"
             @click="handleUpdateValue(option)"
           >
             {{ option }}
@@ -85,6 +88,9 @@ const handleUpdateValue = (option: string) => {
   font-size: 14px;
   margin: 0;
   color: var(--color-white);
+}
+.bold {
+  font-weight: bold;
 }
 .dropdown-button:hover {
   color: var(--color-primary);

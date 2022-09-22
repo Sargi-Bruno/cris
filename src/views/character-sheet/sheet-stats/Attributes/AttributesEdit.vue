@@ -3,15 +3,7 @@ import { Character } from '../../../../types'
 
 defineProps<{character: Character}>()
 
-const emit = defineEmits(['handleChangeAttribute'])
-
-const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con' | 'pre') => {
-  const payload = {
-    value: (e.target as HTMLInputElement).valueAsNumber,
-    attribute
-  }
-  emit('handleChangeAttribute', payload)
-}
+defineEmits(['handleChangeAttribute'])
 </script>
 
 <template>
@@ -22,31 +14,31 @@ const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con
         type="number" 
         class="input str"
         :value="character.attributes.str"
-        @blur="e => handleChangeAttribute(e, 'str')"
+        @blur="e => $emit('handleChangeAttribute', { e, attr: 'str' })"
       >
       <input 
         type="number" 
         class="input dex" 
         :value="character.attributes.dex"
-        @blur="e => handleChangeAttribute(e, 'dex')"
+        @blur="e => $emit('handleChangeAttribute', { e, attr: 'dex' })"
       >
       <input 
         type="number" 
         class="input int" 
         :value="character.attributes.int"
-        @blur="e => handleChangeAttribute(e, 'int')"
+        @blur="e => $emit('handleChangeAttribute', { e, attr: 'int' })"
       >
       <input 
         type="number" 
         class="input con" 
         :value="character.attributes.con"
-        @blur="e => handleChangeAttribute(e, 'con')"
+        @blur="e => $emit('handleChangeAttribute', { e, attr: 'con' })"
       >
       <input 
         type="number" 
         class="input pre" 
         :value="character.attributes.pre"
-        @blur="e => handleChangeAttribute(e, 'pre')"
+        @blur="e => $emit('handleChangeAttribute', { e, attr: 'pre' })"
       >
     </div>
   </div>
@@ -74,10 +66,6 @@ const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con
   border-left: none;
   border-right: none;
   border-bottom: 1px solid var(--color-white);
-}
-.input:hover {
-  color: var(--color-primary);
-  border-bottom: 1px solid var(--color-primary);
 }
 .str {
   position: absolute;

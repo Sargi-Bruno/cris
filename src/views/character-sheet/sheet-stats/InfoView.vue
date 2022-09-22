@@ -1,12 +1,50 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { Character } from '../../../types'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
 
-defineProps<{character: Character}>()
+const props = defineProps<{character: Character}>()
+
+defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeCharDropdown', 'handleChangeMovementInSquares'])
 
 const nexOptions = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%']
-const nexValue = ref('5%')
+const nexList = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%'] as const
+type NexKeys = typeof nexList[number]
+const peOptions = {
+  '5%': '1',
+  '10%': '2',
+  '15%': '3',
+  '20%': '4',
+  '25%': '5',
+  '30%': '6',
+  '35%': '7',
+  '40%': '8',
+  '45%': '9',
+  '50%': '10',
+  '55%': '11',
+  '60%': '12',
+  '65%': '13',
+  '70%': '14',
+  '75%': '15',
+  '80%': '16',
+  '85%': '17',
+  '90%': '18',
+  '95%': '19',
+  '99%': '20',
+}
+
+const pe = computed(() => {
+  return peOptions[props.character.nex as NexKeys]
+})
+
+const movementInSquares = computed(() => {
+  if(props.character.movement === 0) return 0
+  return props.character.movement/1.5
+})
+
+const defense = computed(() => {
+  return 10 + props.character.attributes.dex + props.character.protectionDefense + props.character.bonusDefense
+})
 </script>
 
 <template>
@@ -31,13 +69,14 @@ const nexValue = ref('5%')
       <div class="nex-container">
         <SheetDropdown
           title="NEX"
-          :value="nexValue"
+          :value="character.nex"
           :options="nexOptions"
-          @update-value="(option) => nexValue = option"
+          bold
+          @update-value="(option: string) => $emit('handleChangeCharDropdown', { value: option, key: 'nex' })"
         />
         <div class="pe-container">
           <div class="pe">
-            <h3>1</h3>
+            <h3>{{ pe }}</h3>
           </div>
           <h4>PE / RODADA</h4>
         </div>
@@ -45,9 +84,19 @@ const nexValue = ref('5%')
       <div class="desl-container">
         <h3>DESL</h3>
         <div class="desl-input-container">
-          <input class="sheet-input" type="number">
+          <input 
+            class="sheet-input" 
+            type="number"
+            :value="character.movement"
+            @blur="e => $emit('handleChangeCharNumber', {e, key: 'movement'})"
+          >
           <h4>m /</h4>
-          <input class="sheet-input" type="number">
+          <input 
+            class="sheet-input" 
+            type="number"
+            :value="movementInSquares"
+            @blur="e => $emit('handleChangeMovementInSquares', e)"
+          >
           <h4>q</h4>
         </div>
       </div>
@@ -55,7 +104,12 @@ const nexValue = ref('5%')
     <div class="info-row">
       <div class="info-block-container">
         <div class="info-block-header">
-          <input class="sheet-input-size sheet-input" type="number">
+          <input 
+            class="sheet-input-size sheet-input" 
+            type="number"
+            :value="character.maxPv"
+            @blur="e => $emit('handleChangeCharNumber', {e, key: 'maxPv'})"
+          >
           <h3>PV</h3>
           <h4>PONTOS DE VIDA</h4>
         </div>
@@ -65,13 +119,20 @@ const nexValue = ref('5%')
             <input 
               class="sheet-input" 
               type="number"
+              :value="character.currentPv"
+              @blur="e => $emit('handleChangeCharNumber', {e, key: 'currentPv'})"
             >
           </div>
         </div>
       </div>
       <div class="info-block-container second">
         <div class="info-block-header">
-          <input class="sheet-input-size sheet-input" type="number">
+          <input 
+            class="sheet-input-size sheet-input" 
+            type="number"
+            :value="character.maxPe"
+            @blur="e => $emit('handleChangeCharNumber', {e, key: 'maxPe'})"
+          >
           <h3>PE</h3>
           <div class="second-subtitle">
             <h4>PONTOS DE ESFORÇO</h4>
@@ -80,7 +141,12 @@ const nexValue = ref('5%')
         <div>
           <div class="info-block-content">
             <h4>Atuais</h4>
-            <input class="sheet-input" type="number">
+            <input 
+              class="sheet-input" 
+              type="number"
+              :value="character.currentPe"
+              @blur="e => $emit('handleChangeCharNumber', {e, key: 'currentPe'})"
+            >
           </div>
         </div>
       </div>
@@ -90,7 +156,7 @@ const nexValue = ref('5%')
         <div class="defense-img-container">
           <img class="defense-img" src="../../../assets/shield-icon.png" alt="defense">
           <div class="defense-value">
-            <h3>10</h3>
+            <h3>{{ defense }}</h3>
           </div>
         </div>
         <div class="defense-content">
@@ -99,21 +165,36 @@ const nexValue = ref('5%')
             <h4>= 10 + AGI + </h4>
           </div>
           <div class="defense-input">
-            <input class="sheet-input" type="number">
+            <input 
+              class="sheet-input" 
+              type="number"
+              :value="character.protectionDefense"
+              @blur="e => $emit('handleChangeCharNumber', {e, key: 'protectionDefense'})"
+            >
             <h5>Equip.</h5>
           </div>
           <h4 class="defense-plus">
             +
           </h4>
           <div class="defense-input">
-            <input class="sheet-input" type="number">
+            <input 
+              class="sheet-input" 
+              type="number"
+              :value="character.bonusDefense"
+              @blur="e => $emit('handleChangeCharNumber', {e, key: 'bonusDefense'})"
+            >
             <h5>Outros.</h5>
           </div>
         </div>
       </div>
       <div class="info-block-container second">
         <div class="info-block-header">
-          <input class="sheet-input-size sheet-input" type="number">
+          <input 
+            class="sheet-input-size sheet-input" 
+            type="number"
+            :value="character.maxSan"
+            @blur="e => $emit('handleChangeCharNumber', {e, key: 'maxSan'})"
+          >
           <div>
             <h3>SAN</h3>
             <h4>SANIDADE</h4>
@@ -122,18 +203,33 @@ const nexValue = ref('5%')
         <div>
           <div class="info-block-content">
             <h4>Atuais</h4>
-            <input class="sheet-input" type="number">
+            <input 
+              class="sheet-input" 
+              type="number"
+              :value="character.currentSan"
+              @blur="e => $emit('handleChangeCharNumber', {e, key: 'currentSan'})"
+            >
           </div>
         </div>
       </div>
     </div>
     <div class="info-line">
       <h3>PROTEÇÃO</h3>
-      <input class="sheet-input" type="text">
+      <input 
+        class="sheet-input" 
+        type="text"
+        :value="character.currentProtection"
+        @blur="e => $emit('handleChangeCharText', {e, key: 'currentProtection'})"
+      >
     </div>
     <div class="info-line">
       <h3>RESISTÊNCIAS</h3>
-      <input class="sheet-input" type="text">
+      <input 
+        class="sheet-input" 
+        type="text"
+        :value="character.resistances"
+        @blur="e => $emit('handleChangeCharText', {e, key: 'resistances'})"
+      >
     </div>
   </div>
 </template>

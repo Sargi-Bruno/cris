@@ -4,7 +4,7 @@ import { Protection } from '../types'
 import DividerView from './DividerView.vue'
 
 const props = defineProps({
-  procetion: {
+  protection: {
     type: Object as PropType<Protection>,
     required: true
   },
@@ -16,21 +16,20 @@ const props = defineProps({
   sheet: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEquip'])
 
 const showMore = ref(false)
-const check = ref(false)
-
-const handleCheck = () => {
-  check.value = !check.value
-}
 
 const handleAdd = () => {
-  emit('handleAdd', props.procetion)
+  emit('handleAdd', props.protection)
 }
 
 const handleRemove = () => {
   emit('handleRemove', props.id)
+}
+
+const handleEquip = () => {
+  emit('handleEquip', props.id)
 }
 </script>
 
@@ -50,19 +49,19 @@ const handleRemove = () => {
       <div>
         <div class="first-row">
           <h3 class="title" :class="{ 'sheet-title': sheet}">
-            {{ procetion.name }}
+            {{ protection.name }}
           </h3>
         </div>
         <div class="item-info-container">
           <div class="item-info">
-            <h3>Defesa: <span>+{{ procetion.defense }}</span></h3>
+            <h3>Defesa: <span>+{{ protection.defense }}</span></h3>
           </div>
           <div v-if="!sheet" class="flex-row">
             <div class="item-info">
-              <h3>Categoria: <span>{{ procetion.category }}</span></h3>
+              <h3>Categoria: <span>{{ protection.category }}</span></h3>
             </div>
             <div class="item-info">
-              <h3>Espaços: <span>{{ procetion.slots }}</span></h3>
+              <h3>Espaços: <span>{{ protection.slots }}</span></h3>
             </div>
           </div>
         </div>
@@ -75,13 +74,13 @@ const handleRemove = () => {
       <div v-if="sheet" class="button-container">
         <button 
           class="checkbox-button"
-          @click.stop="handleCheck"
+          @click.stop="handleEquip"
         >
           <img
             src="../assets/done-icon-primary.svg" 
             alt="equipar"
             class="checkbox-img"
-            :class="{ 'checkbox-img-fade': !check }"
+            :class="{ 'checkbox-img-fade': !protection.equipped }"
           >
         </button>
       </div>
@@ -92,13 +91,13 @@ const handleRemove = () => {
         <div class="content">
           <div v-if="sheet" class="only-sheet-content-container">
             <div class="item-info">
-              <h3>Categoria: <span>{{ procetion.category }}</span></h3>
+              <h3>Categoria: <span>{{ protection.category }}</span></h3>
             </div>
             <div class="item-info">
-              <h3>Espaços: <span>{{ procetion.slots }}</span></h3>
+              <h3>Espaços: <span>{{ protection.slots }}</span></h3>
             </div>
           </div>
-          <div :class="{ 'sheet-content': sheet}" v-html="procetion.description" />
+          <div :class="{ 'sheet-content': sheet}" v-html="protection.description" />
           <button
             v-if="sheet"
             class="button-remove card-remove-button"

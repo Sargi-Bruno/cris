@@ -1,5 +1,6 @@
-import { Character, Attack } from "../../types"
+import { Character, Attack, Weapon, Protection } from "../../types"
 import Skills from "../../data/skills"
+import { v4 as uuidv4 } from 'uuid'
 
 export const characterDefaultValue: Character = {
   name: 'Adam',
@@ -21,7 +22,6 @@ export const characterDefaultValue: Character = {
   currentPe: 0,
   maxSan: 0,
   currentSan: 0,
-  defense: 10,
   protectionDefense: 0,
   bonusDefense: 0,
   currentProtection: '',
@@ -62,4 +62,51 @@ export const attackDefaultValue: Attack = {
   range: '',
   skillUsed: 'Luta',
   damageAttribute: 'Força'
+}
+
+export const equipItem = (character: Character, index: number) => {
+  if(character.inventory[index].itemType === 'weapon') {
+    const weapon = (character.inventory[index] as Weapon)
+    const newAttack = {...attackDefaultValue}
+    newAttack.id = uuidv4()
+    newAttack.itemId = weapon.id
+    newAttack.name = weapon.name
+    newAttack.damage = weapon.damage
+    newAttack.criticalRange = weapon.criticalRange
+    newAttack.criticalMult = weapon.criticalMult
+    newAttack.damageType = weapon.damageType
+    newAttack.range = weapon.range
+
+    if(weapon.type !== 'Corpo a Corpo') {
+      newAttack.skillUsed = 'Pontaria'
+      newAttack.damageAttribute = 'Nenhum'
+    }
+
+    character.attacks.push(newAttack)
+  }
+
+  if(character.inventory[index].itemType === 'protection') {
+    const protection = (character.inventory[index] as Protection)
+
+    character.protectionDefense += protection.defense
+
+    if(character.currentProtection === '') character.currentProtection += protection.name
+    else character.currentProtection += ` ${protection.name}`
+  }
+}
+
+export const unequipItem = (character: Character, index: number) => {
+  if(character.inventory[index].itemType === 'weapon') {
+    const weapon = (character.inventory[index] as Weapon)
+    const attackIndex = character.attacks.findIndex((ele) => ele.itemId === weapon.id)
+    character.attacks.splice(attackIndex, 1)
+  }
+
+  if(character.inventory[index].itemType === 'protection') {
+    const protection = (character.inventory[index] as Protection)
+
+    character.protectionDefense -= protection.defense
+    character.currentProtection = character.currentProtection.replace(protection.name, '')
+    character.currentProtection = character.currentProtection.trim()
+  }
 }

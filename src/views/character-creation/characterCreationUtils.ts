@@ -1,4 +1,4 @@
-import { Character, Background, Class } from "../../types"
+import { Character, Background, Class, AttrKeys } from "../../types"
 import Skills from "../../data/skills"
 
 export const characterDefaultValue: Character = {
@@ -21,7 +21,6 @@ export const characterDefaultValue: Character = {
   currentPe: 0,
   maxSan: 0,
   currentSan: 0,
-  defense: 10,
   protectionDefense: 0,
   bonusDefense: 0,
   currentProtection: '',
@@ -51,7 +50,7 @@ export const characterDefaultValue: Character = {
   }
 }
 
-export const changeAttribute = (character: Character, payload: { value: number, attribute: 'str' | 'dex' | 'int' | 'con' | 'pre' }) => {
+export const changeAttribute = (character: Character, payload: { value: number, attribute: AttrKeys }) => {
   if(payload.value > 3) payload.value = 3
 
   if(payload.value < 0) payload.value = 0

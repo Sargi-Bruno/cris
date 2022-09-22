@@ -16,14 +16,9 @@ const props = defineProps({
   sheet: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEquip'])
 
 const showMore = ref(false)
-const check = ref(false)
-
-const handleCheck = () => {
-  check.value = !check.value
-}
 
 const handleAdd = () => {
   emit('handleAdd', props.weapon)
@@ -31,6 +26,10 @@ const handleAdd = () => {
 
 const handleRemove = () => {
   emit('handleRemove', props.id)
+}
+
+const handleEquip = () => {
+  emit('handleEquip', props.id)
 }
 </script>
 
@@ -95,13 +94,13 @@ const handleRemove = () => {
       <div v-if="sheet" class="button-container">
         <button 
           class="checkbox-button"
-          @click.stop="handleCheck"
+          @click.stop="handleEquip"
         >
           <img
             src="../assets/done-icon-primary.svg" 
             alt="equipar"
             class="checkbox-img"
-            :class="{ 'checkbox-img-fade': !check }"
+            :class="{ 'checkbox-img-fade': !weapon.equipped }"
           >
         </button>
       </div>

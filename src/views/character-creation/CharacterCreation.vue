@@ -7,7 +7,7 @@ import ChooseBackground from './ChooseBackground/ChooseBackground.vue'
 import ChooseClass from './ChooseClass/ChooseClass.vue'
 import ChooseDescription from './ChooseDescription/ChooseDescription.vue'
 import ToastNotification from '../../components/ToastNotification.vue'
-import { Character, Background, Class } from '../../types'
+import { Character, Background, Class, AttrKeys } from '../../types'
 import { 
   characterDefaultValue,
   changeAttribute,
@@ -41,7 +41,7 @@ const toastTimeout = ref<number>()
 
 const handleNavigation = (value: number) => currentStep.value = value
 
-const handleChangeAttribute = (payload: { value: number, attribute: 'str' | 'dex' | 'int' | 'con' | 'pre' }) => {
+const handleChangeAttribute = (payload: { value: number, attribute: AttrKeys}) => {
   changeAttribute(character.value, payload)
 }
 

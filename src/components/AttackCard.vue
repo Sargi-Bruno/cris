@@ -15,17 +15,12 @@ defineProps({
   }
 })
 
-defineEmits(['handleRemoveAttack'])
+defineEmits(['handleRemoveAttack', 'handleChangeAttackText', 'handleChangeAttackNumber', 'handleChangeAttackDropdown'])
 
 const damageTypeOptions = ['-', 'Balístico', 'Corte', 'Fogo', 'Impacto', 'Perfuração']
 const rangeOptions = ['-', 'Curto', 'Médio', 'Longo']
 const skillUsedOptions = ['Luta', 'Pontaria']
-const damageAttrOptions = ['Agilidate', 'Força', 'Intelecto', 'Presença', 'Vigor']
-
-const damageTypeValue = ref('-')
-const rangeValue = ref('-')
-const skillUsedValue = ref('Luta')
-const damageAttrValue = ref('Força')
+const damageAttrOptions = ['Nenhum', 'Agilidate', 'Força', 'Intelecto', 'Presença', 'Vigor']
 
 
 const showMore = ref(false)
@@ -39,18 +34,49 @@ const showMore = ref(false)
       <button class="button-primary roll-button">
         <img src="../assets/d20-icon.png" alt="rolar">
       </button>
-      <!-- Name -->
-      <input type="text" class="attack-input name" autocomplete="nope"> 
-      <!-- Attack bonus -->
-      <input type="number" class="attack-input number" autocomplete="nope">
-      <!-- Damage -->
-      <input type="text" class="attack-input text" autocomplete="nope">
-      <!-- Extra Damage -->
-      <input type="text" class="attack-input text" autocomplete="nope"> 
-      <!-- Critical -->
-      <input type="number" class="attack-input crit" autocomplete="nope"> 
+      <input 
+        type="text" 
+        class="attack-input name" 
+        autocomplete="nope"
+        :value="attack.name"
+        @blur="e => $emit('handleChangeAttackText', {e, id, key: 'name'})"
+      >
+      <input 
+        type="number" 
+        class="attack-input number" 
+        autocomplete="nope"
+        :value="attack.attackBonus"
+        @blur="e => $emit('handleChangeAttackNumber', {e, id, key: 'attackBonus'})"
+      >
+      <input 
+        type="text" 
+        class="attack-input text" 
+        autocomplete="nope"
+        :value="attack.damage"
+        @blur="e => $emit('handleChangeAttackText', {e, id, key: 'damage'})"
+      >
+      <input 
+        type="text" 
+        class="attack-input text" 
+        autocomplete="nope"
+        :value="attack.extraDamage"
+        @blur="e => $emit('handleChangeAttackText', {e, id, key: 'extraDamage'})"
+      > 
+      <input 
+        type="number" 
+        class="attack-input crit" 
+        autocomplete="nope"
+        :value="attack.criticalRange"
+        @blur="e => $emit('handleChangeAttackNumber', {e, id, key: 'criticalRange'})"
+      > 
       <span class="crit-span">/x</span>
-      <input type="number" class="attack-input crit-mult" autocomplete="nope"> 
+      <input 
+        type="number" 
+        class="attack-input crit-mult" 
+        autocomplete="nope"
+        :value="attack.criticalMult"
+        @blur="e => $emit('handleChangeAttackNumber', {e, id, key: 'criticalMult'})"
+      > 
       <button
         class="show-more"
         @click="showMore = !showMore"
@@ -66,17 +92,17 @@ const showMore = ref(false)
             <div class="dropdown-container">
               <h3>TIPO DE DANO</h3>
               <AttackDropdown
-                :value="damageTypeValue"
+                :value="attack.damageType"
                 :options="damageTypeOptions"
-                @update-value="value => damageTypeValue = value"
+                @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'damageType'})"
               />
             </div>
             <div class="dropdown-container">
               <h3>ALCANCE</h3>
               <AttackDropdown
-                :value="rangeValue"
+                :value="attack.range"
                 :options="rangeOptions"
-                @update-value="value => rangeValue = value"
+                @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'range'})"
               />
             </div>
           </div>
@@ -84,17 +110,17 @@ const showMore = ref(false)
             <div class="dropdown-container">
               <h3>PERÍCIA</h3>
               <AttackDropdown
-                :value="skillUsedValue"
+                :value="attack.skillUsed"
                 :options="skillUsedOptions"
-                @update-value="value => skillUsedValue = value"
+                @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'skillUsed'})"
               />
             </div>
             <div class="dropdown-container">
               <h3>ATRIBUTO</h3>
               <AttackDropdown
-                :value="damageAttrValue"
+                :value="attack.damageAttribute"
                 :options="damageAttrOptions"
-                @update-value="value => damageAttrValue = value"
+                @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'damageAttribute'})"
               />
             </div>
           </div>

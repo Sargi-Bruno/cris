@@ -4,6 +4,8 @@ import InfoView from './InfoView.vue'
 import AttributesView from './Attributes/AttributesView.vue'
 
 defineProps<{character: Character}>()
+
+defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeAttribute', 'handleChangeCharDropdown', 'handleChangeMovementInSquares'])
 </script>
 
 <template>
@@ -16,6 +18,7 @@ defineProps<{character: Character}>()
           placeholder="Nome do personagem"
           autocomplete="nope"
           :value="character.name"
+          @blur="e => $emit('handleChangeCharText', {e, key: 'name'})"
         >
         <h3>PERSONAGEM</h3>
       </div>
@@ -26,6 +29,7 @@ defineProps<{character: Character}>()
           placeholder="Nome do jogador"
           autocomplete="nope"
           :value="character.player"
+          @blur="e => $emit('handleChangeCharText', {e, key: 'player'})"
         >
         <h3>JOGADOR</h3>
       </div>
@@ -33,11 +37,16 @@ defineProps<{character: Character}>()
     <div class="char-attr">
       <AttributesView 
         :character="character"
+        @handle-change-attribute="(payload) => $emit('handleChangeAttribute', payload)"
       />
     </div>
     <div class="char-info">
       <InfoView
         :character="character"
+        @handle-change-char-text="payload => $emit('handleChangeCharText', payload)"
+        @handle-change-char-number="payload => $emit('handleChangeCharNumber', payload)"
+        @handle-change-char-dropdown="payload => $emit('handleChangeCharDropdown', payload)"
+        @handle-change-movement-in-squares="e => $emit('handleChangeMovementInSquares', e)"
       />
     </div>
   </div>
