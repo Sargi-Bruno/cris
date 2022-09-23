@@ -34,7 +34,11 @@ const emit = defineEmits([
   'handleEquipItem',
   'handleChangeAttackText', 
   'handleChangeAttackNumber', 
-  'handleChangeAttackDropdown'
+  'handleChangeAttackDropdown',
+  'handleChangeDescription',
+  'handleChangeInventoryNumber',
+  'handleChangeItemsLimit', 
+  'handleChangeInventoryDropdown'
 ])
 
 const tabOptions = [
@@ -62,6 +66,14 @@ const handleChangeAttackText = (payload: PayloadEvent) => emit('handleChangeAtta
 const handleChangeAttackNumber = (payload: PayloadEvent) => emit('handleChangeAttackNumber', payload)
 
 const handleChangeAttackDropdown = (payload: PayloadValue) => emit('handleChangeAttackDropdown', payload)
+
+const handleChangeDescription = (payload: {value: string, key: string}) => emit('handleChangeDescription', payload)
+
+const handleChangeInventoryNumber = (payload: {value: number, key: string}) => emit('handleChangeInventoryNumber', payload)
+
+const handleChangeItemsLimit  = (payload: {value: number, key: string}) => emit('handleChangeItemsLimit', payload)
+
+const handleChangeInventoryDropdown = (payload: {value: string, key: string}) => emit('handleChangeInventoryDropdown', payload)
 </script>
 
 <template>
@@ -89,6 +101,10 @@ const handleChangeAttackDropdown = (payload: PayloadValue) => emit('handleChange
         @handle-change-attack-text="handleChangeAttackText"
         @handle-change-attack-number="handleChangeAttackNumber"
         @handle-change-attack-dropdown="handleChangeAttackDropdown"
+        @handle-change-description="handleChangeDescription"
+        @handle-change-inventory-number="handleChangeInventoryNumber"
+        @handle-change-items-limit="handleChangeItemsLimit"
+        @handle-change-inventory-dropdown="handleChangeInventoryDropdown"
       />
     </KeepAlive>
   </div>

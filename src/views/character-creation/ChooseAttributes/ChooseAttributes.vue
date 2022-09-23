@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { getCurrentInstance } from 'vue'
 import { Character } from '../../../types'
 
 defineProps<{character: Character}>()
 
 const emit = defineEmits(['handleChangeAttribute'])
+
+const instance = getCurrentInstance()
 
 const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con' | 'pre') => {
   const payload = {
@@ -11,6 +14,7 @@ const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con
     attribute
   }
   emit('handleChangeAttribute', payload)
+  instance?.proxy?.$forceUpdate()
 }
 </script>
 
@@ -81,7 +85,11 @@ const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con
   position: relative;
 }
 .att-image {
-  pointer-events: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 .input {
   text-align: center;
@@ -93,10 +101,6 @@ const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con
   border-left: none;
   border-right: none;
   border-bottom: 1px solid var(--color-white);
-}
-.input:hover {
-  color: var(--color-primary);
-  border-bottom: 1px solid var(--color-primary);
 }
 .input:focus {
   outline: none;

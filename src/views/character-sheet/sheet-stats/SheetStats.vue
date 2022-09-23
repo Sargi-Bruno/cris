@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import { Character } from '../../../types'
+import { Character, AttrKeys } from '../../../types'
 import InfoView from './InfoView.vue'
 import AttributesView from './Attributes/AttributesView.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeAttribute', 'handleChangeCharDropdown', 'handleChangeMovementInSquares'])
+const emit = defineEmits([
+  'handleChangeCharText', 
+  'handleChangeCharNumber', 
+  'handleChangeAttribute', 
+  'handleChangeCharDropdown', 
+  'handleChangeMovementInSquares', 
+  'handleRollAttribute'
+])
+
+const handleRollAttribute = (attr: AttrKeys) => {
+  emit('handleRollAttribute', attr)
+}
 </script>
 
 <template>
@@ -38,6 +49,7 @@ defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeAttr
       <AttributesView 
         :character="character"
         @handle-change-attribute="(payload) => $emit('handleChangeAttribute', payload)"
+        @handle-roll-attribute="handleRollAttribute"
       />
     </div>
     <div class="char-info">

@@ -17,10 +17,12 @@ defineEmits(['dismiss'])
 const greenColor = '#5cb85c'
 const blueColor = '#5bc0de'
 const redColor = '#d9534f'
+const grayColor = '#1F1F1F'
 
 const toastColor = computed(() => {
   if(props.type === 'success') return greenColor
   if(props.type === 'error') return redColor
+  if(props.type === 'dice') return grayColor
   return blueColor
 })
 </script>

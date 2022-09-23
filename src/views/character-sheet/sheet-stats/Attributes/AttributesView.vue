@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Character } from '../../../../types'
+import { Character, AttrKeys } from '../../../../types'
 import AttributesEdit from './AttributesEdit.vue'
 import AttributesRoll from './AttributesRoll.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleChangeAttribute'])
+const emit = defineEmits(['handleChangeAttribute', 'handleRollAttribute'])
 
+const handleRollAttribute = (attr: AttrKeys) => {
+  emit('handleRollAttribute', attr)
+}
 const edit = ref(false)
 </script>
 
@@ -33,6 +36,7 @@ const edit = ref(false)
     </button>
     <AttributesRoll
       :character="character"
+      @handle-roll-attribute="handleRollAttribute"
     />
   </div>
 </template>

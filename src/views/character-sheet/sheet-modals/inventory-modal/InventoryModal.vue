@@ -29,24 +29,24 @@ const tabOptions = [
 ]
 
 const currentTab = ref(0)
-const searchText = ref('')
+const searchTextWeapons = ref('')
+const searchTextMisc = ref('')
 
 const handleAddItem = (item: Weapon | Protection | Misc) => emit('handleAddItem', item)
 
 const currentItems = computed<Weapon[] | Protection[] | Misc[]>(() => {
   if(currentTab.value === 0) 
     return weapons
-            .filter((ele) => compare(ele.name, searchText.value))
+            .filter((ele) => compare(ele.name, searchTextWeapons.value))
             .sort((a, b) => a.name.localeCompare(b.name))
 
   if(currentTab.value === 1) 
     return protections
-            .filter((ele) => compare(ele.name, searchText.value))
             .sort((a, b) => a.name.localeCompare(b.name))
 
   if(currentTab.value === 2) 
     return miscs
-            .filter((ele) => compare(ele.name, searchText.value))
+            .filter((ele) => compare(ele.name, searchTextMisc.value))
             .sort((a, b) => a.name.localeCompare(b.name))
   return []
 })
@@ -72,13 +72,23 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[]>(() => {
           @handle-navigation="(value: number) => currentTab = value"
         />
         <div
-          v-if="currentTab !== 1"
+          v-if="currentTab === 0"
           class="search-container"
         >
           <SearchInput 
-            :value="searchText"
+            :value="searchTextWeapons"
             dark
-            @update="value => searchText = value"
+            @update="value => searchTextWeapons = value"
+          />
+        </div>
+        <div
+          v-if="currentTab === 2"
+          class="search-container"
+        >
+          <SearchInput 
+            :value="searchTextMisc"
+            dark
+            @update="value => searchTextMisc = value"
           />
         </div>
         <div

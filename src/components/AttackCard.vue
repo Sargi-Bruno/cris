@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
+import { PropType, ref, getCurrentInstance } from 'vue'
 import { Attack } from '../types'
 import DividerView from './DividerView.vue'
 import AttackDropdown from '../components/AttackDropdown.vue'
 
-defineProps({
+const props = defineProps({
   attack: {
     type: Object as PropType<Attack>,
     required: true
@@ -15,15 +15,21 @@ defineProps({
   }
 })
 
-defineEmits(['handleRemoveAttack', 'handleChangeAttackText', 'handleChangeAttackNumber', 'handleChangeAttackDropdown'])
+const emit = defineEmits(['handleRemoveAttack', 'handleChangeAttackText', 'handleChangeAttackNumber', 'handleChangeAttackDropdown'])
 
 const damageTypeOptions = ['-', 'Balístico', 'Corte', 'Fogo', 'Impacto', 'Perfuração']
 const rangeOptions = ['-', 'Curto', 'Médio', 'Longo']
 const skillUsedOptions = ['Luta', 'Pontaria']
 const damageAttrOptions = ['Nenhum', 'Agilidate', 'Força', 'Intelecto', 'Presença', 'Vigor']
 
-
 const showMore = ref(false)
+const instance = getCurrentInstance()
+
+const handleChangeAttackNumber = (e: Event, key: string) => {
+  const id = props.id
+  emit('handleChangeAttackNumber', {e, id, key})
+  instance?.proxy?.$forceUpdate()
+}
 </script>
 
 <template>
@@ -46,7 +52,7 @@ const showMore = ref(false)
         class="attack-input number" 
         autocomplete="nope"
         :value="attack.attackBonus"
-        @blur="e => $emit('handleChangeAttackNumber', {e, id, key: 'attackBonus'})"
+        @blur="e => handleChangeAttackNumber(e, 'attackBonus')"
       >
       <input 
         type="text" 
@@ -67,7 +73,7 @@ const showMore = ref(false)
         class="attack-input crit" 
         autocomplete="nope"
         :value="attack.criticalRange"
-        @blur="e => $emit('handleChangeAttackNumber', {e, id, key: 'criticalRange'})"
+        @blur="e => handleChangeAttackNumber(e, 'criticalRange')"
       > 
       <span class="crit-span">/x</span>
       <input 
@@ -75,7 +81,7 @@ const showMore = ref(false)
         class="attack-input crit-mult" 
         autocomplete="nope"
         :value="attack.criticalMult"
-        @blur="e => $emit('handleChangeAttackNumber', {e, id, key: 'criticalMult'})"
+        @blur="e => handleChangeAttackNumber(e, 'criticalMult')"
       > 
       <button
         class="show-more"

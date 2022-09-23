@@ -202,10 +202,10 @@ export interface Character {
   prestigePoints: number,
   inventory: Array<Weapon | Protection | Misc>,
   itemsLimit: {
-    I: string,
-    II: string,
-    III: string,
-    IV: string
+    I: number,
+    II: number,
+    III: number,
+    IV: number
   },
   creditsLimit: string,
   maxLoad: number,
@@ -220,29 +220,37 @@ export interface Character {
 }
 
 const characterStringKeysList = ['name', 'player'] as const
-
 export type CharacterStringKeys = typeof characterStringKeysList[number]
 
 const characterNumberKeysList = ['movement', 'maxPv', 'currentPv', 'maxPe', 'currentPe', 'maxSan', 'currentSan', 'protectionDefense', 'bonusDefense'] as const
-
 export type CharacterNumberKeys = typeof characterNumberKeysList[number]
 
 const characterDropdownKeysList = ['nex'] as const
-
 export type CharacterDropdownKeys = typeof characterDropdownKeysList[number]
 
 const attrList = ['str', 'dex', 'int', 'con', 'pre'] as const
-
 export type AttrKeys = typeof attrList[number]
 
 const attackStringKeyList = ['name', 'damage', 'extraDamage'] as const
-
 export type AttackStringKeys = typeof attackStringKeyList[number]
 
 const attackNumberKeyList = ['attackBonus', 'criticalRange', 'criticalMult'] as const
-
 export type AttackNumberKeys = typeof attackNumberKeyList[number]
 
 const attackDropdownKeyList = ['damageType', 'range', 'skillUsed', 'damageAttribute'] as const
-
 export type AttackDropdownKeys = typeof attackDropdownKeyList[number]
+
+const skillDropdownKeyList = ['attribute', 'trainingDegree'] as const
+export type SkillDropdownKeys = typeof skillDropdownKeyList[number]
+
+const descriptionKeyList = ['physical', 'personal', 'history', 'goal'] as const
+export type DescriptionKeys = typeof descriptionKeyList[number]
+
+const inventoryDropdownKeyList = ['patent', 'creditsLimit'] as const
+export type InventoryDropdownKeys = typeof inventoryDropdownKeyList[number]
+
+const inventoryNumberKeyList = ['currentLoad', 'maxLoad', 'prestigePoints'] as const
+export type InventoryNumberKeys = typeof inventoryNumberKeyList[number]
+
+const itemsLimitKeyList = ['I', 'II', 'III', 'IV'] as const
+export type ItemsLimitKeys = typeof itemsLimitKeyList[number]

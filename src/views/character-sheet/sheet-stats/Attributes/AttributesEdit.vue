@@ -1,9 +1,17 @@
 <script setup lang="ts">
+import { getCurrentInstance } from 'vue'
 import { Character } from '../../../../types'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleChangeAttribute'])
+const emit = defineEmits(['handleChangeAttribute'])
+
+const instance = getCurrentInstance()
+
+const handleChangeAttribute = (e: Event, key: string) => {
+  emit('handleChangeAttribute', {e, key})
+  instance?.proxy?.$forceUpdate()
+}
 </script>
 
 <template>
@@ -14,31 +22,31 @@ defineEmits(['handleChangeAttribute'])
         type="number" 
         class="input str"
         :value="character.attributes.str"
-        @blur="e => $emit('handleChangeAttribute', { e, attr: 'str' })"
+        @blur="e => handleChangeAttribute(e, 'str')"
       >
       <input 
         type="number" 
         class="input dex" 
         :value="character.attributes.dex"
-        @blur="e => $emit('handleChangeAttribute', { e, attr: 'dex' })"
+        @blur="e => handleChangeAttribute(e, 'dex')"
       >
       <input 
         type="number" 
         class="input int" 
         :value="character.attributes.int"
-        @blur="e => $emit('handleChangeAttribute', { e, attr: 'int' })"
+        @blur="e => handleChangeAttribute(e, 'int')"
       >
       <input 
         type="number" 
         class="input con" 
         :value="character.attributes.con"
-        @blur="e => $emit('handleChangeAttribute', { e, attr: 'con' })"
+        @blur="e => handleChangeAttribute(e, 'con')"
       >
       <input 
         type="number" 
         class="input pre" 
         :value="character.attributes.pre"
-        @blur="e => $emit('handleChangeAttribute', { e, attr: 'pre' })"
+        @blur="e => handleChangeAttribute(e, 'pre')"
       >
     </div>
   </div>
@@ -54,7 +62,11 @@ defineEmits(['handleChangeAttribute'])
 }
 .attr-image {
   height: 20rem;
-  pointer-events: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 .input {
   text-align: center;

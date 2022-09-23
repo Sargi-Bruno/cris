@@ -1,20 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+  import { computed, getCurrentInstance } from 'vue'
 import { Character, Weapon, Protection, Misc } from '../../../types'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
 import WeaponCard from '../../../components/WeaponCard.vue'
 import ProtectionCard from '../../../components/ProtectionCard.vue'
 import MiscCard from '../../../components/MiscCard.vue'
 
-defineProps<{character: Character}>()
+const props = defineProps<{character: Character}>()
 
-defineEmits(['handleOpenItemsModal', 'handleRemoveItem', 'handleEquipItem'])
+const emit = defineEmits([
+  'handleOpenItemsModal', 
+  'handleRemoveItem', 
+  'handleEquipItem', 
+  'handleChangeInventoryNumber', 
+  'handleChangeItemsLimit', 
+  'handleChangeInventoryDropdown'
+])
 
 const patentOptions = ['Recruta', 'Operador', 'Agente especial', 'Oficial de operações', 'Agente de elite']
 const creditOptions = ['Baixo', 'Médio', 'Alto', 'Ilimitado']
 
-const patentValue = ref('Recruta')
-const creditValue = ref('Baixo')
+const instance = getCurrentInstance()
+
+const currentLoadColor = computed(() => {
+  if(props.character.currentLoad > props.character.maxLoad * 2) return '#d9534f'
+  if(props.character.currentLoad > props.character.maxLoad) return '#ff8c00'
+  return '#fff'
+})
+
+const handleChangeItemsLimit = (e: Event, key: string) => {
+  const value = (e.target as HTMLInputElement).valueAsNumber
+  emit('handleChangeItemsLimit', {value, key})
+  instance?.proxy?.$forceUpdate()
+}
+
+const handleChangeInventoryNumber = (e: Event, key: string) => {
+  const value = (e.target as HTMLInputElement).valueAsNumber
+  emit('handleChangeInventoryNumber', {value, key})
+  instance?.proxy?.$forceUpdate()
+}
 </script>
   
 <template>
@@ -28,14 +52,16 @@ const creditValue = ref('Baixo')
           <input 
             type="number"
             class="sheet-input sheet-input-size"
+            :value="character.prestigePoints"
+            @blur="e => handleChangeInventoryNumber(e, 'prestigePoints')"
           >
         </div>
         <SheetDropdown
           title="PATENTE"
-          :value="patentValue"
+          :value="character.patent"
           button-width="10rem"
           :options="patentOptions"
-          @update-value="(option: string) => patentValue = option"
+          @update-value="(value: string) => $emit('handleChangeInventoryDropdown', {value, key: 'patent'})"
         />
       </div>
       <div class="inventory-row">
@@ -47,31 +73,39 @@ const creditValue = ref('Baixo')
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="I"
+            :value="character.itemsLimit.I"
+            @blur="e => handleChangeItemsLimit(e, 'I')"
           >
           <input 
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="II"
+            :value="character.itemsLimit.II"
+            @blur="e => handleChangeItemsLimit(e, 'II')"
           >
           <input 
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="III"
+            :value="character.itemsLimit.III"
+            @blur="e => handleChangeItemsLimit(e, 'III')"
           >
           <input 
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="IV"
+            :value="character.itemsLimit.IV"
+            @blur="e => handleChangeItemsLimit(e, 'IV')"
           >
         </div>
       </div>
       <div class="inventory-row inventory-row-gap">
         <SheetDropdown
           title="LIMITE DE CRÉDITO"
-          :value="creditValue"
+          :value="character.creditsLimit"
           button-width="6rem"
           :options="creditOptions"
-          @update-value="(option: string) => creditValue = option"
+          @update-value="(value: string) => $emit('handleChangeInventoryDropdown', {value, key: 'creditsLimit'})"
         />
         <div class="input-container">
           <h4 class="sheet-subtitle">
@@ -79,11 +113,15 @@ const creditValue = ref('Baixo')
           </h4>
           <input 
             type="number"
-            class="sheet-input sheet-input-size"
+            class="sheet-input sheet-input-size current-load-color"
+            :value="character.currentLoad"
+            @blur="e => handleChangeInventoryNumber(e, 'currentLoad')"
           >
           <input 
             type="number"
             class="sheet-input sheet-input-size"
+            :value="character.maxLoad"
+            @blur="e => handleChangeInventoryNumber(e, 'maxLoad')"
           >
         </div>
       </div>
@@ -163,5 +201,8 @@ const creditValue = ref('Baixo')
 }
 .sheet-card-list {
   margin-bottom: .5rem;
+}
+.current-load-color {
+  color: v-bind(currentLoadColor)
 }
 </style>

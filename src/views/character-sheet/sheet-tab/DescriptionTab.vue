@@ -9,15 +9,15 @@ interface DescriptionItems {
 
 defineProps<{character: Character}>()
 
-const emit = defineEmits(['handleUpdateDescription'])
+const emit = defineEmits(['handleChangeDescription'])
 
-const handleUpdateDescription = (e: Event, key: 'physical' | 'personal' | 'history' | 'goal') => {
+const handleChangeDescription = (e: Event, key: 'physical' | 'personal' | 'history' | 'goal') => {
   const payload = {
     value: (e.target as HTMLInputElement).value,
     key
   }
 
-  emit('handleUpdateDescription', payload)
+  emit('handleChangeDescription', payload)
 }
 const items: Array<DescriptionItems> = [
   {
@@ -53,7 +53,7 @@ const items: Array<DescriptionItems> = [
           rows="6"
           :placeholder="item.placeholder"
           :value="character.description[item.key]"
-          @input="(e) => handleUpdateDescription(e, item.key)"
+          @input="(e) => handleChangeDescription(e, item.key)"
         >
         </textarea>
       </div>

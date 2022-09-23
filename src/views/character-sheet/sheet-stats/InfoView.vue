@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { Character } from '../../../types'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
 
 const props = defineProps<{character: Character}>()
 
-defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeCharDropdown', 'handleChangeMovementInSquares'])
+const emit = defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeCharDropdown', 'handleChangeMovementInSquares'])
 
 const nexOptions = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%']
 const nexList = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%'] as const
@@ -33,6 +33,8 @@ const peOptions = {
   '99%': '20',
 }
 
+const instance = getCurrentInstance()
+
 const pe = computed(() => {
   return peOptions[props.character.nex as NexKeys]
 })
@@ -45,6 +47,16 @@ const movementInSquares = computed(() => {
 const defense = computed(() => {
   return 10 + props.character.attributes.dex + props.character.protectionDefense + props.character.bonusDefense
 })
+
+const handleChangeCharNumber = (e: Event, key: string) => {
+  emit('handleChangeCharNumber', {e, key})
+  instance?.proxy?.$forceUpdate()
+}
+
+const handleChangeMovementInSquares = (e: Event) => {
+  emit('handleChangeMovementInSquares', e)
+  instance?.proxy?.$forceUpdate()
+}
 </script>
 
 <template>
@@ -88,14 +100,14 @@ const defense = computed(() => {
             class="sheet-input" 
             type="number"
             :value="character.movement"
-            @blur="e => $emit('handleChangeCharNumber', {e, key: 'movement'})"
+            @blur="e => handleChangeCharNumber(e, 'movement')"
           >
           <h4>m /</h4>
           <input 
             class="sheet-input" 
             type="number"
             :value="movementInSquares"
-            @blur="e => $emit('handleChangeMovementInSquares', e)"
+            @blur="handleChangeMovementInSquares"
           >
           <h4>q</h4>
         </div>
@@ -108,7 +120,7 @@ const defense = computed(() => {
             class="sheet-input-size sheet-input" 
             type="number"
             :value="character.maxPv"
-            @blur="e => $emit('handleChangeCharNumber', {e, key: 'maxPv'})"
+            @blur="e => handleChangeCharNumber(e, 'maxPv')"
           >
           <h3>PV</h3>
           <h4>PONTOS DE VIDA</h4>
@@ -120,7 +132,7 @@ const defense = computed(() => {
               class="sheet-input" 
               type="number"
               :value="character.currentPv"
-              @blur="e => $emit('handleChangeCharNumber', {e, key: 'currentPv'})"
+              @blur="e => handleChangeCharNumber(e, 'currentPv')"
             >
           </div>
         </div>
@@ -131,7 +143,7 @@ const defense = computed(() => {
             class="sheet-input-size sheet-input" 
             type="number"
             :value="character.maxPe"
-            @blur="e => $emit('handleChangeCharNumber', {e, key: 'maxPe'})"
+            @blur="e => handleChangeCharNumber(e, 'maxPe')"
           >
           <h3>PE</h3>
           <div class="second-subtitle">
@@ -145,7 +157,7 @@ const defense = computed(() => {
               class="sheet-input" 
               type="number"
               :value="character.currentPe"
-              @blur="e => $emit('handleChangeCharNumber', {e, key: 'currentPe'})"
+              @blur="e => handleChangeCharNumber(e, 'currentPe')"
             >
           </div>
         </div>
@@ -169,7 +181,7 @@ const defense = computed(() => {
               class="sheet-input" 
               type="number"
               :value="character.protectionDefense"
-              @blur="e => $emit('handleChangeCharNumber', {e, key: 'protectionDefense'})"
+              @blur="e => handleChangeCharNumber(e, 'protectionDefense')"
             >
             <h5>Equip.</h5>
           </div>
@@ -181,7 +193,7 @@ const defense = computed(() => {
               class="sheet-input" 
               type="number"
               :value="character.bonusDefense"
-              @blur="e => $emit('handleChangeCharNumber', {e, key: 'bonusDefense'})"
+              @blur="e => handleChangeCharNumber(e, 'bonusDefense')"
             >
             <h5>Outros.</h5>
           </div>
@@ -193,7 +205,7 @@ const defense = computed(() => {
             class="sheet-input-size sheet-input" 
             type="number"
             :value="character.maxSan"
-            @blur="e => $emit('handleChangeCharNumber', {e, key: 'maxSan'})"
+            @blur="e => handleChangeCharNumber(e, 'maxSan')"
           >
           <div>
             <h3>SAN</h3>
@@ -207,7 +219,7 @@ const defense = computed(() => {
               class="sheet-input" 
               type="number"
               :value="character.currentSan"
-              @blur="e => $emit('handleChangeCharNumber', {e, key: 'currentSan'})"
+              @blur="e => handleChangeCharNumber(e, 'currentSan')"
             >
           </div>
         </div>
@@ -377,7 +389,7 @@ const defense = computed(() => {
 .defense-value {
   position: absolute;
   top: 15px;
-  left: 30%;
+  left: 18px;
 }
 .defense-value h3 {
   margin: 0;
