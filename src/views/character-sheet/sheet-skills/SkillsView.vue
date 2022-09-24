@@ -4,10 +4,14 @@ import SkillCard from './SkillCard.vue'
 
 defineProps<{character: Character}>()
 
-const emit = defineEmits(['handleOpenSkillModal', 'handleChangeSkillOtherBonus', 'handleChangeSkillDropdown'])
+const emit = defineEmits(['handleOpenSkillModal', 'handleChangeSkillOtherBonus', 'handleChangeSkillDropdown', 'handleRollSkill'])
 
 const handleOpenSkill = (skill: Skill) => {
   emit('handleOpenSkillModal', skill)
+}
+
+const handleRollSkill = (skill: Skill) => {
+  emit('handleRollSkill', skill)
 }
 </script>
 
@@ -37,6 +41,7 @@ const handleOpenSkill = (skill: Skill) => {
             @handle-open-skill-modal="handleOpenSkill"
             @handle-change-skill-dropdown="payload => $emit('handleChangeSkillDropdown', payload)"
             @handle-change-skill-other-bonus="payload => $emit('handleChangeSkillOtherBonus', payload)"
+            @handle-roll-skill="handleRollSkill"
           />
         </tr>
       </tbody>

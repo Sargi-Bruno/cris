@@ -45,7 +45,10 @@ const movementInSquares = computed(() => {
 })
 
 const defense = computed(() => {
-  return 10 + props.character.attributes.dex + props.character.protectionDefense + props.character.bonusDefense
+  const result = 10 + props.character.attributes.dex + props.character.protectionDefense + props.character.bonusDefense
+
+  if(result > 0) return result
+  else return 0
 })
 
 const handleChangeCharNumber = (e: Event, key: string) => {
@@ -388,8 +391,10 @@ const handleChangeMovementInSquares = (e: Event) => {
 }
 .defense-value {
   position: absolute;
-  top: 15px;
-  left: 18px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding-bottom: .5rem;
 }
 .defense-value h3 {
   margin: 0;

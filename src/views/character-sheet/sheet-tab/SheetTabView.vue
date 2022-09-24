@@ -9,15 +9,15 @@ import InventoryTab from './InventoryTab.vue'
 import DescriptionTab from './DescriptionTab.vue'
 
 interface PayloadEvent {
-  e: Event,
-  id: string,
-  key: string,
+  e: Event
+  id: string
+  key: string
 }
 
 interface PayloadValue {
-  value: string,
-  id: string,
-  key: string,
+  value: string
+  id: string
+  key: string
 }
 
 defineProps<{character: Character}>()
@@ -38,7 +38,8 @@ const emit = defineEmits([
   'handleChangeDescription',
   'handleChangeInventoryNumber',
   'handleChangeItemsLimit', 
-  'handleChangeInventoryDropdown'
+  'handleChangeInventoryDropdown',
+  'handleRollDices'
 ])
 
 const tabOptions = [
@@ -105,6 +106,7 @@ const handleChangeInventoryDropdown = (payload: {value: string, key: string}) =>
         @handle-change-inventory-number="handleChangeInventoryNumber"
         @handle-change-items-limit="handleChangeItemsLimit"
         @handle-change-inventory-dropdown="handleChangeInventoryDropdown"
+        @handle-roll-dices="(value: string) => $emit('handleRollDices', value)"
       />
     </KeepAlive>
   </div>

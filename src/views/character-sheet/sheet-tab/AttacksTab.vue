@@ -1,14 +1,49 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { Character } from '../../../types'
 import AttackCard from '../../../components/AttackCard.vue'
 
 defineProps<{character: Character}>()
 
-defineEmits(['handleAddAttack', 'handleRemoveAttack', 'handleChangeAttackText', 'handleChangeAttackNumber', 'handleChangeAttackDropdown'])
+const emit = defineEmits([
+  'handleAddAttack', 
+  'handleRemoveAttack', 
+  'handleChangeAttackText', 
+  'handleChangeAttackNumber', 
+  'handleChangeAttackDropdown',
+  'handleRollDices'
+])
+
+const rollDicesValue = ref('')
+
+const handleRollDices = () => {
+  emit('handleRollDices', rollDicesValue.value)
+  rollDicesValue.value = ''
+}
 </script>
   
 <template>
   <div class="attacks-tab">
+    <h3 class="roll-dice-text">
+      Rolar Dados
+    </h3>
+    <div class="roll-dices-container">
+      <input 
+        v-model="rollDicesValue"
+        type="text"
+        class="roll-dice-input"
+      >
+      <button
+        class="dice-button"
+        @click="handleRollDices"
+      >
+        <img
+          class="dice-icon"
+          src="../../../assets/d20-icon.png" 
+          alt="rolar"
+        >
+      </button>
+    </div>
     <button 
       class="button-primary add-button"
       @click="$emit('handleAddAttack')"
@@ -57,6 +92,31 @@ defineEmits(['handleAddAttack', 'handleRemoveAttack', 'handleChangeAttackText', 
 </template>
   
 <style scoped>
+.roll-dice-text {
+  font-size: 14px;
+  margin-bottom: 0;
+}
+.roll-dices-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.dice-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.roll-dice-input {
+  width: 100%;
+  background-color: transparent;
+  color: var(--color-white);
+  font-size: 16px;
+  border: none;
+  border-bottom: 1px solid var(--color-white);
+}
+.dice-icon {
+  height: 1.5rem;
+}
 .no-content h3 {
   text-align: center;
   margin-top: 10rem;

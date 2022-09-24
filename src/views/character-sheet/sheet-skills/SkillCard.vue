@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType, computed, getCurrentInstance } from 'vue'
+import { PropType, getCurrentInstance } from 'vue'
 import { Skill } from '../../../types'
 import SkillsDropdown from './SkillsDropdown.vue'
 
@@ -18,22 +18,12 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['handleOpenSkillModal', 'handleChangeSkillOtherBonus', 'handleChangeSkillDropdown'])
+const emit = defineEmits(['handleOpenSkillModal', 'handleChangeSkillOtherBonus', 'handleChangeSkillDropdown', 'handleRollSkill'])
 
 const attrOptions = ['AGI', 'FOR', 'INT', 'PRE', 'VIG']
 const trainingOptions = ['D', 'T', 'V', 'E']
-const trainingValues = {
-  D: 0,
-  T: 5,
-  V: 10,
-  E: 15
-}
 
 const instance = getCurrentInstance()
-
-const skillBonus = computed(() => {
-  return trainingValues[(props.skill.trainingDegree as 'D' | 'T' | 'V' | 'E')] + props.skill.otherBonus
-})
 
 const handleOpenSkill = () => {
   emit('handleOpenSkillModal', props.skill)
@@ -76,8 +66,11 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
   </td>
   <td>
     <span>( </span>
-    <button class="naked-button">
-      {{ skillBonus }}
+    <button 
+      class="naked-button"
+      @click="$emit('handleRollSkill', skill)"
+    >
+      {{ skill.bonus }}
     </button>
     <span> )</span>
   </td>

@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import ToastNotification from '../../components/ToastNotification.vue'
+import ToastDice from '../../components/ToastDice.vue'
 import SheetStats from './sheet-stats/SheetStats.vue'
 import SkillsView from './sheet-skills/SkillsView.vue'
 import SheetTabView from './sheet-tab/SheetTabView.vue'
@@ -46,18 +47,32 @@ import {
   changeItemsLimit,
   addPower,
   addRitual,
-  addItem
+  addItem,
+  attrDic,
+  updateSkillBonus,
+  rollSkill,
+  formatRollResult,
+  formatRollNotation,
+  rollDices
 } from './characterSheetUtils'
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
 
 const { play } = useSound(diceSound)
 
-interface Toast {
-  message: string,
-  type: string,
-  alive: boolean,
+interface ToastInfo {
+  message: string
+  type: string
+  alive: boolean
   timeout: number
+}
+
+interface ToastRoll {
+  title: string 
+  total: number
+  result: string
+  notation: string
+  alive: boolean
 }
 
 const modalOptions = [AbilitiesModal, AttackModal, InventoryModal, RitualsModal, SkillModal]
@@ -71,20 +86,44 @@ const modals = {
 
 const character = ref(characterDefaultValue)
 
-const toast = ref<Toast>({
+const toastInfo = ref<ToastInfo>({
   message: '',
   type: '',
   alive: false,
   timeout: 0
 })
 
+const toastRoll = ref<ToastRoll>({
+  title: '',
+  total: 0,
+  result: '',
+  notation: '',
+  alive: false
+})
+
 const showModal = ref(false)
 const currentModal = ref(0)
 const currentSkill = ref<Skill>()
 
-const handleShowInfoToast = (toast: Toast, name: string) => {
+const dismissToastInfo = () => {
+  toastInfo.value.alive = false
+  clearTimeout(toastInfo.value.timeout)
+}
+
+const dismissToastRoll = () => toastRoll.value.alive = false
+
+const handleShowInfoToast = (toast: ToastInfo, name: string) => {
   toast.message = `${name} adicionado`
   toast.type = 'info'
+  toast.alive = true
+}
+
+const handleShowDiceToast = (toast: ToastRoll, title: string, total: number, result: string, notation: string) => {
+  dismissToastInfo()
+  toast.title = title
+  toast.total = total
+  toast.result = result
+  toast.notation = notation
   toast.alive = true
 }
 
@@ -114,7 +153,11 @@ const handleChangeMovementInSquares = (e: Event) => {
 
 const handleRollAttribute = (attr: AttrKeys) => {
   play()
-  rollAttribute(character.value, attr)
+  const title = attrDic[attr]
+  const roll = rollAttribute(character.value, attr)
+  const output = formatRollResult(roll.output)
+  const notation = formatRollNotation(roll.output)
+  handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
 }
 
 const handleOpenSkillModal = (skill: Skill) => {
@@ -126,10 +169,21 @@ const handleOpenSkillModal = (skill: Skill) => {
 const handleChangeSkillDropdown = (payload: { value: string, skillName: string, key: SkillDropdownKeys}) => {
   const index = character.value.skills.findIndex((e) => e.name === payload.skillName)
   character.value.skills[index][payload.key] = payload.value
+  updateSkillBonus(character.value, payload.skillName)
 }
 
 const handleChangeSkillOtherBonus = (payload: {value: number, skillName: string}) => {
   changeSkillOtherBonus(character.value, payload.value, payload.skillName)
+  updateSkillBonus(character.value, payload.skillName)
+}
+
+const handleRollSkill = (skill: Skill) => {
+  play()
+  const title = skill.name
+  const roll = rollSkill(character.value, skill)
+  const output = formatRollResult(roll.output)
+  const notation = formatRollNotation(roll.output)
+  handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
 }
 
 const handleOpenAbilitiesModal = () => {
@@ -207,31 +261,35 @@ const handleChangeItemsLimit = (payload: {value: number, key: ItemsLimitKeys}) =
   changeItemsLimit(character.value, payload.value, payload.key)
 }
 
+const handleRollDices = (value: string) => {
+  play()
+  const title = 'Resultado'
+  const roll = rollDices(value)
+  const output = formatRollResult(roll.output)
+  const notation = formatRollNotation(roll.output)
+  handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+}
+
 const handleAddPower = (power: Power) => {
   addPower(character.value, power)
-  handleShowInfoToast(toast.value, power.name)
+  handleShowInfoToast(toastInfo.value, power.name)
 }
 
 const handleAddRitual = (ritual: Ritual) => {
   addRitual(character.value, ritual)
-  handleShowInfoToast(toast.value, ritual.name)
+  handleShowInfoToast(toastInfo.value, ritual.name)
 }
 
 const handleAddItem = (item: Weapon | Protection | Misc) => {
   addItem(character.value, item)
-  handleShowInfoToast(toast.value, item.name)
+  handleShowInfoToast(toastInfo.value, item.name)
 }
 
-watch(() => toast.value.alive, () => {
-  if(toast.value.alive === true) {
-    toast.value.timeout = setTimeout(() => toast.value.alive = false, 3000)
+watch(() => toastInfo.value.alive, () => {
+  if(toastInfo.value.alive === true) {
+    toastInfo.value.timeout = setTimeout(() => toastInfo.value.alive = false, 3000)
   }
 })
-
-const dismissToast = () => {
-  toast.value.alive = false
-  clearTimeout(toast.value.timeout)
-}
 </script>
 
 <template>
@@ -253,6 +311,7 @@ const dismissToast = () => {
         @handle-open-skill-modal="handleOpenSkillModal"
         @handle-change-skill-dropdown="handleChangeSkillDropdown"
         @handle-change-skill-other-bonus="handleChangeSkillOtherBonus"
+        @handle-roll-skill="handleRollSkill"
       />
     </div>
     <div class="sheet-tab">
@@ -274,6 +333,7 @@ const dismissToast = () => {
         @handle-change-inventory-dropdown="handleChangeInventoryDropdown"
         @handle-change-inventory-number="handleChangeInventoryNumber"
         @handle-change-items-limit="handleChangeItemsLimit"
+        @handle-roll-dices="handleRollDices"
       />
     </div>
     <vue-final-modal 
@@ -293,10 +353,20 @@ const dismissToast = () => {
     </vue-final-modal>
     <transition name="toast">
       <ToastNotification
-        v-if="toast.alive"
-        :value="toast.message"
-        :type="toast.type"
-        @dismiss="dismissToast"
+        v-if="toastInfo.alive"
+        :value="toastInfo.message"
+        :type="toastInfo.type"
+        @dismiss="dismissToastInfo"
+      />
+    </transition>
+    <transition name="toast">
+      <ToastDice
+        v-if="toastRoll.alive"
+        :title="toastRoll.title"
+        :total="toastRoll.total"
+        :result="toastRoll.result"
+        :notation="toastRoll.notation"
+        @dismiss="dismissToastRoll"
       />
     </transition>
   </div>

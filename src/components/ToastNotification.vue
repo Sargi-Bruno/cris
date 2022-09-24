@@ -53,11 +53,15 @@ const toastColor = computed(() => {
           alt="erro"
         >
         <h3>{{ value }}</h3>
-        <img
+        <button 
           class="close-icon"
-          src="../assets/close-icon.svg" 
-          alt="fechar"
+          @click="$emit('dismiss')"
         >
+          <img
+            src="../assets/close-icon.svg" 
+            alt="fechar"
+          >
+        </button>
       </div>
     </div>
   </div>
@@ -67,7 +71,6 @@ const toastColor = computed(() => {
 .toast-wrapper {
   position: fixed;
   width: 18rem;
-  height: 4rem;
   bottom: 3rem;
   right: 3rem;
 }
@@ -91,7 +94,10 @@ const toastColor = computed(() => {
 }
 .close-icon {
   height: 1.25rem;
+  background-color: transparent;
+  border: none;
   margin-left: auto;
   margin-bottom: auto;
+  cursor: pointer;
 }
 </style>

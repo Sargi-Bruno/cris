@@ -9,11 +9,13 @@ import {
   Weapon, 
   Protection, 
   Misc, 
+  Skill,
   AttrKeys,
   CharacterNumberKeys, 
   AttackNumberKeys,
   InventoryNumberKeys,
   ItemsLimitKeys,
+  AttrPtKeys,
 } from "../../types"
 
 export const characterDefaultValue: Character = {
@@ -78,6 +80,22 @@ export const attackDefaultValue: Attack = {
   damageAttribute: 'Força'
 }
 
+export const attrDic = {
+  str: 'Força',
+  dex: 'Agilidade',
+  int: 'Inteligência',
+  con: 'Vigor',
+  pre: 'Presença'
+}
+
+const attrShortDic = {
+  FOR: 'str',
+  AGI: 'dex',
+  INT: 'int',
+  PRE: 'pre',
+  VIG: 'con'
+}
+
 const formatValueNumbers = (value: number, limit: 1 | 2 | 3, floor = true, noNegative = true) => {
   const digitisLimit = {
     1: 9,
@@ -104,7 +122,7 @@ const formatValueNumbers = (value: number, limit: 1 | 2 | 3, floor = true, noNeg
 }
 
 export const changeCharNumber = (character: Character, value: number, key: CharacterNumberKeys) => {
-  if(key === 'currentPv' || key === 'currentPe' || key === 'currentSan') character[key] = formatValueNumbers(value, 3, true, false)
+  if(key === 'currentPv' || key === 'currentPe' || key === 'currentSan' || key === 'bonusDefense') character[key] = formatValueNumbers(value, 3, true, false)
   else if(key === 'movement') character[key] = formatValueNumbers(value, 3, false, true)
   else character[key] = formatValueNumbers(value, 3)
 }
@@ -122,13 +140,55 @@ export const changeMovementInSquares = (character: Character, value: number) => 
   else character.movement = Math.floor(value) * 1.5
 }
 
+export const formatRollResult = (output: string) => {
+  return output.split('=')[0].split(':')[1]
+}
+
+export const formatRollNotation = (output: string) => {
+  return output.split('=')[0].split(':')[0]
+}
+
 export const rollAttribute = (character: Character, attr: AttrKeys) => {
   let rollString: string
-  if(character.attributes[attr] > 0) rollString = `${character.attributes[attr]}d20kh1`
-  else rollString = '2d20kl1'
+  const attrValue = character.attributes[attr]
+
+  if(attrValue > 0) rollString = `${attrValue}d20kh1`
+  else rollString = `${Math.abs(attrValue) + 2}d20kl1`
   
   const roll = new DiceRoll(rollString)
-  console.log(roll.output)
+
+  return roll
+}
+
+export const rollDices = (value: string) => {
+  const roll = new DiceRoll(value)
+
+  return roll
+}
+
+export const rollSkill = (character: Character, skill: Skill) => {
+  let rollString: string
+  const attrValue = character.attributes[attrShortDic[skill.attribute as AttrPtKeys] as AttrKeys]
+
+  if(attrValue > 0) rollString = `${attrValue}d20kh1 + ${skill.bonus}`
+  else rollString = `${Math.abs(attrValue) + 2}d20kl1 + ${skill.bonus}`
+
+  const roll = new DiceRoll(rollString)
+
+  return roll
+}
+
+export const updateSkillBonus = (character: Character, skillName: string) => {
+  const trainingValues = {
+    D: 0,
+    T: 5,
+    V: 10,
+    E: 15
+  }
+
+  const index = character.skills.findIndex((e) => e.name === skillName)
+  const skill =  character.skills[index]
+  skill.bonus = trainingValues[(skill.trainingDegree as 'D' | 'T' | 'V' | 'E')] + skill.otherBonus
 }
 
 export const changeSkillOtherBonus = (character: Character, value: number, skillName: string) => {
