@@ -18,6 +18,15 @@ const handleLogout = () => {
   router.push({ name: 'home' })
 }
 
+const handleAgentsSignIn = () => {
+  const provider = new GoogleAuthProvider()
+
+  signInWithPopup(auth, provider)
+    .then(() => {
+      router.push({ name: 'character-list' })
+    })
+}
+
 onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     if(user) isLoggedIn.value = true
@@ -39,9 +48,19 @@ onMounted(() => {
         <router-link :to="{ name: 'home' }">
           Início
         </router-link>
-        <router-link :to="{ name: 'character-list' }">
+        <router-link 
+          v-if="isLoggedIn"
+          :to="{ name: 'character-list' }"
+        >
           Agentes
         </router-link>
+        <h3 
+          v-else
+          class="agents-login"
+          @click="handleAgentsSignIn"
+        >
+          Agentes
+        </h3>
         <router-link :to="{ name: 'contact' }">
           Créditos e contato
         </router-link>
@@ -100,6 +119,16 @@ onMounted(() => {
   font-size: 20px;
 }
 .nav-container a:hover {
+  color: var(--color-primary);
+}
+.agents-login {
+  color: var(--color-white);
+  margin: 0;
+  font-size: 20px;
+  font-weight: normal;
+  cursor: pointer;
+}
+.agents-login:hover {
   color: var(--color-primary);
 }
 .login-button {
