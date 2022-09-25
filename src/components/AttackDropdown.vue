@@ -78,6 +78,7 @@ const handleUpdateValue = (option: string) => {
   width: 6rem;
   position: absolute;
   left: 0;
+  top: calc(100% + .25rem);
   padding: .5rem;
   border-radius: 4px;
   background-color: var(--color-light-black);

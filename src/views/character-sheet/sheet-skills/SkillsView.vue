@@ -23,6 +23,7 @@ const handleRollSkill = (skill: Skill) => {
     <table class="skills-table">
       <thead>
         <tr>
+          <th class="small"></th>
           <th class="left">
             PERÍCIA
           </th>
@@ -68,7 +69,7 @@ const handleRollSkill = (skill: Skill) => {
   width: 3.25rem;
 }
 .skills-table td {
-  min-width: 3.25rem;
+  width: 3.25rem;
   text-align: center;
 }
 .skills-table td span {
@@ -77,6 +78,10 @@ const handleRollSkill = (skill: Skill) => {
 .left {
   width: 6.25rem;
   text-align: left;
+}
+.small {
+  width: 1.5rem !important;
+  text-align: center;
 }
 .table-caption {
   margin: 0;

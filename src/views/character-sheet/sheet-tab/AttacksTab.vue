@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Character } from '../../../types'
+import { Character, Attack } from '../../../types'
 import AttackCard from '../../../components/AttackCard.vue'
 
 defineProps<{character: Character}>()
@@ -11,7 +11,8 @@ const emit = defineEmits([
   'handleChangeAttackText', 
   'handleChangeAttackNumber', 
   'handleChangeAttackDropdown',
-  'handleRollDices'
+  'handleRollDices',
+  'handleRollAttack'
 ])
 
 const rollDicesValue = ref('')
@@ -19,6 +20,10 @@ const rollDicesValue = ref('')
 const handleRollDices = () => {
   emit('handleRollDices', rollDicesValue.value)
   rollDicesValue.value = ''
+}
+
+const handleRollAttack = (attack: Attack) => {
+  emit('handleRollAttack', attack)
 }
 </script>
   
@@ -28,11 +33,6 @@ const handleRollDices = () => {
       Rolar Dados
     </h3>
     <div class="roll-dices-container">
-      <input 
-        v-model="rollDicesValue"
-        type="text"
-        class="roll-dice-input"
-      >
       <button
         class="dice-button"
         @click="handleRollDices"
@@ -43,6 +43,12 @@ const handleRollDices = () => {
           alt="rolar"
         >
       </button>
+      <input 
+        v-model="rollDicesValue"
+        type="text"
+        class="roll-dice-input"
+        @keyup.enter="handleRollDices"
+      >
     </div>
     <button 
       class="button-primary add-button"
@@ -82,6 +88,7 @@ const handleRollDices = () => {
           @handle-change-attack-text="payload => $emit('handleChangeAttackText', payload)"
           @handle-change-attack-number="payload => $emit('handleChangeAttackNumber', payload)"
           @handle-change-attack-dropdown="payload => $emit('handleChangeAttackDropdown', payload)"
+          @handle-roll-attack="handleRollAttack"
         />
       </div>
     </div>
@@ -94,7 +101,8 @@ const handleRollDices = () => {
 <style scoped>
 .roll-dice-text {
   font-size: 14px;
-  margin-bottom: 0;
+  margin-bottom: .5rem;
+  margin-left: 2.25rem;
 }
 .roll-dices-container {
   display: flex;
@@ -105,6 +113,8 @@ const handleRollDices = () => {
   background-color: transparent;
   border: none;
   cursor: pointer;
+  width: 2rem;
+  height: 2rem;
 }
 .roll-dice-input {
   width: 100%;
@@ -113,8 +123,10 @@ const handleRollDices = () => {
   font-size: 16px;
   border: none;
   border-bottom: 1px solid var(--color-white);
+  margin-left: .5rem;
 }
 .dice-icon {
+  width: 1.5rem;
   height: 1.5rem;
 }
 .no-content h3 {

@@ -15,20 +15,30 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['handleRemoveAttack', 'handleChangeAttackText', 'handleChangeAttackNumber', 'handleChangeAttackDropdown'])
+const emit = defineEmits(['handleRemoveAttack', 'handleChangeAttackText', 'handleChangeAttackNumber', 'handleChangeAttackDropdown', 'handleRollAttack'])
 
 const damageTypeOptions = ['-', 'Balístico', 'Corte', 'Fogo', 'Impacto', 'Perfuração']
 const rangeOptions = ['-', 'Curto', 'Médio', 'Longo']
 const skillUsedOptions = ['Luta', 'Pontaria']
-const damageAttrOptions = ['Nenhum', 'Agilidate', 'Força', 'Intelecto', 'Presença', 'Vigor']
+const damageAttrOptions = ['Nenhum', 'Agilidade', 'Força', 'Intelecto', 'Presença', 'Vigor']
 
 const showMore = ref(false)
 const instance = getCurrentInstance()
+
+const handleChangeAttackText = (e: Event, key: string) => {
+  const id = props.id
+  emit('handleChangeAttackText', {e, id, key})
+  instance?.proxy?.$forceUpdate()
+}
 
 const handleChangeAttackNumber = (e: Event, key: string) => {
   const id = props.id
   emit('handleChangeAttackNumber', {e, id, key})
   instance?.proxy?.$forceUpdate()
+}
+
+const handleRollAttack = () => {
+  emit('handleRollAttack', props. attack)
 }
 </script>
 
@@ -37,7 +47,10 @@ const handleChangeAttackNumber = (e: Event, key: string) => {
     <div
       class="header"
     >
-      <button class="button-primary roll-button">
+      <button 
+        class="roll-button"
+        @click="handleRollAttack"
+      >
         <img src="../assets/d20-icon.png" alt="rolar">
       </button>
       <input 
@@ -45,7 +58,7 @@ const handleChangeAttackNumber = (e: Event, key: string) => {
         class="attack-input name" 
         autocomplete="nope"
         :value="attack.name"
-        @blur="e => $emit('handleChangeAttackText', {e, id, key: 'name'})"
+        @blur="e => handleChangeAttackText(e, 'name')"
       >
       <input 
         type="number" 
@@ -59,14 +72,14 @@ const handleChangeAttackNumber = (e: Event, key: string) => {
         class="attack-input text" 
         autocomplete="nope"
         :value="attack.damage"
-        @blur="e => $emit('handleChangeAttackText', {e, id, key: 'damage'})"
+        @blur="e => handleChangeAttackText(e, 'damage')"
       >
       <input 
         type="text" 
         class="attack-input text" 
         autocomplete="nope"
         :value="attack.extraDamage"
-        @blur="e => $emit('handleChangeAttackText', {e, id, key: 'extraDamage'})"
+        @blur="e => handleChangeAttackText(e, 'extraDamage')"
       > 
       <input 
         type="number" 
@@ -122,7 +135,7 @@ const handleChangeAttackNumber = (e: Event, key: string) => {
               />
             </div>
             <div class="dropdown-container">
-              <h3>ATRIBUTO</h3>
+              <h3>ATRIBUTO DANO</h3>
               <AttackDropdown
                 :value="attack.damageAttribute"
                 :options="damageAttrOptions"
@@ -187,6 +200,9 @@ const handleChangeAttackNumber = (e: Event, key: string) => {
   justify-content: center;
   width: 2rem;
   height: 2rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 .roll-button img {
   width: 1.5rem;

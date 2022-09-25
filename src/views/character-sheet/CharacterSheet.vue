@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
+import { getAuth } from 'firebase/auth'
+import { getFirestore, getDoc, doc, updateDoc } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import ToastNotification from '../../components/ToastNotification.vue'
 import ToastDice from '../../components/ToastDice.vue'
+import ToastAttack from '../../components/ToastAttack.vue'
 import SheetStats from './sheet-stats/SheetStats.vue'
 import SkillsView from './sheet-skills/SkillsView.vue'
 import SheetTabView from './sheet-tab/SheetTabView.vue'
@@ -11,7 +15,8 @@ import AttackModal from './sheet-modals/attack-modal/AttackModal.vue'
 import InventoryModal from './sheet-modals/inventory-modal/InventoryModal.vue'
 import RitualsModal from './sheet-modals/rituals-modal/RitualsModal.vue'
 import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
-import { 
+import {
+  Character,
   Skill, 
   Power, 
   Ritual, 
@@ -30,6 +35,7 @@ import {
   InventoryDropdownKeys,
   InventoryNumberKeys,
   ItemsLimitKeys,
+  Attack
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -53,10 +59,12 @@ import {
   rollSkill,
   formatRollResult,
   formatRollNotation,
-  rollDices
+  rollDices,
+  rollAttack
 } from './characterSheetUtils'
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
+import router from '../../router'
 
 const { play } = useSound(diceSound)
 
@@ -70,8 +78,16 @@ interface ToastInfo {
 interface ToastRoll {
   title: string 
   total: number
-  result: string
+  output: string
   notation: string
+  alive: boolean
+}
+
+interface ToastAttackInterface {
+  title: string
+  totalAttack: number
+  totalDamage: number
+  critical: number
   alive: boolean
 }
 
@@ -84,7 +100,12 @@ const modals = {
   skill: 4
 }
 
-const character = ref(characterDefaultValue)
+const auth = getAuth()
+const firestore = getFirestore()
+const route = useRoute()
+const characterId = route.params.id as string
+const loading = ref(true)
+const character = ref<Character>(characterDefaultValue)
 
 const toastInfo = ref<ToastInfo>({
   message: '',
@@ -96,14 +117,43 @@ const toastInfo = ref<ToastInfo>({
 const toastRoll = ref<ToastRoll>({
   title: '',
   total: 0,
-  result: '',
+  output: '',
   notation: '',
+  alive: false
+})
+
+const toastAttack = ref<ToastAttackInterface>({
+  title: '',
+  totalAttack: 0,
+  totalDamage: 0,
+  critical: 0,
   alive: false
 })
 
 const showModal = ref(false)
 const currentModal = ref(0)
 const currentSkill = ref<Skill>()
+
+onMounted(async() => {
+  const querySnapshot = await getDoc(doc(firestore, 'characters', characterId))
+
+  if(!querySnapshot.data()) router.push({ name: 'home' })
+
+  if((querySnapshot?.data()?.uid as string) !== auth?.currentUser?.uid) router.push({ name: 'home' })
+
+  character.value = querySnapshot.data() as Character
+  character.value.id = querySnapshot?.id
+
+  loading.value = false
+})
+
+const updateCharacter = () => {
+  updateDoc(doc(firestore, 'characters', character.value.id as string), character.value)
+}
+
+onBeforeUnmount(() => {
+  updateCharacter()
+})
 
 const dismissToastInfo = () => {
   toastInfo.value.alive = false
@@ -112,43 +162,63 @@ const dismissToastInfo = () => {
 
 const dismissToastRoll = () => toastRoll.value.alive = false
 
+const dismissToastAttack = () => toastAttack.value.alive = false
+
 const handleShowInfoToast = (toast: ToastInfo, name: string) => {
+  dismissToastRoll()
+  dismissToastAttack()
   toast.message = `${name} adicionado`
   toast.type = 'info'
   toast.alive = true
 }
 
-const handleShowDiceToast = (toast: ToastRoll, title: string, total: number, result: string, notation: string) => {
+const handleShowDiceToast = (toast: ToastRoll, title: string, total: number, output: string, notation: string) => {
   dismissToastInfo()
+  dismissToastAttack()
   toast.title = title
   toast.total = total
-  toast.result = result
+  toast.output = output
   toast.notation = notation
+  toast.alive = true
+}
+
+const handleShowAttackToast = (toast: ToastAttackInterface, title: string, totalAttack: number, totalDamage: number, critical: number) => {
+  dismissToastInfo()
+  dismissToastRoll()
+  toast.title = title
+  toast.totalAttack = totalAttack
+  toast.totalDamage = totalDamage
+  toast.critical = critical
   toast.alive = true
 }
 
 const handleChangeCharText = (payload: { e: Event, key: CharacterStringKeys }) => {
   const value = (payload.e.target as HTMLInputElement).value
   character.value[payload.key] = value
+  updateCharacter()
 }
 
 const handleChangeCharNumber = (payload: { e: Event, key: CharacterNumberKeys }) => {
   const value = (payload.e.target as HTMLInputElement).valueAsNumber
   changeCharNumber(character.value, value, payload.key)
+  updateCharacter()
 }
 
 const handleChangeAttributes = (payload: { e: Event, key: AttrKeys }) => {
   const value = (payload.e.target as HTMLInputElement).valueAsNumber
   changeCharAttributes(character.value, value, payload.key)
+  updateCharacter()
 }
 
 const handleChangeCharDropdown = (payload: { value: string, key: CharacterDropdownKeys }) => {
   character.value[payload.key] = payload.value
+  updateCharacter()
 }
 
 const handleChangeMovementInSquares = (e: Event) => {
   const value = (e.target as HTMLInputElement).valueAsNumber
   changeMovementInSquares(character.value, value)
+  updateCharacter()
 }
 
 const handleRollAttribute = (attr: AttrKeys) => {
@@ -170,11 +240,13 @@ const handleChangeSkillDropdown = (payload: { value: string, skillName: string, 
   const index = character.value.skills.findIndex((e) => e.name === payload.skillName)
   character.value.skills[index][payload.key] = payload.value
   updateSkillBonus(character.value, payload.skillName)
+  updateCharacter()
 }
 
 const handleChangeSkillOtherBonus = (payload: {value: number, skillName: string}) => {
   changeSkillOtherBonus(character.value, payload.value, payload.skillName)
   updateSkillBonus(character.value, payload.skillName)
+  updateCharacter()
 }
 
 const handleRollSkill = (skill: Skill) => {
@@ -205,60 +277,74 @@ const handleAddAttack = () => {
   const aux = {...attackDefaultValue}
   aux.id = uuidv4()
   character.value.attacks.push(aux)
+  updateCharacter()
 }
 
 const handleRemoveAttack = (id: string) => {
   removeAttack(character.value, id)
+  updateCharacter()
 }
 
 const handleRemovePower = (id: string) => {
   const index = character.value.powers.findIndex((e) => e.id === id)
   character.value.powers.splice(index, 1)
+  updateCharacter()
 }
 
 const handleRemoveRitual = (id: string) => {
   const index = character.value.rituals.findIndex((e) => e.id === id)
   character.value.rituals.splice(index, 1)
+  updateCharacter()
 }
 
 const handleRemoveItem = (id: string) => {
   removeItem(character.value, id)
+  updateCharacter()
 }
 
 const handleEquipItem = (id: string) => {
   handleItem(character.value, id)
+  updateCharacter()
 }
 
 const handleChangeAttackText = (payload: {e: Event, id: string, key: AttackStringKeys}) => {
-  const value = (payload.e.target as HTMLInputElement).value
+  let value = (payload.e.target as HTMLInputElement).value
   const index = character.value.attacks.findIndex((e) => e.id === payload.id)
+  if(payload.key === 'damage' || payload.key === 'extraDamage') if(value === '') value = '-'
   character.value.attacks[index][payload.key] = value
+  updateCharacter()
 }
 
 const handleChangeAttackNumber = (payload: {e: Event, id: string, key: AttackNumberKeys}) => {
   const value = (payload.e.target as HTMLInputElement).valueAsNumber
   changeAttackNumber(character.value, value, payload.id, payload.key)
+  updateCharacter()
 }
 
 const handleChangeAttackDropdown = (payload: {value: string, id: string, key: AttackDropdownKeys}) => {
   const index = character.value.attacks.findIndex((e) => e.id === payload.id)
   character.value.attacks[index][payload.key] = payload.value
+  updateCharacter()
 }
 
 const handleChangeDescription = (payload: {value: string, key: DescriptionKeys}) => {
   character.value.description[payload.key] = payload.value
+  updateCharacter()
 }
 
 const handleChangeInventoryDropdown = (payload: {value: string, key: InventoryDropdownKeys}) => {
   character.value[payload.key] = payload.value
+  updateCharacter()
 }
 
 const handleChangeInventoryNumber = (payload: {value: number, key: InventoryNumberKeys}) => {
   changeInventoryNumber(character.value, payload.value, payload.key)
+  updateCharacter()
 }
 
 const handleChangeItemsLimit = (payload: {value: number, key: ItemsLimitKeys}) => {
   changeItemsLimit(character.value, payload.value, payload.key)
+  updateCharacter()
 }
 
 const handleRollDices = (value: string) => {
@@ -270,30 +356,42 @@ const handleRollDices = (value: string) => {
   handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
 }
 
+const handleRollAttack = (attack: Attack) => {
+  play()
+  const { attackTotal, damageTotal, critical } = rollAttack(character.value, attack)
+  handleShowAttackToast(toastAttack.value, attack.name, attackTotal, damageTotal, critical)
+}
+
 const handleAddPower = (power: Power) => {
   addPower(character.value, power)
   handleShowInfoToast(toastInfo.value, power.name)
+  updateCharacter()
 }
 
 const handleAddRitual = (ritual: Ritual) => {
   addRitual(character.value, ritual)
   handleShowInfoToast(toastInfo.value, ritual.name)
+  updateCharacter()
 }
 
 const handleAddItem = (item: Weapon | Protection | Misc) => {
   addItem(character.value, item)
   handleShowInfoToast(toastInfo.value, item.name)
+  updateCharacter()
 }
 
 watch(() => toastInfo.value.alive, () => {
   if(toastInfo.value.alive === true) {
-    toastInfo.value.timeout = setTimeout(() => toastInfo.value.alive = false, 3000)
+    toastInfo.value.timeout = window.setTimeout(() => toastInfo.value.alive = false, 3000)
   }
 })
 </script>
 
 <template>
-  <div class="character-sheet">
+  <div
+    v-if="!loading"
+    class="character-sheet"
+  >
     <div class="sheet-stats">
       <SheetStats
         :character="character"
@@ -334,6 +432,7 @@ watch(() => toastInfo.value.alive, () => {
         @handle-change-inventory-number="handleChangeInventoryNumber"
         @handle-change-items-limit="handleChangeItemsLimit"
         @handle-roll-dices="handleRollDices"
+        @handle-roll-attack="handleRollAttack"
       />
     </div>
     <vue-final-modal 
@@ -364,9 +463,19 @@ watch(() => toastInfo.value.alive, () => {
         v-if="toastRoll.alive"
         :title="toastRoll.title"
         :total="toastRoll.total"
-        :result="toastRoll.result"
+        :output="toastRoll.output"
         :notation="toastRoll.notation"
         @dismiss="dismissToastRoll"
+      />
+    </transition>
+    <transition name="toast">
+      <ToastAttack
+        v-if="toastAttack.alive"
+        :title="toastAttack.title"
+        :total-attack="toastAttack.totalAttack"
+        :total-damage="toastAttack.totalDamage"
+        :critical="toastAttack.critical"
+        @dismiss="dismissToastAttack"
       />
     </transition>
   </div>

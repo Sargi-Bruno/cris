@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { Character } from '../../../types'
 import PowerCard from '../../../components/PowerCard.vue'
 
-defineProps<{character: Character}>()
+const props = defineProps<{character: Character}>()
 
 defineEmits(['handleOpenAbilitiesModal', 'handleRemovePower'])
 
+const powersOrdered = computed(() => {
+  const powers = [...props.character.powers]
+  return powers.sort((a, b) => a.name.localeCompare(b.name))
+})
 </script>
 
 <template>
@@ -18,7 +23,7 @@ defineEmits(['handleOpenAbilitiesModal', 'handleRemovePower'])
     </button>
     <div v-if="character.powers.length > 0" class="sheet-cards-container">
       <div 
-        v-for="power in character.powers" 
+        v-for="power in powersOrdered" 
         :key="power.id"
         class="sheet-card-list"
       >

@@ -216,7 +216,9 @@ export interface Character {
     history: string
     goal: string
   }
+  uid?: string
   id?: string
+  timestamp?: unknown
 }
 
 const characterStringKeysList = ['name', 'player'] as const
@@ -233,6 +235,9 @@ export type AttrKeys = typeof attrList[number]
 
 const attrPtList = ['FOR', 'AGI', 'INT', 'VIG', 'PRE'] as const
 export type AttrPtKeys = typeof attrPtList[number]
+
+const attrDamageList = ['Força', 'Agilidade', 'Intelecto', 'Vigor', 'Presença'] as const
+export type AttrDamageKeys = typeof attrDamageList[number]
 
 const attackStringKeyList = ['name', 'damage', 'extraDamage'] as const
 export type AttackStringKeys = typeof attackStringKeyList[number]
@@ -257,3 +262,8 @@ export type InventoryNumberKeys = typeof inventoryNumberKeyList[number]
 
 const itemsLimitKeyList = ['I', 'II', 'III', 'IV'] as const
 export type ItemsLimitKeys = typeof itemsLimitKeyList[number]
+
+export interface Timestamp {
+  seconds: number
+  nanoseconds: number
+}

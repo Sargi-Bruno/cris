@@ -13,6 +13,7 @@
     "@dice-roller/rpg-dice-roller": "^5.1.0",
     "@vueuse/core": "^9.2.0",
     "@vueuse/sound": "^1.1.7",
+    "firebase": "^9.10.0",
     "uuid": "^9.0.0",
     "vue": "^3.2.37",
     "vue-final-modal": "^3.4.4",

@@ -26,7 +26,6 @@ const handleRollAttribute = (attr: AttrKeys) => {
         <input 
           type="text" 
           class="sheet-input-title"
-          placeholder="Nome do personagem"
           autocomplete="nope"
           :value="character.name"
           @blur="e => $emit('handleChangeCharText', {e, key: 'name'})"
@@ -37,7 +36,6 @@ const handleRollAttribute = (attr: AttrKeys) => {
         <input 
           type="text" 
           class="sheet-input-title"
-          placeholder="Nome do jogador"
           autocomplete="nope"
           :value="character.player"
           @blur="e => $emit('handleChangeCharText', {e, key: 'player'})"

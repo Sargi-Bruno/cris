@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { Character } from '../../../types'
 import RitualCard from '../../../components/RitualCard.vue'
 
-defineProps<{character: Character}>()
+const props = defineProps<{character: Character}>()
 
 defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual'])
+
+const ritualsOrdered = computed(() => {
+  const rituals = [...props.character.rituals]
+  return rituals.sort((a, b) => a.name.localeCompare(b.name))
+})
 </script>
   
 <template>
@@ -17,7 +23,7 @@ defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual'])
     </button>
     <div v-if="character.rituals.length > 0" class="sheet-cards-container">
       <div 
-        v-for="ritual in character.rituals" 
+        v-for="ritual in ritualsOrdered" 
         :key="ritual.id"
         class="sheet-card-list"
       >

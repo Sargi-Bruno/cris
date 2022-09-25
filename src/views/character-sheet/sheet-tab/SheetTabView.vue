@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Character } from '../../../types'
+import { Character, Attack } from '../../../types'
 import TabNav from '../../../components/TabNav.vue'
 import AttacksTab from './AttacksTab.vue'
 import AbilitiesTab from './AbilitiesTab.vue'
@@ -39,7 +39,8 @@ const emit = defineEmits([
   'handleChangeInventoryNumber',
   'handleChangeItemsLimit', 
   'handleChangeInventoryDropdown',
-  'handleRollDices'
+  'handleRollDices',
+  'handleRollAttack'
 ])
 
 const tabOptions = [
@@ -75,6 +76,8 @@ const handleChangeInventoryNumber = (payload: {value: number, key: string}) => e
 const handleChangeItemsLimit  = (payload: {value: number, key: string}) => emit('handleChangeItemsLimit', payload)
 
 const handleChangeInventoryDropdown = (payload: {value: string, key: string}) => emit('handleChangeInventoryDropdown', payload)
+
+const handleRollAttack = (attack: Attack) => emit('handleRollAttack', attack)
 </script>
 
 <template>
@@ -107,6 +110,7 @@ const handleChangeInventoryDropdown = (payload: {value: string, key: string}) =>
         @handle-change-items-limit="handleChangeItemsLimit"
         @handle-change-inventory-dropdown="handleChangeInventoryDropdown"
         @handle-roll-dices="(value: string) => $emit('handleRollDices', value)"
+        @handle-roll-attack="handleRollAttack"
       />
     </KeepAlive>
   </div>

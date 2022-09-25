@@ -6,16 +6,16 @@ const props = defineProps({
     type: String,
     required: true
   },
-  total: {
+  totalAttack: {
     type: Number,
     required: true
   },
-  output: {
-    type: String,
+  totalDamage: {
+    type: Number,
     required: true
   },
-  notation: {
-    type: String,
+  critical: {
+    type: Number,
     required: true
   }
 })
@@ -26,28 +26,10 @@ const greenColor = '#5cb85c'
 const redColor = '#d9534f'
 const whiteColor = '#fff'
 
-const totalColor = computed(() => {
-  let color = whiteColor
-
-  if(props.title === 'Resultado') return color
-  
-  const outputArray = props.output.substring(props.output.indexOf('['), props.output.indexOf(']')).split(',')
-
-  if(outputArray.length > 1) {
-    outputArray.map(value => {
-      if(!value.includes('d')) {
-        if(parseInt(value) === 20) color = greenColor
-        if(parseInt(value) === 1) color = redColor
-      }
-    })
-  } else {
-    const outputSubstring = props.output.substring(props.output.indexOf('[') + 1, props.output.indexOf(']'))
-
-    if(parseInt(outputSubstring) === 20) color = greenColor
-    if(parseInt(outputSubstring) === 1) color = redColor
-  }
-  
-  return color
+const attackColor = computed(() => {
+  if(props.critical === 1) return greenColor
+  if(props.critical === -1) return redColor
+  return whiteColor
 })
 </script>
 
@@ -68,15 +50,14 @@ const totalColor = computed(() => {
             {{ title }}
           </h3>
           <div class="result">
-            <div class="result-container">
-              <h4>{{ output }}</h4>
-              <h4 v-if="title === 'Resultado'">
-                {{ notation }}
-              </h4>
+            <div class="attack-container">
+              <h3>{{ totalAttack }}</h3>
+              <h4>ATAQUE</h4>
             </div>
-            <span>=</span>
-            <div class="total-container">
-              <h3>{{ total }}</h3>
+            <div class="divider" />
+            <div class="damage-container">
+              <h3>{{ totalDamage }}</h3>
+              <h4>DANO</h4>
             </div>
           </div>
         </div>
@@ -122,34 +103,44 @@ const totalColor = computed(() => {
   margin: 0;
 }
 .result {
+  width: 11.5rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
-.result span {
-  color: var(--color-white);
-  font-size: 14px;
+.result h3 {
+  width: 2.25rem;
+  margin: 0;
+  font-size: 32px;
+  text-align: center;
 }
-.result-container {
-  margin-right: .5rem;
-}
-.result-container h4 {
+.result h4 {
   margin: 0;
   font-size: 14px;
   color: var(--color-off-white);
-  width: 120px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-align: center;
 }
-.total-container {
-  margin-left: 1rem;
+.attack-container {
+  width: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.total-container h3 {
-  width: 2.25rem;
-  text-align: right;
-  margin: 0;
-  font-size: 32px;
-  color: v-bind(totalColor);
+.attack-container h3 {
+  color: v-bind(attackColor);
+}
+.damage-container {
+  width: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.divider {
+  height: 2.75rem;
+  margin-bottom: auto;
+  border-left: 1px solid var(--color-off-white);
 }
 .toast-icon {
   height: 2rem;

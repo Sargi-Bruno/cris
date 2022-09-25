@@ -55,7 +55,15 @@ const handleRemove = () => {
       <div v-if="showMore">
         <DividerView />
         <div class="content">
-          <div :class="{ 'sheet-content': sheet}" v-html="power.description" />
+          <div v-if="power.description[0] !== '<'">
+            <p class="sheet-content">
+              {{ power.description }}
+            </p>
+          </div>
+          <div v-else>
+            <div :class="{ 'sheet-content': sheet}" v-html="power.description" />
+          </div>
+          
           <button 
             v-if="sheet"
             class="button-remove card-remove-button"
@@ -101,6 +109,9 @@ const handleRemove = () => {
   margin-left: .75rem;
 }
 .sheet-title {
+  font-size: 14px;
+}
+.sheet-content p {
   font-size: 14px;
 }
 .sheet-content :deep(p) {

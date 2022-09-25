@@ -66,6 +66,7 @@ const handleUpdateValue = (option: string) => {
 }
 .span {
   color: var(--color-white);
+  font-size: 14px;
 }
 .dropdown-button {
   width: 2.25rem;

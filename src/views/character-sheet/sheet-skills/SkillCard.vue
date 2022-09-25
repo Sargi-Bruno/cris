@@ -41,6 +41,14 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
 </script>
 
 <template>
+  <td class="small">
+    <button 
+      class="roll-button"
+      @click="$emit('handleRollSkill', skill)"
+    >
+      <img src="../../../assets/d20-icon.png" alt="rolar">
+    </button>
+  </td>
   <td>
     <button 
       class="naked-button left"
@@ -65,14 +73,9 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
     />
   </td>
   <td>
-    <span>( </span>
-    <button 
-      class="naked-button"
-      @click="$emit('handleRollSkill', skill)"
-    >
-      {{ skill.bonus }}
-    </button>
-    <span> )</span>
+    <h3 class="skill-bonus">
+      <span>( </span>{{ skill.bonus }}<span> )</span>
+    </h3>
   </td>
   <td v-if="index > (length - 7)">
     <SkillsDropdown 
@@ -104,11 +107,27 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
 </template>
 
 <style scoped>
+.roll-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin: 0;
+}
+.roll-button img {
+  width: 1rem;
+  height: 1rem;
+}
 td {
-  min-width: 3.25rem;
+  width: 3.25rem;
   text-align: center;
 }
 td span {
+  font-size: 14px;
   color: var(--color-white);
 }
 .input-container {
@@ -130,6 +149,12 @@ td span {
 }
 .naked-button:hover span {
   color: var(--color-primary);
+  font-size: 14px;
+}
+.skill-bonus {
+  font-size: 14px;
+  margin: 0;
+  font-weight: normal;
 }
 .underline-input {
   background-color: transparent;
@@ -144,5 +169,8 @@ td span {
 .left {
   width: 6.25rem;
   text-align: left;
+}
+.small {
+  width: 1rem;
 }
 </style>

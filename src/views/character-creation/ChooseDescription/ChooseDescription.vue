@@ -7,9 +7,9 @@ interface DescriptionItems {
   placeholder: string
 }
 
-defineProps<{character: Character}>()
+defineProps<{character: Character, loading: boolean}>()
 
-const emit = defineEmits(['handleUpdateDescription', 'handleFinishCreation'])
+const emit = defineEmits(['handleUpdateDescription', 'handleFinishCreation', 'handleChangeChar'])
 
 const handleUpdateDescription = (e: Event, key: 'physical' | 'personal' | 'history' | 'goal') => {
   const payload = {
@@ -56,6 +56,7 @@ const items: Array<DescriptionItems> = [
     </p>
     <button 
       class="button-primary finish-button"
+      :disabled="loading"
       @click="$emit('handleFinishCreation')"
     >
       Finalizar
@@ -68,6 +69,7 @@ const items: Array<DescriptionItems> = [
           class="input-primary"
           placeholder="Nome do personagem"
           :value="character.name"
+          @blur="e => $emit('handleChangeChar', {e, key: 'name'})"
         >
       </div>
       <div class="input-container">
@@ -77,6 +79,7 @@ const items: Array<DescriptionItems> = [
           class="input-primary"
           placeholder="Nome do jogador"
           :value="character.player"
+          @blur="e => $emit('handleChangeChar', {e, key: 'player'})"
         >
       </div>
     </div>
@@ -88,7 +91,7 @@ const items: Array<DescriptionItems> = [
           rows="6"
           :placeholder="item.placeholder"
           :value="character.description[item.key]"
-          @input="(e) => handleUpdateDescription(e, item.key)"
+          @blur="(e) => handleUpdateDescription(e, item.key)"
         >
         </textarea>
       </div>

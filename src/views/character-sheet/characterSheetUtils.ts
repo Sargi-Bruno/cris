@@ -16,21 +16,22 @@ import {
   InventoryNumberKeys,
   ItemsLimitKeys,
   AttrPtKeys,
+  AttrDamageKeys
 } from "../../types"
 
 export const characterDefaultValue: Character = {
-  name: 'Adam',
-  player: 'Bruno',
+  name: '',
+  player: '',
   attributes: {
-    str: 1,
-    dex: 1,
-    int: 1,
-    con: 1,
-    pre: 1,
+    str: 0,
+    dex: 0,
+    int: 0,
+    con: 0,
+    pre: 0,
   },
-  backgroundName: 'T.I.',
-  className: 'Combatente',
-  nex: '5%',
+  backgroundName: '',
+  className: '',
+  nex: '',
   movement: 9,
   maxPv: 0,
   currentPv: 0,
@@ -47,17 +48,17 @@ export const characterDefaultValue: Character = {
   powers: [],
   rituals: [],
   ritualsDc: 0,
-  patent: 'Recruta',
+  patent: '',
   prestigePoints: 0,
   inventory: [],
   itemsLimit: {
-    I: 2,
+    I: 0,
     II: 0,
     III: 0,
     IV: 0,
   },
-  creditsLimit: 'Baixo',
-  maxLoad: 10,
+  creditsLimit: '',
+  maxLoad: 0,
   currentLoad: 0,
   description: {
     physical: '',
@@ -70,12 +71,12 @@ export const characterDefaultValue: Character = {
 export const attackDefaultValue: Attack = {
   name: '',
   attackBonus: 0,
-  damage: '0',
-  extraDamage: '0',
+  damage: '-',
+  extraDamage: '-',
   criticalRange: 20,
   criticalMult: 2,
-  damageType: '',
-  range: '',
+  damageType: '-',
+  range: '-',
   skillUsed: 'Luta',
   damageAttribute: 'Força'
 }
@@ -94,6 +95,14 @@ const attrShortDic = {
   INT: 'int',
   PRE: 'pre',
   VIG: 'con'
+}
+
+const attrDamageDic = {
+  'Força': 'str',
+  'Agilidade': 'dex',
+  'Intelecto': 'int',
+  'Vigor': 'con',
+  'Presença': 'pre'
 }
 
 const formatValueNumbers = (value: number, limit: 1 | 2 | 3, floor = true, noNegative = true) => {
@@ -161,19 +170,83 @@ export const rollAttribute = (character: Character, attr: AttrKeys) => {
 }
 
 export const rollDices = (value: string) => {
-  const roll = new DiceRoll(value)
+  const roll = new DiceRoll(value.trim())
 
   return roll
+}
+
+export const rollAttack = (character: Character, attack: Attack) => {
+  const rollSkillIndex = character.skills.findIndex((e) => e.name === attack.skillUsed)
+  const skill = character.skills[rollSkillIndex]
+  const attrSkillValue = character.attributes[attrShortDic[skill.attribute  as AttrPtKeys] as AttrKeys]
+  
+  let attackRollString: string
+
+  if(attrSkillValue > 0) 
+    attackRollString = `${attrSkillValue}d20kh1` 
+                        + (skill.bonus !== 0 ? `+${skill.bonus}` : '')
+                        + (attack.attackBonus !== 0 ? `+${attack.attackBonus}` : '')
+
+  else attackRollString = `${Math.abs(attrSkillValue) + 2}d20kl1`
+                           + (skill.bonus !== 0 ? `+${skill.bonus}` : '')
+                           + (attack.attackBonus !== 0 ? `+${attack.attackBonus}` : '')
+
+  const rollAttack = new DiceRoll(attackRollString.trim())
+  const attackTotal = rollAttack.total
+
+  const outputAttackArray = rollAttack.output.substring(rollAttack.output.indexOf('['), rollAttack.output.indexOf(']')).split(',')
+  let critical = 0
+
+  if(outputAttackArray.length > 1) {
+    outputAttackArray.map(value => {
+      if(!value.includes('d')) {
+        if(parseInt(value) >= attack.criticalRange) critical = 1
+        if(parseInt(value) === 1) critical = -1
+        if(parseInt(value) === 1 && attack.criticalRange === 1) critical = 1
+      }
+    })
+  } else {
+    const outputAttackString = rollAttack.output.substring(rollAttack.output.indexOf('[') + 1, rollAttack.output.indexOf(']'))
+
+    if(parseInt(outputAttackString) >= attack.criticalRange) critical = 1
+    if(parseInt(outputAttackString) === 1) critical = -1
+  }
+
+  const damageRollString = attack.damage !== '-' ? `${attack.damage}` : '0'
+  let damageTotal = 0
+
+  if(critical === 1) {
+    for(let x = 0; x < attack.criticalMult; x++) {
+      const damageRoll = new DiceRoll(damageRollString.trim())
+      damageTotal += damageRoll.total
+    }
+  } else {
+    const damageRoll = new DiceRoll(damageRollString.trim())
+    damageTotal += damageRoll.total
+  }
+
+  const attrDamageValue = attack.damageAttribute !== 'Nenhum' ? 
+                          `${character.attributes[attrDamageDic[attack.damageAttribute as AttrDamageKeys] as AttrKeys]}` : ''
+
+  const extraDamageRollString = attack.extraDamage !== '-' ? 
+                                `${attack.extraDamage}` + (attrDamageValue !== '' ? `+${attrDamageValue}` : '') : (attrDamageValue !== '' ? `${attrDamageValue}` : '')
+  
+  if(extraDamageRollString !== '') {
+    const extraDamageRoll = new DiceRoll(extraDamageRollString.trim())
+    damageTotal += extraDamageRoll.total
+  }
+  
+  return { attackTotal, damageTotal, critical  }
 }
 
 export const rollSkill = (character: Character, skill: Skill) => {
   let rollString: string
   const attrValue = character.attributes[attrShortDic[skill.attribute as AttrPtKeys] as AttrKeys]
 
-  if(attrValue > 0) rollString = `${attrValue}d20kh1 + ${skill.bonus}`
-  else rollString = `${Math.abs(attrValue) + 2}d20kl1 + ${skill.bonus}`
+  if(attrValue > 0) rollString = `${attrValue}d20kh1` + (skill.bonus !== 0 ? `+${skill.bonus}` : '')
+  else rollString = `${Math.abs(attrValue) + 2}d20kl1` + (skill.bonus !== 0 ? `+${skill.bonus}` : '')
 
-  const roll = new DiceRoll(rollString)
+  const roll = new DiceRoll(rollString.trim())
 
   return roll
 }

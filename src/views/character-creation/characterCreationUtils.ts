@@ -34,10 +34,10 @@ export const characterDefaultValue: Character = {
   prestigePoints: 0,
   inventory: [],
   itemsLimit: {
-    I: '2',
-    II: '-',
-    III: '-',
-    IV: '-',
+    I: 2,
+    II: 0,
+    III: 0,
+    IV: 0,
   },
   creditsLimit: 'Baixo',
   maxLoad: 0,
@@ -64,10 +64,10 @@ export const addBackground = (character: Character, background: Background | nul
   character.backgroundName = background.name
   character.powers.push(background.power)
 
-  for(const skillName of background.skills) {
-    const index = character.skills.findIndex((skill) => skill.name === skillName)
-    character.skills[index].trainingDegree = 'T'
-  }
+  // for(const skillName of background.skills) {
+  //   const index = character.skills.findIndex((skill) => skill.name === skillName)
+  //   character.skills[index].trainingDegree = 'T'
+  // }
 }
 
 export const addClass = (character: Character, charClass: Class | null) => {

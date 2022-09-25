@@ -52,6 +52,16 @@ button {
   font-family: 'Roboto', sans-serif;
 }
 
+button:disabled {
+  background-color: var(--color-light-black);
+  color: var(--color-off-white);
+  cursor: auto;
+}
+
+button:disabled:hover {
+  filter: brightness(100%);
+}
+
 input {
   font-family: 'Roboto', sans-serif;
 }
