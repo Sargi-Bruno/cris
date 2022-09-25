@@ -2,6 +2,10 @@
 import { computed } from 'vue'
 
 const props = defineProps({
+  charId: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true
@@ -16,7 +20,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['handleAdd', 'handleRemove'])
+defineEmits(['handleRemove'])
 
 const creationDate = computed(() => {
   const date = new Date(props.timestamp * 1000);
@@ -44,10 +48,14 @@ const creationDate = computed(() => {
     <div class="footer">
       <button 
         class="button-remove"
+        @click="$emit('handleRemove', charId)"
       >
         Remover
       </button>
-      <button class="sheet-button button-primary">
+      <button 
+        class="sheet-button button-primary"
+        @click="$router.push({ name: 'character-sheet', params: { id: charId }})"
+      >
         Ficha
       </button>
     </div>

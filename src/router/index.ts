@@ -33,7 +33,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/contato',
+      path: '/creditos-e-contato',
       name: 'contact',
       component: () => import('../views/contact/ContactView.vue')
     },

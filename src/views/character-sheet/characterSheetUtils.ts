@@ -71,8 +71,8 @@ export const characterDefaultValue: Character = {
 export const attackDefaultValue: Attack = {
   name: '',
   attackBonus: 0,
-  damage: '-',
-  extraDamage: '-',
+  damage: '',
+  extraDamage: '',
   criticalRange: 20,
   criticalMult: 2,
   damageType: '-',
@@ -212,7 +212,7 @@ export const rollAttack = (character: Character, attack: Attack) => {
     if(parseInt(outputAttackString) === 1) critical = -1
   }
 
-  const damageRollString = attack.damage !== '-' ? `${attack.damage}` : '0'
+  const damageRollString = attack.damage !== '' ? `${attack.damage}` : '0'
   let damageTotal = 0
 
   if(critical === 1) {
@@ -228,7 +228,7 @@ export const rollAttack = (character: Character, attack: Attack) => {
   const attrDamageValue = attack.damageAttribute !== 'Nenhum' ? 
                           `${character.attributes[attrDamageDic[attack.damageAttribute as AttrDamageKeys] as AttrKeys]}` : ''
 
-  const extraDamageRollString = attack.extraDamage !== '-' ? 
+  const extraDamageRollString = attack.extraDamage !== '' ? 
                                 `${attack.extraDamage}` + (attrDamageValue !== '' ? `+${attrDamageValue}` : '') : (attrDamageValue !== '' ? `${attrDamageValue}` : '')
   
   if(extraDamageRollString !== '') {
@@ -252,16 +252,9 @@ export const rollSkill = (character: Character, skill: Skill) => {
 }
 
 export const updateSkillBonus = (character: Character, skillName: string) => {
-  const trainingValues = {
-    D: 0,
-    T: 5,
-    V: 10,
-    E: 15
-  }
-
   const index = character.skills.findIndex((e) => e.name === skillName)
   const skill =  character.skills[index]
-  skill.bonus = trainingValues[(skill.trainingDegree as 'D' | 'T' | 'V' | 'E')] + skill.otherBonus
+  skill.bonus = parseInt(skill.trainingDegree) + skill.otherBonus
 }
 
 export const changeSkillOtherBonus = (character: Character, value: number, skillName: string) => {
@@ -406,4 +399,8 @@ export const addItem = (character: Character, item: Weapon | Protection | Misc) 
 
   character.currentLoad += addedLoad
   character.inventory.push(aux)
+}
+
+export const changeRitualDc = (character: Character, value: number) => {
+  character.ritualsDc = formatValueNumbers(value, 3)
 }

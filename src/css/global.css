@@ -59,7 +59,7 @@ button:disabled {
 }
 
 button:disabled:hover {
-  filter: brightness(100%);
+  filter: none;
 }
 
 input {

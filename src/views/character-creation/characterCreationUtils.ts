@@ -78,6 +78,18 @@ export const addClass = (character: Character, charClass: Class | null) => {
   for(const abilitie of charClass.abilities) {
     character.powers.push(abilitie)
   }
+
+  character.maxPv = charClass.initialPv + character.attributes.con
+  character.currentPv = character.maxPv
+  character.maxPe = charClass.initialPe + character.attributes.pre
+  character.currentPe = character.maxPe
+  character.maxSan = charClass.initialSan
+  character.currentSan = character.maxSan
+
+  if(character.attributes.str === 0) character.maxLoad = 2
+  else character.maxLoad = 5 * character.attributes.str
+
+  character.ritualsDc = 11 + character.attributes.pre
 }
 
 export const updateDescription = (character: Character, payload: { value: string, key:  'physical' | 'personal' | 'history' | 'goal'}) => {

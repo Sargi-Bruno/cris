@@ -43,8 +43,14 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
   
 <template>
   <div class="inventory-tab">
+    <button 
+      class="button-primary add-button"
+      @click="$emit('handleOpenItemsModal')"
+    >
+      Adicionar
+    </button>
     <div class="inventory-info-container">
-      <div class="inventory-row inventory-row-gap">
+      <div class="inventory-row">
         <div class="input-container">
           <h4 class="sheet-subtitle">
             PONTOS DE PRESTÍGIO
@@ -99,7 +105,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
           >
         </div>
       </div>
-      <div class="inventory-row inventory-row-gap">
+      <div class="inventory-row">
         <SheetDropdown
           title="LIMITE DE CRÉDITO"
           :value="character.creditsLimit"
@@ -126,12 +132,6 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
         </div>
       </div>
     </div>
-    <button 
-      class="button-primary add-button"
-      @click="$emit('handleOpenItemsModal')"
-    >
-      Adicionar
-    </button>
     <div v-if="character.inventory.length > 0" class="sheet-cards-container">
       <div 
         v-for="item in character.inventory" 
@@ -183,13 +183,12 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
 .add-button {
   display: block;
   margin-left: auto;
+  margin-bottom: 2rem;
 }
 .inventory-row {
   display: flex;
+  justify-content: space-between;
   margin-bottom: 1rem;
-}
-.inventory-row-gap {
-  gap: 1.5rem;
 }
 .input-container {
   display: flex;

@@ -40,7 +40,8 @@ const emit = defineEmits([
   'handleChangeItemsLimit', 
   'handleChangeInventoryDropdown',
   'handleRollDices',
-  'handleRollAttack'
+  'handleRollAttack',
+  'handleChangeRitualDc'
 ])
 
 const tabOptions = [
@@ -78,6 +79,8 @@ const handleChangeItemsLimit  = (payload: {value: number, key: string}) => emit(
 const handleChangeInventoryDropdown = (payload: {value: string, key: string}) => emit('handleChangeInventoryDropdown', payload)
 
 const handleRollAttack = (attack: Attack) => emit('handleRollAttack', attack)
+
+const handleChangeRitualDc = (e: Event) => emit('handleChangeRitualDc', e)
 </script>
 
 <template>
@@ -111,6 +114,7 @@ const handleRollAttack = (attack: Attack) => emit('handleRollAttack', attack)
         @handle-change-inventory-dropdown="handleChangeInventoryDropdown"
         @handle-roll-dices="(value: string) => $emit('handleRollDices', value)"
         @handle-roll-attack="handleRollAttack"
+        @handle-change-ritual-dc="handleChangeRitualDc"
       />
     </KeepAlive>
   </div>

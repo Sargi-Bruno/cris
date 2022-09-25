@@ -21,7 +21,7 @@ const props = defineProps({
 const emit = defineEmits(['handleOpenSkillModal', 'handleChangeSkillOtherBonus', 'handleChangeSkillDropdown', 'handleRollSkill'])
 
 const attrOptions = ['AGI', 'FOR', 'INT', 'PRE', 'VIG']
-const trainingOptions = ['D', 'T', 'V', 'E']
+const trainingOptions = ['0', '5', '10', '15']
 
 const instance = getCurrentInstance()
 

@@ -2,9 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
 
-const firestore = getFirestore()
 const auth = getAuth()
 const router = useRouter()
 const isLoggedIn = ref(false)
@@ -13,19 +11,6 @@ const handleSignIn = () => {
   const provider = new GoogleAuthProvider()
 
   signInWithPopup(auth, provider)
-    .then(async () => {
-      if(!auth.currentUser) return
-
-      const querySnapshot = await getDoc(doc(firestore, 'users', auth.currentUser.uid))
-
-      if(!querySnapshot.data()) {
-        const newUser = {
-          characters: []
-        }
-
-        setDoc(doc(firestore, 'users', auth.currentUser.uid), newUser)
-      }
-    })
 }
 
 const handleLogout = () => {
@@ -44,7 +29,10 @@ onMounted(() => {
 <template>
   <div class="header">
     <div class="header-content">
-      <div class="logo">
+      <div 
+        class="logo"
+        @click="$router.push({ name: 'home' })"
+      >
         <h1>C.R.I.S.</h1>
       </div>
       <div class="nav-container">
@@ -55,7 +43,7 @@ onMounted(() => {
           Agentes
         </router-link>
         <router-link :to="{ name: 'contact' }">
-          Contato
+          Créditos e contato
         </router-link>
       </div>
       <div v-if="!isLoggedIn">
@@ -99,11 +87,12 @@ onMounted(() => {
   margin: 0;
   margin-left: 1rem;
   color: var(--color-primary);
+  cursor: pointer;
 }
 .nav-container {
   display: flex;
   justify-content: space-between;
-  width: 25%;
+  width: 30%;
 }
 .nav-container a {
   color: var(--color-white);

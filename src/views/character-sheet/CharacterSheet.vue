@@ -60,7 +60,8 @@ import {
   formatRollResult,
   formatRollNotation,
   rollDices,
-  rollAttack
+  rollAttack,
+  changeRitualDc
 } from './characterSheetUtils'
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
@@ -172,6 +173,14 @@ const handleShowInfoToast = (toast: ToastInfo, name: string) => {
   toast.alive = true
 }
 
+const handleShowErrorToast = (toast: ToastInfo) => {
+  dismissToastRoll()
+  dismissToastAttack()
+  toast.message = 'Valor incorreto nos dados'
+  toast.type = 'error'
+  toast.alive = true
+}
+
 const handleShowDiceToast = (toast: ToastRoll, title: string, total: number, output: string, notation: string) => {
   dismissToastInfo()
   dismissToastAttack()
@@ -222,12 +231,17 @@ const handleChangeMovementInSquares = (e: Event) => {
 }
 
 const handleRollAttribute = (attr: AttrKeys) => {
-  play()
-  const title = attrDic[attr]
-  const roll = rollAttribute(character.value, attr)
-  const output = formatRollResult(roll.output)
-  const notation = formatRollNotation(roll.output)
-  handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+  try {
+    play()
+    const title = attrDic[attr]
+    const roll = rollAttribute(character.value, attr)
+    const output = formatRollResult(roll.output)
+    const notation = formatRollNotation(roll.output)
+    handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+
+  } catch(error) {
+    handleShowErrorToast(toastInfo.value)
+  }
 }
 
 const handleOpenSkillModal = (skill: Skill) => {
@@ -250,12 +264,17 @@ const handleChangeSkillOtherBonus = (payload: {value: number, skillName: string}
 }
 
 const handleRollSkill = (skill: Skill) => {
-  play()
-  const title = skill.name
-  const roll = rollSkill(character.value, skill)
-  const output = formatRollResult(roll.output)
-  const notation = formatRollNotation(roll.output)
-  handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+  try {
+    play()
+    const title = skill.name
+    const roll = rollSkill(character.value, skill)
+    const output = formatRollResult(roll.output)
+    const notation = formatRollNotation(roll.output)
+    handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+    
+  } catch(error) {
+    handleShowErrorToast(toastInfo.value)
+  }
 }
 
 const handleOpenAbilitiesModal = () => {
@@ -308,9 +327,8 @@ const handleEquipItem = (id: string) => {
 }
 
 const handleChangeAttackText = (payload: {e: Event, id: string, key: AttackStringKeys}) => {
-  let value = (payload.e.target as HTMLInputElement).value
+  const value = (payload.e.target as HTMLInputElement).value
   const index = character.value.attacks.findIndex((e) => e.id === payload.id)
-  if(payload.key === 'damage' || payload.key === 'extraDamage') if(value === '') value = '-'
   character.value.attacks[index][payload.key] = value
   updateCharacter()
 }
@@ -348,18 +366,34 @@ const handleChangeItemsLimit = (payload: {value: number, key: ItemsLimitKeys}) =
 }
 
 const handleRollDices = (value: string) => {
-  play()
-  const title = 'Resultado'
-  const roll = rollDices(value)
-  const output = formatRollResult(roll.output)
-  const notation = formatRollNotation(roll.output)
-  handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+  try {
+    play()
+    const title = 'Resultado'
+    const roll = rollDices(value)
+    const output = formatRollResult(roll.output)
+    const notation = formatRollNotation(roll.output)
+    handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+
+  } catch(error) {
+    handleShowErrorToast(toastInfo.value)
+  }
 }
 
 const handleRollAttack = (attack: Attack) => {
-  play()
-  const { attackTotal, damageTotal, critical } = rollAttack(character.value, attack)
-  handleShowAttackToast(toastAttack.value, attack.name, attackTotal, damageTotal, critical)
+  try {
+    play()
+    const { attackTotal, damageTotal, critical } = rollAttack(character.value, attack)
+    handleShowAttackToast(toastAttack.value, attack.name, attackTotal, damageTotal, critical)
+
+  } catch(error) {
+    handleShowErrorToast(toastInfo.value)
+  }
+}
+
+const handleChangeRitualDc = (e: Event) => {
+  const value = (e.target as HTMLInputElement).valueAsNumber
+  changeRitualDc(character.value, value)
+  updateCharacter()
 }
 
 const handleAddPower = (power: Power) => {
@@ -433,6 +467,7 @@ watch(() => toastInfo.value.alive, () => {
         @handle-change-items-limit="handleChangeItemsLimit"
         @handle-roll-dices="handleRollDices"
         @handle-roll-attack="handleRollAttack"
+        @handle-change-ritual-dc="handleChangeRitualDc"
       />
     </div>
     <vue-final-modal 

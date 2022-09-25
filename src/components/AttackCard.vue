@@ -71,6 +71,7 @@ const handleRollAttack = () => {
         type="text" 
         class="attack-input text" 
         autocomplete="nope"
+        placeholder="-"
         :value="attack.damage"
         @blur="e => handleChangeAttackText(e, 'damage')"
       >
@@ -78,6 +79,7 @@ const handleRollAttack = () => {
         type="text" 
         class="attack-input text" 
         autocomplete="nope"
+        placeholder="-"
         :value="attack.extraDamage"
         @blur="e => handleChangeAttackText(e, 'extraDamage')"
       > 

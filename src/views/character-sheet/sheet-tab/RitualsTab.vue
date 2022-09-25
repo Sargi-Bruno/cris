@@ -1,16 +1,23 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { Character } from '../../../types'
 import RitualCard from '../../../components/RitualCard.vue'
 
 const props = defineProps<{character: Character}>()
 
-defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual'])
+const emit = defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual', 'handleChangeRitualDc'])
+
+const instance = getCurrentInstance()
 
 const ritualsOrdered = computed(() => {
   const rituals = [...props.character.rituals]
   return rituals.sort((a, b) => a.name.localeCompare(b.name))
 })
+
+const handleChangeRitualDc = (e: Event) => {
+ emit('handleChangeRitualDc', e)
+ instance?.proxy?.$forceUpdate()
+}
 </script>
   
 <template>
@@ -21,6 +28,19 @@ const ritualsOrdered = computed(() => {
     >
       Adicionar
     </button>
+    <div class="ritual-dc-wrapper">
+      <div class="ritual-dc-container">
+        <h4 class="sheet-subtitle">
+          DT DE RITUAIS
+        </h4>
+        <input 
+          type="number"
+          class="sheet-input sheet-input-size"
+          :value="character.ritualsDc"
+          @blur="handleChangeRitualDc"
+        >
+      </div>
+    </div>
     <div v-if="character.rituals.length > 0" class="sheet-cards-container">
       <div 
         v-for="ritual in ritualsOrdered" 
@@ -43,6 +63,17 @@ const ritualsOrdered = computed(() => {
 </template>
   
 <style scoped>
+.ritual-dc-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.ritual-dc-container {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
 .no-content h3 {
   text-align: center;
   margin-top: 10rem;

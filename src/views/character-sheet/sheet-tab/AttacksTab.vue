@@ -29,6 +29,12 @@ const handleRollAttack = (attack: Attack) => {
   
 <template>
   <div class="attacks-tab">
+    <button 
+      class="button-primary add-button"
+      @click="$emit('handleAddAttack')"
+    >
+      Adicionar
+    </button>
     <h3 class="roll-dice-text">
       Rolar Dados
     </h3>
@@ -50,12 +56,6 @@ const handleRollAttack = (attack: Attack) => {
         @keyup.enter="handleRollDices"
       >
     </div>
-    <button 
-      class="button-primary add-button"
-      @click="$emit('handleAddAttack')"
-    >
-      Adicionar
-    </button>
     <div v-if="character.attacks.length > 0">
       <div class="attacks-info-row">
         <h3 class="name-label">
