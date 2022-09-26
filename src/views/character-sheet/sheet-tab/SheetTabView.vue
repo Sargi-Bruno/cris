@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, defineAsyncComponent } from 'vue'
 import { Character, Attack } from '../../../types'
 import TabNav from '../../../components/TabNav.vue'
 import AttacksTab from './AttacksTab.vue'
-import AbilitiesTab from './AbilitiesTab.vue'
-import RitualsTab from './RitualsTab.vue'
-import InventoryTab from './InventoryTab.vue'
-import DescriptionTab from './DescriptionTab.vue'
+
+const AbilitiesTab =  defineAsyncComponent(() => import('./AbilitiesTab.vue'))
+const RitualsTab =  defineAsyncComponent(() => import('./RitualsTab.vue'))
+const InventoryTab =  defineAsyncComponent(() => import('./InventoryTab.vue'))
+const DescriptionTab =  defineAsyncComponent(() => import('./DescriptionTab.vue'))
 
 interface PayloadEvent {
   e: Event

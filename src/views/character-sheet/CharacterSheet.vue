@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, getDoc, doc, updateDoc } from 'firebase/firestore'
@@ -10,11 +10,6 @@ import ToastAttack from '../../components/ToastAttack.vue'
 import SheetStats from './sheet-stats/SheetStats.vue'
 import SkillsView from './sheet-skills/SkillsView.vue'
 import SheetTabView from './sheet-tab/SheetTabView.vue'
-import AbilitiesModal from './sheet-modals/abilities-modal/AbilitiesModal.vue'
-import AttackModal from './sheet-modals/attack-modal/AttackModal.vue'
-import InventoryModal from './sheet-modals/inventory-modal/InventoryModal.vue'
-import RitualsModal from './sheet-modals/rituals-modal/RitualsModal.vue'
-import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
 import {
   Character,
   Skill, 
@@ -67,6 +62,11 @@ import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
 import router from '../../router'
 
+const AbilitiesModal =  defineAsyncComponent(() => import('./sheet-modals/abilities-modal/AbilitiesModal.vue'))
+const InventoryModal =  defineAsyncComponent(() => import('./sheet-modals/inventory-modal/InventoryModal.vue'))
+const RitualsModal =  defineAsyncComponent(() => import('./sheet-modals/rituals-modal/RitualsModal.vue'))
+const SkillModal =  defineAsyncComponent(() => import('./sheet-modals/skill-modal/SkillModal.vue'))
+
 const { play } = useSound(diceSound)
 
 interface ToastInfo {
@@ -89,16 +89,18 @@ interface ToastAttackInterface {
   totalAttack: number
   totalDamage: number
   critical: number
+  attackTooltip: string
+  damageTooltip: string
+  criticalTooltip: string
   alive: boolean
 }
 
-const modalOptions = [AbilitiesModal, AttackModal, InventoryModal, RitualsModal, SkillModal]
+const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal]
 const modals = {
   abilities: 0,
-  attack: 1,
-  inventory: 2,
-  rituals: 3,
-  skill: 4
+  inventory: 1,
+  rituals: 2,
+  skill: 3
 }
 
 const auth = getAuth()
@@ -128,6 +130,9 @@ const toastAttack = ref<ToastAttackInterface>({
   totalAttack: 0,
   totalDamage: 0,
   critical: 0,
+  attackTooltip: '',
+  damageTooltip: '',
+  criticalTooltip: '',
   alive: false
 })
 
@@ -191,13 +196,25 @@ const handleShowDiceToast = (toast: ToastRoll, title: string, total: number, out
   toast.alive = true
 }
 
-const handleShowAttackToast = (toast: ToastAttackInterface, title: string, totalAttack: number, totalDamage: number, critical: number) => {
+const handleShowAttackToast = (
+  toast: ToastAttackInterface, 
+  title: string, 
+  totalAttack: number, 
+  totalDamage: number, 
+  critical: number,
+  attackTooltip: string,
+  damageTooltip: string,
+  criticalTooltip: string
+) => {
   dismissToastInfo()
   dismissToastRoll()
   toast.title = title
   toast.totalAttack = totalAttack
   toast.totalDamage = totalDamage
   toast.critical = critical
+  toast.attackTooltip = attackTooltip
+  toast.damageTooltip = damageTooltip
+  toast.criticalTooltip = criticalTooltip
   toast.alive = true
 }
 
@@ -232,12 +249,12 @@ const handleChangeMovementInSquares = (e: Event) => {
 
 const handleRollAttribute = (attr: AttrKeys) => {
   try {
-    play()
     const title = attrDic[attr]
     const roll = rollAttribute(character.value, attr)
     const output = formatRollResult(roll.output)
     const notation = formatRollNotation(roll.output)
     handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+    play()
 
   } catch(error) {
     handleShowErrorToast(toastInfo.value)
@@ -265,12 +282,12 @@ const handleChangeSkillOtherBonus = (payload: {value: number, skillName: string}
 
 const handleRollSkill = (skill: Skill) => {
   try {
-    play()
     const title = skill.name
     const roll = rollSkill(character.value, skill)
     const output = formatRollResult(roll.output)
     const notation = formatRollNotation(roll.output)
     handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+    play()
     
   } catch(error) {
     handleShowErrorToast(toastInfo.value)
@@ -367,12 +384,12 @@ const handleChangeItemsLimit = (payload: {value: number, key: ItemsLimitKeys}) =
 
 const handleRollDices = (value: string) => {
   try {
-    play()
     const title = 'Resultado'
     const roll = rollDices(value)
     const output = formatRollResult(roll.output)
     const notation = formatRollNotation(roll.output)
     handleShowDiceToast(toastRoll.value, title, roll.total, output, notation)
+    play()
 
   } catch(error) {
     handleShowErrorToast(toastInfo.value)
@@ -381,9 +398,9 @@ const handleRollDices = (value: string) => {
 
 const handleRollAttack = (attack: Attack) => {
   try {
+    const { attackTotal, damageTotal, critical, attackTooltipInfo, damageTooltipInfo, criticalTooltipInfo } = rollAttack(character.value, attack)
+    handleShowAttackToast(toastAttack.value, attack.name, attackTotal, damageTotal, critical, attackTooltipInfo, damageTooltipInfo, criticalTooltipInfo)
     play()
-    const { attackTotal, damageTotal, critical } = rollAttack(character.value, attack)
-    handleShowAttackToast(toastAttack.value, attack.name, attackTotal, damageTotal, critical)
 
   } catch(error) {
     handleShowErrorToast(toastInfo.value)
@@ -510,6 +527,9 @@ watch(() => toastInfo.value.alive, () => {
         :total-attack="toastAttack.totalAttack"
         :total-damage="toastAttack.totalDamage"
         :critical="toastAttack.critical"
+        :attack-tooltip="toastAttack.attackTooltip"
+        :damage-tooltip="toastAttack.damageTooltip"
+        :critical-tooltip="toastAttack.criticalTooltip"
         @dismiss="dismissToastAttack"
       />
     </transition>
@@ -529,7 +549,7 @@ watch(() => toastInfo.value.alive, () => {
   align-items: center;
 }
 .sheet-tab {
-  max-width: 31.25rem;
+  width: 31.25rem;
   max-height: 56.25rem;
   overflow-y: scroll;
   overflow-x: hidden;

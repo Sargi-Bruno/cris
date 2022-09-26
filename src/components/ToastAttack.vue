@@ -17,6 +17,18 @@ const props = defineProps({
   critical: {
     type: Number,
     required: true
+  },
+  attackTooltip: {
+    type: String,
+    required: true
+  },
+  damageTooltip: {
+    type: String,
+    required: true
+  },
+  criticalTooltip: {
+    type: String,
+    required: true
   }
 })
 
@@ -51,11 +63,17 @@ const attackColor = computed(() => {
           </h3>
           <div class="result">
             <div class="attack-container">
+              <div class="attack-tooltip">
+                <span>{{ attackTooltip }}</span>
+              </div>
               <h3>{{ totalAttack }}</h3>
               <h4>ATAQUE</h4>
             </div>
             <div class="divider" />
             <div class="damage-container">
+              <div class="damage-tooltip">
+                <span>{{ damageTooltip }} - {{ criticalTooltip }}</span>
+              </div>
               <h3>{{ totalDamage }}</h3>
               <h4>DANO</h4>
             </div>
@@ -121,21 +139,72 @@ const attackColor = computed(() => {
   text-align: center;
 }
 .attack-container {
+  position: relative;
   width: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.attack-tooltip {
+  position: absolute;
+  top: -60px;
+  opacity: 0;
+  background-color: var(--color-smoky-black);
+  border-radius: 8px;
+  border: 1px solid var(--color-gray);
+  display: none;
+  width: 10rem;
+  height: 3rem;
+}
+.attack-tooltip span {
+  color: var(--color-white);
+  margin: 0 auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 12px;
+  font-weight: normal;
+}
+.attack-container:hover > .attack-tooltip {
+  opacity: 1;
+  display: flex;
+  transition: opacity 150ms ease-in;
 }
 .attack-container h3 {
   color: v-bind(attackColor);
 }
 .damage-container {
+  position: relative;
   width: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.damage-tooltip {
+  position: absolute;
+  top: -60px;
+  opacity: 0;
+  background-color: var(--color-smoky-black);
+  border-radius: 8px;
+  border: 1px solid var(--color-gray);
+  display: none;
+  width: 10rem;
+  height: 3rem;
+  padding: .5rem;
+}
+.damage-tooltip span {
+  color: var(--color-white);
+  margin: 0 auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 12px;
+  font-weight: normal;
+}
+.damage-container:hover > .damage-tooltip {
+  opacity: 1;
+  display: flex;
+  transition: opacity 150ms ease-in;
 }
 .divider {
   height: 2.75rem;

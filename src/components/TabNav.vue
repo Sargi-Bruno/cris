@@ -53,7 +53,7 @@ defineEmits(['handleNavigation'])
 <style scoped>
 .tab-nav-container {
   display: flex;
-  gap: 1rem;
+  justify-content: space-between;
 }
 .tab-nav-container-secondary {
   display: flex;

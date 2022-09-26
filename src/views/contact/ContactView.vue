@@ -8,7 +8,6 @@
     </div>
     <div class="divider" />
     <div class="author-container">
-      <h3>Esta plataforma foi criada e é mantida por Bruno Sargi</h3>
       <h3>Para mais informações e contato:</h3>
     </div>
   </div>

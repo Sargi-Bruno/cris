@@ -105,6 +105,14 @@ const attrDamageDic = {
   'Presença': 'pre'
 }
 
+const attrLongToShortDic = {
+  'Força': 'FOR',
+  'Agilidade': 'AGI',
+  'Intelecto': 'INT',
+  'Vigor': 'VIG',
+  'Presença': 'PRE',
+}
+
 const formatValueNumbers = (value: number, limit: 1 | 2 | 3, floor = true, noNegative = true) => {
   const digitisLimit = {
     1: 9,
@@ -179,6 +187,12 @@ export const rollAttack = (character: Character, attack: Attack) => {
   const rollSkillIndex = character.skills.findIndex((e) => e.name === attack.skillUsed)
   const skill = character.skills[rollSkillIndex]
   const attrSkillValue = character.attributes[attrShortDic[skill.attribute  as AttrPtKeys] as AttrKeys]
+
+  const attackTooltipInfo = `${skill.name} (${skill.attribute})` + (attack.attackBonus !== 0 ? ` + ${attack.attackBonus}` : '')
+  const damageTooltipInfo = `${attack.damage}` 
+                            + (attack.extraDamage !== '' ? ` + ${attack.extraDamage}` : '')
+                            + (attack.damageAttribute !== 'Nenhum' ? ` + ${attrLongToShortDic[attack.damageAttribute as AttrDamageKeys]}` : '')
+  const criticalTooltipInfo = `${attack.criticalRange}/x${attack.criticalMult}`
   
   let attackRollString: string
 
@@ -236,7 +250,7 @@ export const rollAttack = (character: Character, attack: Attack) => {
     damageTotal += extraDamageRoll.total
   }
   
-  return { attackTotal, damageTotal, critical  }
+  return { attackTotal, damageTotal, critical, attackTooltipInfo, damageTooltipInfo, criticalTooltipInfo }
 }
 
 export const rollSkill = (character: Character, skill: Skill) => {
