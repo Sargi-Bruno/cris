@@ -9,6 +9,8 @@
     <div class="divider" />
     <div class="author-container">
       <h3>Para mais informações e contato:</h3>
+      <h4>contatobrunosargi@gmail.com</h4>
+      <h4><a href="https://discord.gg/ShrayAdvDJ" target="_blank">discord</a></h4>
     </div>
   </div>
 </template>
@@ -19,7 +21,7 @@
   margin: 0 auto;
   margin-top: 6rem;
 }
-.contact-container h1, h2, h3 {
+.contact-container h1, h2 {
   font-weight: normal;
 }
 .contact-container h1 {
@@ -35,5 +37,12 @@
 .divider {
   width: 100%;
   border-top: 1px solid var(--color-dark-gray);
+}
+.author-container a {
+  color: var(--color-white);
+}
+.author-container h4 {
+  margin: 0;
+  font-weight: normal;
 }
 </style>

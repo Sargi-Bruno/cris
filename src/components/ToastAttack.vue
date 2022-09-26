@@ -72,7 +72,7 @@ const attackColor = computed(() => {
             <div class="divider" />
             <div class="damage-container">
               <div class="damage-tooltip">
-                <span>{{ damageTooltip }} - {{ criticalTooltip }}</span>
+                <span>{{ damageTooltip }} | {{ criticalTooltip }}</span>
               </div>
               <h3>{{ totalDamage }}</h3>
               <h4>DANO</h4>

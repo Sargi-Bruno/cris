@@ -57,7 +57,7 @@ const handleChangeRitualDc = (e: Event) => {
       </div>
     </div>
     <div v-else class="no-content">
-      <h3>Você ainda não possue rituais</h3>
+      <h3>Você ainda não possui rituais</h3>
     </div>
   </div>
 </template>

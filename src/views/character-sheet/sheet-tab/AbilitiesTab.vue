@@ -37,7 +37,7 @@ const powersOrdered = computed(() => {
       </div>
     </div>
     <div v-else class="no-content">
-      <h3>Você ainda não possue habilidades</h3>
+      <h3>Você ainda não possui habilidades</h3>
     </div>
   </div>
 </template>

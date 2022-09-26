@@ -13,7 +13,8 @@ defineProps({
     type: Array<TabOptions>,
     required: true
   },
-  secondary: Boolean
+  secondary: Boolean,
+  noGap: Boolean
 })
 
 defineEmits(['handleNavigation'])
@@ -23,6 +24,7 @@ defineEmits(['handleNavigation'])
   <div
     v-if="!secondary"
     class="tab-nav-container"
+    :class="{ 'no-gap': noGap }"
   >
     <button 
       v-for="tab in tabOptions" 
@@ -53,7 +55,11 @@ defineEmits(['handleNavigation'])
 <style scoped>
 .tab-nav-container {
   display: flex;
+  gap: 1rem;
+}
+.no-gap {
   justify-content: space-between;
+  gap: 0;
 }
 .tab-nav-container-secondary {
   display: flex;

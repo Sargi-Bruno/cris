@@ -170,7 +170,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
       </div>
     </div>
     <div v-else class="no-content">
-      <h3>Você ainda não possue itens</h3>
+      <h3>Você ainda não possui itens</h3>
     </div>
   </div>
 </template>

@@ -90,6 +90,7 @@ const handleChangeRitualDc = (e: Event) => emit('handleChangeRitualDc', e)
       <TabNav
         :tab-options="tabOptions"
         :current-tab="currentTab"
+        no-gap
         @handle-navigation="handleNavigation"
       />
     </div>

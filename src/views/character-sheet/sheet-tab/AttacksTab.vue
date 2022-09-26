@@ -93,7 +93,7 @@ const handleRollAttack = (attack: Attack) => {
       </div>
     </div>
     <div v-else class="no-content">
-      <h3>Você ainda não possue ataques</h3>
+      <h3>Você ainda não possui ataques</h3>
     </div>
   </div>
 </template>

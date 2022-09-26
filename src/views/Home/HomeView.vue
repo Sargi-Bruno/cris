@@ -73,12 +73,12 @@ onMounted(() => {
     </div>
     <div class="divider" />
     <div class="content-block">
-      <div class="last-block">
+      <div>
         <h2 class="info">
           Esta plataforma ainda esta em desenvolvimento, por isso bugs ou problemas podem ser esperados
         </h2>
         <h2 class="info">
-          Novas funcionalidades estão por vir, caso queira saber mais acesse
+          Novas funcionalidades estão por vir, caso queira saber mais acesse nosso <a href="https://discord.gg/ShrayAdvDJ" target="_blank">discord</a>
         </h2>
       </div>
     </div>
@@ -120,9 +120,6 @@ onMounted(() => {
   width: 100%;
   border-top: 1px solid var(--color-dark-gray);
 }
-.last-block {
-  margin-bottom: 8rem;
-}
 .info {
   font-size: 16px;
   color: var(--color-off-white);
@@ -131,5 +128,8 @@ onMounted(() => {
   width: 6rem;
   height: 3rem;
   font-size: 16px;
+}
+.info a {
+  color: var(--color-white);
 }
 </style>
