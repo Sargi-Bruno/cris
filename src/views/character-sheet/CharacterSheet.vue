@@ -487,21 +487,23 @@ watch(() => toastInfo.value.alive, () => {
         @handle-change-ritual-dc="handleChangeRitualDc"
       />
     </div>
-    <vue-final-modal 
-      v-model="showModal"
-      :lock-scroll="false" 
-      classes="modal-container"
-    >
-      <component 
-        :is="modalOptions[currentModal]"
-        :character="character"
-        :skill="currentSkill"
-        @handle-close-modal="showModal = false"
-        @handle-add-power="handleAddPower"
-        @handle-add-ritual="handleAddRitual"
-        @handle-add-item="handleAddItem"
-      />
-    </vue-final-modal>
+    <div v-if="showModal">
+      <vue-final-modal 
+        v-model="showModal"
+        :lock-scroll="false" 
+        classes="modal-container"
+      >
+        <component 
+          :is="modalOptions[currentModal]"
+          :character="character"
+          :skill="currentSkill"
+          @handle-close-modal="showModal = false"
+          @handle-add-power="handleAddPower"
+          @handle-add-ritual="handleAddRitual"
+          @handle-add-item="handleAddItem"
+        />
+      </vue-final-modal>
+    </div>
     <transition name="toast">
       <ToastNotification
         v-if="toastInfo.alive"
