@@ -64,6 +64,11 @@ onMounted(() => {
         <router-link :to="{ name: 'contact' }">
           Créditos e contato
         </router-link>
+        <a href="https://jamboeditora.com.br" target="_blank">
+          <h3 class="agents-login">
+            Comprar Ordem Paranormal
+          </h3>
+        </a>
       </div>
       <div v-if="!isLoggedIn">
         <button 
@@ -111,7 +116,7 @@ onMounted(() => {
 .nav-container {
   display: flex;
   justify-content: space-between;
-  width: 30%;
+  width: 50%;
 }
 .nav-container a {
   color: var(--color-white);

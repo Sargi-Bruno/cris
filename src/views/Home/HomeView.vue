@@ -65,8 +65,8 @@ onMounted(() => {
     <div class="divider" />
     <div class="content-block">
       <div class="topics">
-        <h1>Diversos recursos para você poder focar no jogo!</h1>
-        <h2>Passo a passo de criação de ficha</h2>
+        <h1>Este site foi feito para ser utilizado em conjunto com o livro Ordem Paranormal</h1>
+        <h2>Criação de ficha</h2>
         <h2>Rolagens de dados</h2>
         <h2>Acesso fácil a informações</h2>
       </div>
@@ -107,7 +107,7 @@ onMounted(() => {
   margin-right: 8rem;
 }
 .topics {
-  width: 33rem;
+  width: 48rem;
 }
 .topics h1 {
   font-size: 22px;

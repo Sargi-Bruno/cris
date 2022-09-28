@@ -67,7 +67,7 @@ const classes: Array<Class> = [
       },
       {
         name: 'Reflexos Defensivos',
-        description: '<p>Você recebe +5 em Defesa e em testes de resistência contra inimigos em alcance curto. <em>Pré-requisitos:</em> Agi 2.</p>'
+        description: '<p>Você recebe +2 em Defesa e em testes de resistência. <em>Pré-requisitos:</em> Agi 2.</p>'
       },
       {
         name: 'Saque Rápido',
@@ -79,7 +79,7 @@ const classes: Array<Class> = [
       },
       {
         name: 'Sentido Tático',
-        description: '<p>Você pode gastar uma ação de movimento e 2 PE para analisar o ambiente. Se fizer isso, recebe +5 em Defesa e em testes de resistência até o final da cena. <em>Pré-requisitos:</em> treinado em Percepção e Tática.</p>'
+        description: '<p>Você pode gastar uma ação de movimento e 2 PE para analisar o ambiente. Se fizer isso, recebe um bônus em Defesa e em testes de resistência igual ao seu Intelecto até o final da cena. <em>Pré-requisitos:</em> treinado em Percepção e Tática.</p>'
       },
       {
         name: 'Tanque de Guerra',
@@ -121,7 +121,7 @@ const classes: Array<Class> = [
           },
           {
             name: 'NEX 99% - Máquina de Matar',
-            description: '<p>A categoria da arma favorita passa a ser reduzida em IV, ela recebe +2 na margem de ameaça e seu dano aumenta em um passo.</p>'
+            description: '<p>A categoria da arma favorita passa a ser reduzida em III, ela recebe +2 na margem de ameaça e seu dano aumenta em um dado do mesmo tipo.</p>'
           },
         ]
       },
@@ -192,28 +192,6 @@ const classes: Array<Class> = [
         ]
       },
       {
-        name: 'Operações Especiais',
-        description: '<p>Você é um combatente eficaz, e suas ações são calculadas e otimizadas, sempre antevendo os movimentos inimigos e se posicionando da maneira mais inteligente no campo de batalha.</p>',
-        abilities: [
-          {
-            name: 'NEX 10% - Iniciativa Aprimorada',
-            description: '<p>Você recebe +5 em Iniciativa e recebe uma ação de movimento adicional na primeira rodada.</p>'
-          },
-          {
-            name: 'NEX 40% - Ataque Extra',
-            description: '<p>Uma vez por rodada, quando faz um ataque, você pode gastar 2 PE para fazer um ataque adicional.</p>'
-          },
-          {
-            name: 'NEX 65% - Surto de Adrenalina',
-            description: '<p>Uma vez por rodada, você pode gastar 5 PE para realizar uma ação padrão ou de movimento adicional.</p>'
-          },
-          {
-            name: 'NEX 99% - Sempre Alerta',
-            description: '<p>Você recebe uma ação padrão adicional no início de cada cena de combate.</p>'
-          },
-        ]
-      },
-      {
         name: 'Tropa de Choque',
         description: '<p>Você é duro na queda. Treinou seu corpo para resistir a traumas f ísicos, tornando-o praticamente inquebrável, e por isso não teme se colocar entre seus aliados e o perigo.</p>',
         abilities: [
@@ -231,7 +209,7 @@ const classes: Array<Class> = [
           },
           {
             name: 'NEX 99% - Inquebrável',
-            description: '<p>Enquanto estiver machucado, você recebe +10 na Defesa e resistência a dano 5. Enquanto estiver morrendo, em vez do normal, você não fica indefeso e ainda pode realizar ações. Você ainda segue as regras de morte normalmente.</p>'
+            description: '<p>Enquanto estiver machucado, você recebe +5 na Defesa e resistência a dano 5. Enquanto estiver morrendo, em vez do normal, você não fica indefeso e ainda pode realizar ações. Você ainda segue as regras de morte normalmente.</p>'
           },
         ]
       },
@@ -282,6 +260,10 @@ const classes: Array<Class> = [
         description: 'Quando faz um teste de uma perícia, você pode gastar 2 PE para receber os benefícios de ser treinado nesta perícia.'
       },
       {
+        name: 'Engenhosidade',
+        description: 'Em NEX 40%, quando usa sua habilidade Eclético, você pode gastar 2 PE adicionais para receber os benefícios de ser veterano na perícia. Em NEX 75%, pode gastar 4 PE adicionais para receber os benefícios de ser expert na perícia.'
+      },
+      {
         name: 'Perito',
         description: 'Escolha duas perícias nas quais você é treinado (exceto Luta e Pontaria). Quando faz um teste de uma dessas perícias, você pode gastar 2 PE para somar +1d6 no resultado do teste. Conforme avança de NEX, você pode gastar +1 PE para aumentar o dado de bônus. Por exemplo, em NEX 55%, pode gastar 4 PE para receber +1d12 no teste.'
       },
@@ -325,7 +307,7 @@ const classes: Array<Class> = [
       },
       {
         name: 'Ninja Urbano',
-        description: '<p>Você recebe proficiência com armas táticas de ataque corpo a corpo e +2 em rolagens de dano com essas armas.</p>'
+        description: '<p>Você recebe proficiência com armas táticas de ataque corpo a corpo e de disparo (exceto de fogo) +2 em rolagens de dano com essas armas.</p>'
       },
       {
         name: 'Pensamento Ágil',
@@ -395,7 +377,7 @@ const classes: Array<Class> = [
       },
       {
         name: 'Médico de Campo',
-        description: '<p>Você é treinado em técnicas de primeiros socorros e tratamento de emergência, o que torna você um membro valioso para qualquer grupo de agentes. Ao contrário dos profissionais de saúde convencionais, você está acostumado com o campo de batalha e sabe tomar decisões rápidas no meio do caos.</p><p><span>Especial: </span>para escolher esta trilha, você precisa ser treinado em Medicina.</p>',
+        description: '<p>Você é treinado em técnicas de primeiros socorros e tratamento de emergência, o que torna você um membro valioso para qualquer grupo de agentes. Ao contrário dos profissionais de saúde convencionais, você está acostumado com o campo de batalha e sabe tomar decisões rápidas no meio do caos.</p><p><span>Especial: </span>para escolher esta trilha, você precisa ser treinado em Medicina. Para usar as habilidades desta trilha, você precisa possuir um kit de medicina.</p>',
         abilities: [
           {
             name: 'NEX 10% - Paramédico',
@@ -513,7 +495,7 @@ const classes: Array<Class> = [
       },
       {
         name: 'Criar Selo',
-        description: '<p>Você sabe fabricar selos amaldiçoados. Escolha um ritual que você conheça para gravar no selo. O processo de fabricação gasta uma hora e um número de PE iguais ao custo de conjurar o ritual. No final do processo, faça um teste de Ocultismo (DT 15 + PE gastos). Se passar, você cria o selo. Você pode ter um número máximo de selos criados a qualquer momento igual à sua Presença.</p>'
+        description: '<p>Você sabe fabricar selos paranormais de rituais que conheça. Fabricar um selo gasta uma ação de interlúdio e um número de PE iguais ao custo de conjurar o ritual. Você pode ter um número máximo de selos criados a qualquer momento igual à sua Presença.</p>'
       },
       {
         name: 'Envolto em Mistério',
@@ -525,7 +507,7 @@ const classes: Array<Class> = [
       },
       {
         name: 'Ferramentas Paranormais',
-        description: '<p>Você pode ativar equipamentos paranormais sem pagar seu custo em PE.</p>'
+        description: '<p>Você reduz a categoria de um item paranormal em I e pode ativar itens paranormais sem pagar seu custo em PE.</p>'
       },
       {
         name: 'Fluxo de Poder',
@@ -649,7 +631,7 @@ const classes: Array<Class> = [
           },
           {
             name: 'NEX 40% - Presença Poderosa',
-            description: '<p>Sua resiliência mental faz com que você possa extrair mais do Outro Lado. Você adiciona sua Presença ao seu limite de PE por turno, mas apenas para conjurar rituais.</p>'
+            description: '<p>Sua resiliência mental faz com que você possa extrair mais do Outro Lado. Você adiciona sua Presença ao seu limite de PE por turno, mas apenas para conjurar rituais (não para DT).</p>'
           },
           {
             name: 'NEX 65% - Inabalável',
