@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { Character, Class, Power } from '../../../../types'
+import { Character, Power } from '../../../../types'
 import classes from '../../../../data/classes'
 import TabNav from '../../../../components/TabNav.vue'
 import PowerCard from '../../../../components/PowerCard.vue'
@@ -8,15 +8,22 @@ import SearchInput from '../../../../components/SearchInput.vue'
 import { compare } from '../../../../utils/functions'
 
 interface TabOptions {
-  label: string,
+  label: string
   value: number
+}
+
+interface Path {
+  name: string
+  description: string
+  abilities: Power[]
 }
 
 const props = defineProps<{character: Character}>()
 
 const emit = defineEmits(['handleAddPower'])
 
-const charClass = ref<Class>()
+const powers = ref<Power[]>([])
+const paths = ref<Path[]>([])
 const tabOptions = ref<TabOptions[]>([])
 const currentTab = ref(0)
 const searchText = ref('')
@@ -24,28 +31,37 @@ const searchText = ref('')
 const handleAddPower = (power: Power) => emit('handleAddPower', power)
 
 onMounted(() => {
-  charClass.value = classes.find((element) => props.character.className === element.name)
+  const charClass = classes.find((element) => props.character.className === element.name)
 
-  if(!charClass.value) return
+  if(!charClass) return
 
   tabOptions.value.push({
-    label: `Poderes de ${charClass.value.name}`,
+    label: `Poderes de ${charClass.name}`,
     value: 0
   })
 
-  charClass.value.paths.forEach((path, i) => {
+  charClass.paths.forEach((path, i) => {
     tabOptions.value.push({
       label: path.name,
       value: i+1
     })
+    paths.value.push(path)
   })
+
+  for(const abilitie of charClass.abilities) {
+    powers.value.push(abilitie)
+  }
+
+  for(const power of charClass.powers) {
+    powers.value.push(power)
+  }
 })
 
 const currentPowers = computed<Power[]>(() => {
-  if(!charClass.value) return []
+  if(!powers.value) return []
 
-  if(currentTab.value === 0) return charClass.value.powers.filter((ele) => compare(ele.name, searchText.value))
-  else return charClass.value.paths[currentTab.value - 1].abilities
+  if(currentTab.value === 0) return powers.value.filter((ele) => compare(ele.name, searchText.value)).sort((a, b) => a.name.localeCompare(b.name))
+  else return paths.value[currentTab.value - 1].abilities
 })
 </script>
 

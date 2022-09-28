@@ -136,7 +136,7 @@ const dismissToast = () => {
       @handle-remove-background="handleRemoveBackground"
       @handle-add-class="handleAddClass"
       @handle-remove-class="handleRemoveClass"
-      @handle-update-char="handleChangeChar"
+      @handle-change-char="handleChangeChar"
       @handle-update-description="handleUpdateDescription"
       @handle-finish-creation="handleFinishCreation"
     />

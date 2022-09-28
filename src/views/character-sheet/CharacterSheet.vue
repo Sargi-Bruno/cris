@@ -220,7 +220,7 @@ const handleShowAttackToast = (
 
 const handleChangeCharText = (payload: { e: Event, key: CharacterStringKeys }) => {
   const value = (payload.e.target as HTMLInputElement).value
-  character.value[payload.key] = value
+  character.value[payload.key] = value.trim()
   updateCharacter()
 }
 

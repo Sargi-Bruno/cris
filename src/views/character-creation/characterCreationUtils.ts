@@ -1,5 +1,6 @@
 import { Character, Background, Class, AttrKeys } from "../../types"
 import Skills from "../../data/skills"
+import { v4 as uuidv4 } from 'uuid'
 
 export const characterDefaultValue: Character = {
   name: '',
@@ -62,6 +63,7 @@ export const addBackground = (character: Character, background: Background | nul
   if(background === null) return
 
   character.backgroundName = background.name
+  background.power.id = uuidv4()
   character.powers.push(background.power)
 
   // for(const skillName of background.skills) {
@@ -76,6 +78,7 @@ export const addClass = (character: Character, charClass: Class | null) => {
   character.className = charClass.name
 
   for(const abilitie of charClass.abilities) {
+    abilitie.id = uuidv4()
     character.powers.push(abilitie)
   }
 
