@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPop
 const auth = getAuth()
 const router = useRouter()
 const isLoggedIn = ref(false)
+const disabledAgentsButton = ref(true)
 
 const handleSignIn = () => {
   const provider = new GoogleAuthProvider()
@@ -19,6 +20,8 @@ const handleLogout = () => {
 }
 
 const handleAgentsSignIn = () => {
+  if(disabledAgentsButton.value) return
+
   const provider = new GoogleAuthProvider()
 
   signInWithPopup(auth, provider)
@@ -31,11 +34,14 @@ onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     if(user) isLoggedIn.value = true
     else isLoggedIn.value = false
+
+    disabledAgentsButton.value = false
   })
 })
 </script>
 
 <template>
+  {{ disabledAgentsButton }}
   <div class="header">
     <div class="header-content">
       <div 
