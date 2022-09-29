@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, getDoc, doc, updateDoc } from 'firebase/firestore'
@@ -10,6 +10,10 @@ import ToastAttack from '../../components/ToastAttack.vue'
 import SheetStats from './sheet-stats/SheetStats.vue'
 import SkillsView from './sheet-skills/SkillsView.vue'
 import SheetTabView from './sheet-tab/SheetTabView.vue'
+import AbilitiesModal from './sheet-modals/abilities-modal/AbilitiesModal.vue'
+import InventoryModal from './sheet-modals/inventory-modal/InventoryModal.vue'
+import RitualsModal from './sheet-modals/abilities-modal/AbilitiesModal.vue'
+import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
 import LoadingView from '../../components/LoadingView.vue'
 import {
   Character,
@@ -62,11 +66,6 @@ import {
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
 import router from '../../router'
-
-const AbilitiesModal =  defineAsyncComponent(() => import('./sheet-modals/abilities-modal/AbilitiesModal.vue'))
-const InventoryModal =  defineAsyncComponent(() => import('./sheet-modals/inventory-modal/InventoryModal.vue'))
-const RitualsModal =  defineAsyncComponent(() => import('./sheet-modals/rituals-modal/RitualsModal.vue'))
-const SkillModal =  defineAsyncComponent(() => import('./sheet-modals/skill-modal/SkillModal.vue'))
 
 const { play } = useSound(diceSound)
 

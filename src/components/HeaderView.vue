@@ -41,7 +41,6 @@ onMounted(() => {
 </script>
 
 <template>
-  {{ disabledAgentsButton }}
   <div class="header">
     <div class="header-content">
       <div 

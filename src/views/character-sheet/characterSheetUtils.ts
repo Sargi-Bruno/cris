@@ -357,6 +357,10 @@ export const removeItem = (character: Character, id: string) => {
   }
 
   character.currentLoad -= removedLoad
+
+  console.log(character.inventory[index])
+  if(character.inventory[index].equipped) unequipItem(character, index)
+
   character.inventory.splice(index, 1)
 }
 
