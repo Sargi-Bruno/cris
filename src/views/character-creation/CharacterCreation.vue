@@ -9,7 +9,7 @@ import ChooseBackground from './ChooseBackground/ChooseBackground.vue'
 import ChooseClass from './ChooseClass/ChooseClass.vue'
 import ChooseDescription from './ChooseDescription/ChooseDescription.vue'
 import ToastNotification from '../../components/ToastNotification.vue'
-import { Character, Background, Class, AttrKeys } from '../../types'
+import { Character, Background, Class, AttrKeys, Timestamp } from '../../types'
 import { 
   characterDefaultValue,
   changeAttribute,
@@ -36,7 +36,7 @@ const auth = getAuth()
 const firestore = getFirestore()
 const router = useRouter()
 const currentStep = ref(0)
-const character= ref<Character>(characterDefaultValue)
+const character= ref<Character>({...characterDefaultValue})
 const chosenBackground = ref<Background | null>(null)
 const chosenClass = ref<Class | null>(null)
 const errorMessage = ref('')
@@ -95,10 +95,11 @@ const handleFinishCreation =  async () => {
   addClass(character.value, chosenClass.value)
   addBackground(character.value, chosenBackground.value)
   character.value.uid = auth.currentUser.uid
-  character.value.timestamp = serverTimestamp()
+  character.value.timestamp = (serverTimestamp() as unknown) as Timestamp
 
   const data = await  addDoc(collection(firestore, 'characters'), character.value)
 
+  character.value = {...characterDefaultValue}
   router.push({ name: 'character-sheet', params: { id: data.id } })
 }
 

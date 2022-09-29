@@ -218,7 +218,7 @@ export interface Character {
   }
   uid?: string
   id?: string
-  timestamp?: unknown
+  timestamp?: Timestamp
 }
 
 const characterStringKeysList = ['name', 'player'] as const

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore'
+import { getFirestore, collection, getDocs, getDoc, query, where, deleteDoc, doc } from 'firebase/firestore'
 import { Character, Timestamp } from '../../types'
+import { compare } from '../../utils/functions'
+import LoadingView from '../../components/LoadingView.vue'
+import SearchInput from '../../components/SearchInput.vue'
 import CharacterCard from './CharacterCard.vue'
 
 const auth = getAuth()
@@ -12,8 +15,21 @@ const loading = ref(true)
 const showModal = ref(false)
 const modalChar = ref<Character>()
 const modalRemoveInput = ref('')
+const betaTester = ref(false)
+const searchText = ref('')
+const charLimit = ref(3)
 
 onMounted(async () => {
+  if(!auth.currentUser?.email) return
+
+  const testersSnapshot = await getDoc(doc(firestore, 'beta', 'testers'))
+  const betaTesters = testersSnapshot.data()?.testers as string[]
+
+  if(betaTesters.includes(auth.currentUser?.email)) {
+    betaTester.value = true
+    charLimit.value = 100
+  }
+
   const docs: Character[] = []
 
   const charsCollection = collection(firestore, 'characters')
@@ -28,12 +44,18 @@ onMounted(async () => {
     docs.push(data)
   })
 
+  docs.sort((a, b) => ((b.timestamp?.seconds as number) * 1000) - ((a.timestamp?.seconds as number) * 1000))
+
   characters.value = docs
   loading.value = false
 })
 
 const canRemove = computed(() => {
   return modalRemoveInput.value.toLocaleLowerCase().trim() === 'remover'
+})
+
+const filteredChars = computed(() => {
+  return characters.value.filter((ele) => compare(ele.name, searchText.value))
 })
 
 const handleOpenModal = (charId: string) => {
@@ -65,16 +87,27 @@ const handleRemoveChar = () => {
       <div v-if="characters.length > 0">
         <button 
           class="button-primary new-button"
-          :disabled="characters.length >= 3"
+          :disabled="characters.length >= charLimit"
           @click="$router.push({ name: 'character-creation'})"
         >
           Novo agente
         </button>
         <div>
-          <h3>Agentes {{ characters.length }}/3</h3>
+          <h3 v-if="!betaTester">
+            Agentes {{ characters.length }}/{{ charLimit }}
+          </h3>
+          <h3 v-else>
+            Agentes {{ characters.length }}/{{ charLimit }}
+          </h3>
+          <div v-if="betaTester">
+            <SearchInput 
+              :value="searchText"
+              @update="(value: string) => searchText = value"
+            />
+          </div>
           <div class="cards-container">
             <div 
-              v-for="character in characters"
+              v-for="character in filteredChars"
               :key="character.id"
             >
               <CharacterCard
@@ -97,6 +130,9 @@ const handleRemoveChar = () => {
           Novo agente
         </button>
       </div>
+    </div>
+    <div v-else>
+      <LoadingView />
     </div>
     <div v-if="modalChar">
       <vue-final-modal 
@@ -156,8 +192,16 @@ const handleRemoveChar = () => {
 }
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(3, 23rem);
-  column-gap: 3rem;
+  margin-top: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 3.5rem;
+  row-gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+@media only screen and (max-width: 1280px) {
+.cards-container {
+  column-gap: 2.25rem;
+}
 }
 .modal-width {
   width: 40rem;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue'
+import { ref, watch, onMounted, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, getDoc, doc, updateDoc } from 'firebase/firestore'
@@ -10,6 +10,7 @@ import ToastAttack from '../../components/ToastAttack.vue'
 import SheetStats from './sheet-stats/SheetStats.vue'
 import SkillsView from './sheet-skills/SkillsView.vue'
 import SheetTabView from './sheet-tab/SheetTabView.vue'
+import LoadingView from '../../components/LoadingView.vue'
 import {
   Character,
   Skill, 
@@ -156,10 +157,6 @@ onMounted(async() => {
 const updateCharacter = () => {
   updateDoc(doc(firestore, 'characters', character.value.id as string), character.value)
 }
-
-onBeforeUnmount(() => {
-  updateCharacter()
-})
 
 const dismissToastInfo = () => {
   toastInfo.value.alive = false
@@ -535,6 +532,9 @@ watch(() => toastInfo.value.alive, () => {
         @dismiss="dismissToastAttack"
       />
     </transition>
+  </div>
+  <div v-else>
+    <LoadingView />
   </div>
 </template>
 
