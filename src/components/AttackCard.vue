@@ -19,7 +19,7 @@ const emit = defineEmits(['handleRemoveAttack', 'handleChangeAttackText', 'handl
 
 const damageTypeOptions = ['-', 'Balístico', 'Corte', 'Fogo', 'Impacto', 'Perfuração']
 const rangeOptions = ['-', 'Curto', 'Médio', 'Longo']
-const skillUsedOptions = ['Luta', 'Pontaria']
+const skillUsedOptions = ['Luta', 'Ocultismo', 'Pontaria']
 const damageAttrOptions = ['Nenhum', 'Agilidade', 'Força', 'Intelecto', 'Presença', 'Vigor']
 
 const showMore = ref(false)

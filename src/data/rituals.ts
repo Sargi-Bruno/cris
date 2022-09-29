@@ -81,7 +81,7 @@ const rituals: Array<Ritual> = [
     range: 'toque',
     target: '1 arma corpo a corpo',
     duration: 'sustentada',
-    description: '<p>A arma é recoberta por veias carmesim e passa a exalar uma aura de violência. Ela fornece +2 em testes de ataque e +1 na margem de ameaça.</p><p><span>Discente (+2 PE):</span> muda o bônus para +4 em testes de ataque e +1 na margem de ameaça e no multiplicador de crítico. Requer 2º círculo.</p><p><span>Verdadeiro (+5 PE):</span> muda o bônus para +6 em testes de ataque e +2 na margem de ameaça e no multiplicador de crítico. Requer 3º círculo e afinidade.</p>'
+    description: '<p>A arma é recoberta por veias carmesim e passa a exalar uma aura de violência. Ela fornece +2 em testes de ataque e +1 na margem de ameaça.</p><p><span>Discente (+2 PE):</span> muda o bônus para +5 em testes de ataque. Requer 2º círculo.</p><p><span>Verdadeiro (+5 PE):</span> muda o bônus para +5 em testes de ataque e +2 na margem de ameaça e no multiplicador de crítico. Requer 3º círculo e afinidade.</p>'
   },
   {
     name: 'Armadura de Sangue',
@@ -281,7 +281,7 @@ const rituals: Array<Ritual> = [
     range: 'pessoal',
     area: 'explosão de 15m de raio',
     save: 'Fortitude parcial',
-    description: '<p>Você acumula uma quantidade imensa de Energia, então a libera em uma explosão intensa, como uma estrela em plena terra. Todos na área sofrem 150 pontos de dano de Energia e todos os itens tecnológicos (armas de fogo, acessórios e utensílios) param de funcionar (em termos de regras, estão quebrados). Você não é afetado pela explosão. Alvos que passem no teste de Fortitude sofrem metade do dano e seus itens voltam a funcionar após 1d4 rodadas.</p><p><span>Verdadeiro (+5 PE):</span> afeta apenas alvos a sua escolha.</p>'
+    description: '<p>Você acumula uma quantidade imensa de Energia, então a libera em uma explosão intensa, como uma estrela em plena terra. Todos na área sofrem 3d10 x 10 pontos de dano de Energia e todos os itens tecnológicos (armas de fogo, acessórios e utensílios) param de funcionar (em termos de regras, estão quebrados). Você não é afetado pela explosão. Alvos que passem no teste de Fortitude sofrem metade do dano e seus itens voltam a funcionar após 1d4 rodadas.</p><p><span>Verdadeiro (+5 PE):</span> afeta apenas alvos a sua escolha.</p>'
   },
   {
     name: 'Desacelerar Impacto',
@@ -362,9 +362,9 @@ const rituals: Array<Ritual> = [
     execution: 'padrão',
     range: 'curto',
     target: '1 ser',
-    duration: 'até 2 rodadas',
+    duration: '2 rodadas',
     save: 'Fortitude reduz à metade',
-    description: '<p>Você manifesta em suas mãos uma pequena cópia do alvo feita de cinzas. No início de cada um de seus turnos, você pode gastar uma ação padrão para se manter concentrado ou uma ação livre para descarregar o efeito. Se descarregar, a cópia explode e o alvo sofre dano de Morte igual a quantidade de dano que sofreu desde que o ritual foi conjurado (Fortitude reduz à metade). Se você não descarregar até a segunda rodada após conjurá-lo, ele é dissipado.</p><p><span>Discente (+3 PE):</span> muda a duração para “até 3 rodadas”. Se você não descarregar até a terceira rodada após conjurá-lo, ele é dissipado.</p><p><span>Verdadeiro (+7 PE):</span> muda a ação necessária para se concentrar para movimento e o alvo para até 5 seres. Requer 4º círculo e afinidade.</p>'
+    description: '<p>Você manifesta em suas mãos uma pequena cópia do alvo feita de cinzas. No início do próximo turno após conjurar este ritual, você precisa gastar uma ação padrão para se concentrar nele; caso contrário, ele se dissipa sem efeito. No início do segundo turno, você precisa gastar uma ação padrão para descarregá-lo. Se fizer isso, a cópia explode e o alvo sofre dano de Morte igual a quantidade de dano que sofreu na rodada em que você se concentrou (Fortitude reduz à metade). Se não fizer, o ritual se dissipa sem efeito.</p><p><span>Discente (+3 PE):</span> muda o alvo para “até 5 seres”.</p><p><span>Verdadeiro (+7 PE):</span> muda a duração para “até 3 rodadas”, permitindo que você se concentre nas duas primeiras e descarregue na terceira. Requer 4º círculo e afinidade.</p>'
   },
   {
     name: 'Eletrocussão',
@@ -414,9 +414,9 @@ const rituals: Array<Ritual> = [
     element: 'Morte',
     execution: 'padrão',
     range: 'curto',
-    target: 'seres escolhidos',
-    duration: 'sustentada',
-    description: '<p>Espirais surgem nos corpos dos alvos, tornando os movimentos deles lentos. Os alvos sofrem –2 em testes de ataque.</p><p><span>Discente (+2 PE):</span> a penalidade também se aplica a rolagens de dano. Requer 2º círculo.</p><p><span>Verdadeiro (+8 PE):</span> a penalidade muda para –5 e também se aplica a rolagens de dano. Requer 3º círculo.</p>'
+    target: '1 ser',
+    duration: 'cena',
+    description: '<p>Espirais surgem no corpo do alvo, tornando seus movimentos lentos. O alvo sofre –1d20 em testes de ataque.</p><p><span>Discente (+2 PE):</span> muda a penalidade para –2d20. Requer 2º círculo.</p><p><span>Verdadeiro (+8 PE):</span> muda a penalidade para -2d20. e o alvo para “seres escolhidos”. Requer 3º círculo.</p>'
   },
   {
     name: 'Ferver Sangue',
@@ -436,9 +436,20 @@ const rituals: Array<Ritual> = [
     execution: 'completa',
     range: 'extremo',
     effect: 'buraco negro com 1,5m de diâmetro',
-    duration: '3 rodadas',
+    duration: '4 rodadas',
     save: 'Fortitude parcial',
-    description: '<p>Você cria um vácuo em um espaço desocupado a sua escolha, capaz de sugar tudo nas proximidades. No início de cada um de seus três turnos seguintes, todos os seres a até 90m do vácuo, incluindo você, devem fazer um teste de Fortitude. Em caso de falha, ficam caídas e são puxadas 30m na direção do vácuo. Objetos soltos também são puxados. Seres podem gastar uma ação de movimento para se segurar em algum objeto fixo, recebendo +5 em seus testes de resistência. Seres e objetos que toquem o vácuo temporal são desintegrados, desaparecendo para sempre.</p><p><span>Discente (+5 PE):</span> muda a duração para “4 rodadas” e o efeito para que você não seja afetado. Requer afinidade.</p><p><span>Verdadeiro (+10 PE):</span> muda a duração para “5 rodadas” e o efeito para que seres escolhidos dentro do alcance não sejam afetados. Requer afinidade.</p>'
+    description: '<p>Você cria um vácuo em um espaço desocupado a sua escolha, capaz de sugar tudo nas proximidades. No início de cada um de seus qautro turnos seguintes, todos os seres a até 90m do vácuo, incluindo você, devem fazer um teste de Fortitude. Em caso de falha, ficam caídas e são puxadas 30m na direção do vácuo. Objetos soltos também são puxados. Seres podem gastar uma ação de movimento para se segurar em algum objeto fixo, recebendo +5 em seus testes de resistência. Seres e objetos que iniciem seu turno tocando o vácuo temporal sofrem 100 pontos de dano de Morte por rodada.</p><p><span>Discente (+5 PE):</span> muda a duração para “5 rodadas” e o efeito para que você não seja afetado. Requer afinidade.</p><p><span>Verdadeiro (+10 PE):</span> muda a duração para “6 rodadas” e o efeito para que seres escolhidos dentro do alcance não sejam afetados. Requer afinidade.</p>'
+  },
+  {
+    name: 'Flagelo de Sangue',
+    circle: '2',
+    element: 'Sangue',
+    execution: 'padrão',
+    range: 'toque',
+    target: '1 pessoa',
+    duration: 'cena',
+    save: 'Fortitude parcial',
+    description: '<p>Você toca uma pessoa, gravando uma marca escarificada no corpo dela enquanto profere uma ordem, como “não ataque a mim ou meus aliados”, “siga-me” ou “não saia desta sala”. A cada rodada que o alvo desobedecer a ordem, a marca inflige uma dor excruciante, que causa 10d6 pontos de dano de Sangue e deixa o alvo enjoado pela rodada (Fortitude reduz o dano à metade e evita a condição). Se o alvo passar nesse teste dois turnos seguidos a marca desaparece.</p><p><span>Discente (+3 PE):</span> muda o alvo para “1 ser (exceto criaturas de Sangue)”. Requer 3º círculo.</p><p><span>Verdadeiro (+7 PE):</span> como Discente, e muda a duração para “1 dia”. Requer 4º círculo e afinidade.</p>'
   },
   {
     name: 'Forma Monstruosa',
@@ -522,7 +533,7 @@ const rituals: Array<Ritual> = [
     range: 'pessoal',
     area: 'círculo com 90m de raio',
     duration: 'cena',
-    description: '<p>Esta ritual pode encontrar uma pessoa ou objeto a sua escolha. Você pode pensar em termos gerais (“um policial”, “algo de metal”) ou específicos (“A delegada Joana”, “uma pistola”). O ritual indica a direção e distância da pessoa ou objeto mais próximo desse tipo, caso esteja ao alcance. Você pode movimentar-se para continuar procurando. Procurar algo muito específico (“a chave do armazém 4 no porto”) exige que você tenha em mente uma imagem precisa do objeto; caso a imagem não seja parecida com a verdade, o ritual falha, mas você gasta os PE mesmo assim. Este ritual pode ser bloqueado por uma fina camada de chumbo.</p><p><span>Discente (+3 PE):</span> muda o alvo para 1 pessoa e a duração para 1 hora. Em vez do normal, a pessoa tocada descobre o caminho mais direto para entrar ou sair de um lugar. Assim, o ritual pode ser usado para descobrir a rota até o relicário de uma catedral ou a saída mais próxima de uma caverna (mas não para encontrar a localização de uma pessoa ou objeto; funciona apenas em relação a lugares). Caso a pessoa demore mais de uma hora para percorrer o caminho, o conhecimento se perde.</p><p><span>Verdadeiro (+7 PE):</span> aumenta a área para círculo de 1km de raio. Requer 4º círculo.</p>'
+    description: '<p>Esta ritual pode encontrar uma pessoa ou objeto a sua escolha. Você pode pensar em termos gerais (“um policial”, “algo de metal”) ou específicos (“A delegada Joana”, “uma pistola”). O ritual indica a direção e distância da pessoa ou objeto mais próximo desse tipo, caso esteja ao alcance. Você pode movimentar-se para continuar procurando. Procurar algo muito específico (“a chave do armazém 4 no porto”) exige que você tenha em mente uma imagem precisa do objeto; caso a imagem não seja parecida com a verdade, o ritual falha, mas você gasta os PE mesmo assim. Este ritual pode ser bloqueado por uma fina camada de chumbo.</p><p><span>Discente (+3 PE):</span> muda o alcance para “toque”, o alvo para “1 pessoa” e a duração para “1 hora”. Em vez do normal, a pessoa tocada descobre o caminho mais direto para entrar ou sair de um lugar. Assim, o ritual pode ser usado para descobrir a rota até o relicário de uma catedral ou a saída mais próxima de uma caverna (mas não para encontrar a localização de uma pessoa ou objeto; funciona apenas em relação a lugares). Caso a pessoa demore mais de uma hora para percorrer o caminho, o conhecimento se perde.</p><p><span>Verdadeiro (+7 PE):</span> aumenta a área para círculo de 1km de raio. Requer 4º círculo.</p>'
   },
   {
     name: 'Luz',
@@ -554,7 +565,7 @@ const rituals: Array<Ritual> = [
     target: '1 pessoa',
     duration: 'sustentada',
     save: 'Vontade parcial',
-    description: '<p>Você mergulha nos pensamentos do alvo, para descobrir informações sobre ele. Durante o mergulho, você fica desprevenido. No início de cada turno seu que estiver sustentando o efeito e tocando o alvo, ele deve fazer um teste de Vontade. Se falhar, deve responder uma pergunta sua da melhor maneira possível, sendo incapaz de mentir ou omitir fatos. O que exatamente você descobre depende do mestre: talvez você não descubra tudo que há para saber, mas ganhe pistas para continuar a investigação.</p><p><span>Verdadeiro (+4 PE):</span> muda a execução para 1 dia, o alcance para ilimitado e adiciona como componente ritualístico uma cuba de ouro cheia d’água e uma máscara (acessório de categoria II). Você pode realizar o mergulho mental à distância, submergindo seu rosto mascarado na água enquanto mentaliza o alvo. Para que esse ritual funcione, você precisa ter alguma informação sobre o alvo, como nome completo, e um objeto pessoal ou fotografia. Requer 4º círculo.</p>'
+    description: '<p>Você mergulha nos pensamentos do alvo, para descobrir informações sobre ele. Durante o mergulho, você fica desprevenido. No início de cada turno seu que estiver sustentando o efeito e tocando o alvo, ele deve fazer um teste de Vontade. Se falhar, deve responder uma pergunta sua que possa ser respondida com “sim” ou “não”, sendo incapaz de mentir. O que você descobre depende das suas perguntas e do mestre: talvez você não descubra tudo que há para saber, mas ganhe pistas para continuar a investigação.</p><p><span>Verdadeiro (+4 PE):</span> muda a execução para 1 dia, o alcance para ilimitado e adiciona como componente ritualístico uma cuba de ouro cheia d’água e uma máscara (acessório de categoria II). Você pode realizar o mergulho mental à distância, submergindo seu rosto mascarado na água enquanto mentaliza o alvo. Para que esse ritual funcione, você precisa ter alguma informação sobre o alvo, como nome completo, e um objeto pessoal ou fotografia. Requer 4º círculo.</p>'
   },
   {
     name: 'Miasma Entrópico',
@@ -838,7 +849,7 @@ const rituals: Array<Ritual> = [
     effect: '1 enxame Grande (quadrado de 3m)',
     duration: 'sustentada',
     save: 'Reflexos reduz à metade',
-    description: '<p>Você vomita um enxame de pequenas criaturas de Sangue, que surge em um ponto adjacente a sua escolha. O enxame pode passar pelo espaço de outros seres e não impede que outros seres entrem no espaço dele. No final de cada um de seus turnos, o enxame causa 5d12 pontos de dano de sangue a qualquer ser no espaço dele (Reflexos reduz à metade). Você pode gastar uma ação de movimento para mover o enxame com deslocamento de 12m.</p><p><span>Discente (+2 PE):</span> além do normal, um alvo que falhe no teste de Reflexos fica agarrada (o enxame escala e cobre o corpo dele). O alvo pode gastar uma ação padrão e fazer um teste de Acrobacia ou Atletismo para escapar. Se você mover o enxame, o alvo fica livre.</p><p><span>Verdadeiro (+5 PE):</span> o enxame vira Enorme (cubo de 6m de lado), ganha deslocamento de voo 18m e passa a ocupar um cubo ao invés de um quadrado.</p>'
+    description: '<p>Você vomita um enxame de pequenas criaturas de Sangue, que surge em um ponto adjacente a sua escolha. O enxame pode passar pelo espaço de outros seres e não impede que outros seres entrem no espaço dele. No final de cada um de seus turnos, o enxame causa 5d12 pontos de dano de sangue a qualquer ser no espaço dele (Reflexos reduz à metade). Você pode gastar uma ação de movimento para mover o enxame com deslocamento de 12m.</p><p><span>Discente (+2 PE):</span> além do normal, um alvo que falhe no teste de Reflexos fica agarrada (o enxame escala e cobre o corpo dele). O alvo pode gastar uma ação padrão e fazer um teste de Acrobacia ou Atletismo para escapar. Se você mover o enxame, o alvo fica livre.</p><p><span>Verdadeiro (+5 PE):</span> o enxame vira Enorme (cubo de 6m de lado) e ganha deslocamento de voo 18m.</p>'
   },
   {
     name: 'Zerar Entropia',
@@ -849,7 +860,7 @@ const rituals: Array<Ritual> = [
     target: '1 pessoa',
     duration: 'cena',
     save: 'Vontade parcial',
-    description: '<p>Você zera completamente a entropia do alvo em relação ao ambiente, deixando-o paralisado. Se passar na resistência, em vez disso fica lento. No início de cada um de seus turnos, o alvo pode gastar uma ação completa para fazer um novo teste de Vontade. Se passar, encerra o efeito.</p><p><span>Discente (+4 PE):</span> muda o alvo para 1 ser. Requer 4º círculo.</p><p><span>Verdadeiro (+11 PE):</span> muda o alvo para seres escolhidos. Requer 4º círculo.</p>'
+    description: '<p>Você zera completamente a entropia do alvo em relação ao ambiente, deixando-o paralisado. Se passar na resistência, em vez disso fica lento. No início de cada um de seus turnos, o alvo pode gastar uma ação completa para fazer um novo teste de Vontade. Se passar, encerra o efeito.</p><p><span>Discente (+4 PE):</span> muda o alvo para "1 ser". Requer 4º círculo.</p><p><span>Verdadeiro (+11 PE):</span> muda o alvo para "seres escolhidos". Requer 4º círculo.</p>'
   },
 ]
 
