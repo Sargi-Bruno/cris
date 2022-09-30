@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import _ from 'lodash'
 import StepperView from '../../components/StepperView.vue'
 import ChooseAttributes from './ChooseAttributes/ChooseAttributes.vue'
 import ChooseBackground from './ChooseBackground/ChooseBackground.vue'
@@ -36,7 +37,7 @@ const auth = getAuth()
 const firestore = getFirestore()
 const router = useRouter()
 const currentStep = ref(0)
-const character= ref<Character>({...characterDefaultValue})
+const character= ref<Character>(_.cloneDeep(characterDefaultValue))
 const chosenBackground = ref<Background | null>(null)
 const chosenClass = ref<Class | null>(null)
 const errorMessage = ref('')
@@ -98,8 +99,7 @@ const handleFinishCreation =  async () => {
   character.value.timestamp = (serverTimestamp() as unknown) as Timestamp
 
   const data = await  addDoc(collection(firestore, 'characters'), character.value)
-
-  character.value = {...characterDefaultValue}
+  
   router.push({ name: 'character-sheet', params: { id: data.id } })
 }
 

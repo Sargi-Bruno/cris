@@ -68,7 +68,7 @@ const items: Array<DescriptionItems> = [
           type="text" 
           class="input-primary"
           placeholder="Nome do personagem"
-          :value="character.name"
+          :value="character?.name"
           @blur="e => $emit('handleChangeChar', {e, key: 'name'})"
         >
       </div>
@@ -78,7 +78,7 @@ const items: Array<DescriptionItems> = [
           type="text" 
           class="input-primary"
           placeholder="Nome do jogador"
-          :value="character.player"
+          :value="character?.player"
           @blur="e => $emit('handleChangeChar', {e, key: 'player'})"
         >
       </div>
@@ -90,7 +90,7 @@ const items: Array<DescriptionItems> = [
           class="textarea" 
           rows="6"
           :placeholder="item.placeholder"
-          :value="character.description[item.key]"
+          :value="character?.description[item.key]"
           @blur="(e) => handleUpdateDescription(e, item.key)"
         >
         </textarea>

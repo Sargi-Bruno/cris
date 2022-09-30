@@ -12,7 +12,7 @@ import SkillsView from './sheet-skills/SkillsView.vue'
 import SheetTabView from './sheet-tab/SheetTabView.vue'
 import AbilitiesModal from './sheet-modals/abilities-modal/AbilitiesModal.vue'
 import InventoryModal from './sheet-modals/inventory-modal/InventoryModal.vue'
-import RitualsModal from './sheet-modals/abilities-modal/AbilitiesModal.vue'
+import RitualsModal from './sheet-modals/rituals-modal/RitualsModal.vue'
 import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
 import LoadingView from '../../components/LoadingView.vue'
 import {
