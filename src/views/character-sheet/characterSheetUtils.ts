@@ -84,7 +84,7 @@ export const attackDefaultValue: Attack = {
 export const attrDic = {
   str: 'Força',
   dex: 'Agilidade',
-  int: 'Inteligência',
+  int: 'Intelecto',
   con: 'Vigor',
   pre: 'Presença'
 }

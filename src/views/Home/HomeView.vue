@@ -9,6 +9,7 @@ const auth = getAuth()
 const router = useRouter()
 const isLoggedIn = ref(false)
 const firestore = getFirestore()
+const loading = ref(true)
 
 const handleSignIn = () => {
   const provider = new GoogleAuthProvider()
@@ -35,6 +36,7 @@ const handleSignIn = () => {
 }
 
 const handleEnter = () => {
+  if(loading.value) return
   if(isLoggedIn.value) router.push({ name: 'character-list' })
   else handleSignIn()
 }
@@ -43,6 +45,7 @@ onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     if(user) isLoggedIn.value = true
     else isLoggedIn.value = false
+    loading.value = false
   })
 })
 </script>
