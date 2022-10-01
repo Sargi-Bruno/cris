@@ -183,32 +183,41 @@ export const rollDices = (value: string) => {
   return roll
 }
 
+const getDamageTooltipInfo = (attack: Attack) => {
+  return `${attack.damage}` 
+  + (attack.extraDamage !== '' ? ` + ${attack.extraDamage}` : '')
+  + (attack.damageAttribute !== 'Nenhum' ? ` + ${attrLongToShortDic[attack.damageAttribute as AttrDamageKeys]}` : '')
+}
+
+const getPositiveAttackRollString = (attrSkillValue: number, skillBonus: number, attackBonus: number) => {
+  return `${attrSkillValue}d20kh1` 
+  + (skillBonus !== 0 ? `+${skillBonus}` : '')
+  + (attackBonus !== 0 ? `+${attackBonus}` : '')
+}
+
+const getNegativeAttackRollString = (attrSkillValue: number, skillBonus: number, attackBonus: number) => {
+  return `${Math.abs(attrSkillValue) + 2}d20kl1`
+  + (skillBonus !== 0 ? `+${skillBonus}` : '')
+  + (attackBonus !== 0 ? `+${attackBonus}` : '')
+}
+
 export const rollAttack = (character: Character, attack: Attack) => {
   const rollSkillIndex = character.skills.findIndex((e) => e.name === attack.skillUsed)
   const skill = character.skills[rollSkillIndex]
   const attrSkillValue = character.attributes[attrShortDic[skill.attribute  as AttrPtKeys] as AttrKeys]
 
-  const attackTooltipInfo = `${skill.name} (${skill.attribute})` + (attack.attackBonus !== 0 ? ` + ${attack.attackBonus}` : '')
-  const damageTooltipInfo = `${attack.damage}` 
-                            + (attack.extraDamage !== '' ? ` + ${attack.extraDamage}` : '')
-                            + (attack.damageAttribute !== 'Nenhum' ? ` + ${attrLongToShortDic[attack.damageAttribute as AttrDamageKeys]}` : '')
-  const criticalTooltipInfo = `${attack.criticalRange}/x${attack.criticalMult}`
+  const attackInfo = `${skill.name} (${skill.attribute})` + (attack.attackBonus !== 0 ? ` + ${attack.attackBonus}` : '')
+  const damageInfo = getDamageTooltipInfo(attack)
+  const criticalInfo = `${attack.criticalRange}/x${attack.criticalMult}`
   
   let attackRollString: string
 
-  if(attrSkillValue > 0) 
-    attackRollString = `${attrSkillValue}d20kh1` 
-                        + (skill.bonus !== 0 ? `+${skill.bonus}` : '')
-                        + (attack.attackBonus !== 0 ? `+${attack.attackBonus}` : '')
-
-  else attackRollString = `${Math.abs(attrSkillValue) + 2}d20kl1`
-                           + (skill.bonus !== 0 ? `+${skill.bonus}` : '')
-                           + (attack.attackBonus !== 0 ? `+${attack.attackBonus}` : '')
+  if(attrSkillValue > 0) attackRollString = getPositiveAttackRollString(attrSkillValue, skill.bonus, attack.attackBonus) 
+  else attackRollString = getNegativeAttackRollString(attrSkillValue, skill.bonus, attack.attackBonus)
 
   const rollAttack = new DiceRoll(attackRollString.trim())
   const attackTotal = rollAttack.total
-
-  const outputAttackArray = rollAttack.output.substring(rollAttack.output.indexOf('['), rollAttack.output.indexOf(']')).split(',')
+  const outputAttackArray = rollAttack.output.substring(rollAttack.output.indexOf('[') + 1, rollAttack.output.indexOf(']')).split(',')
   let critical = 0
 
   if(outputAttackArray.length > 1) {
@@ -219,6 +228,7 @@ export const rollAttack = (character: Character, attack: Attack) => {
         if(parseInt(value) === 1 && attack.criticalRange === 1) critical = 1
       }
     })
+
   } else {
     const outputAttackString = rollAttack.output.substring(rollAttack.output.indexOf('[') + 1, rollAttack.output.indexOf(']'))
 
@@ -228,29 +238,48 @@ export const rollAttack = (character: Character, attack: Attack) => {
 
   const damageRollString = attack.damage !== '' ? `${attack.damage}` : '0'
   let damageTotal = 0
+  let damageRollsTooltip = ''
 
   if(critical === 1) {
     for(let x = 0; x < attack.criticalMult; x++) {
       const damageRoll = new DiceRoll(damageRollString.trim())
       damageTotal += damageRoll.total
+      damageRollsTooltip += damageRoll.output.substring(damageRoll.output.indexOf(':') + 1, damageRoll.output.indexOf('=') - 1) + '+'
     }
   } else {
     const damageRoll = new DiceRoll(damageRollString.trim())
     damageTotal += damageRoll.total
+    damageRollsTooltip += damageRoll.output.substring(damageRoll.output.indexOf(':') + 1, damageRoll.output.indexOf('=') - 1) + '+'
   }
 
-  const attrDamageValue = attack.damageAttribute !== 'Nenhum' ? 
-                          `${character.attributes[attrDamageDic[attack.damageAttribute as AttrDamageKeys] as AttrKeys]}` : ''
-
-  const extraDamageRollString = attack.extraDamage !== '' ? 
-                                `${attack.extraDamage}` + (attrDamageValue !== '' ? `+${attrDamageValue}` : '') : (attrDamageValue !== '' ? `${attrDamageValue}` : '')
-  
-  if(extraDamageRollString !== '') {
-    const extraDamageRoll = new DiceRoll(extraDamageRollString.trim())
+  if(attack.extraDamage !== '') {
+    const extraDamageRoll = new DiceRoll(attack.extraDamage.trim())
     damageTotal += extraDamageRoll.total
+    if(extraDamageRoll.output.includes('[')) damageRollsTooltip += extraDamageRoll.output.substring(extraDamageRoll.output.indexOf(':') + 1, extraDamageRoll.output.indexOf('=') - 1) + '+'
+    else damageRollsTooltip += extraDamageRoll.total + '+'
+  }
+
+  if(attack.damageAttribute !== 'Nenhum') {
+    damageTotal += character.attributes[attrDamageDic[attack.damageAttribute as AttrDamageKeys] as AttrKeys]
+    damageRollsTooltip += character.attributes[attrDamageDic[attack.damageAttribute as AttrDamageKeys] as AttrKeys]
+  }
+
+  if(damageRollsTooltip.charAt(damageRollsTooltip.length - 1) === '+') {
+    damageRollsTooltip = damageRollsTooltip.slice(0, -1)
+  }
+
+  const payload = {
+    attackTotal,
+    damageTotal,
+    critical,
+    attackInfo,
+    damageInfo,
+    criticalInfo,
+    attackRollInfo: rollAttack.output.substring(rollAttack.output.indexOf('['), rollAttack.output.indexOf(']') + 1)  + (attack.attackBonus !== 0 ? `+${attack.attackBonus}` : ''),
+    damageRollInfo: `${damageRollsTooltip.trim().replace(/\s/g, "")}`
   }
   
-  return { attackTotal, damageTotal, critical, attackTooltipInfo, damageTooltipInfo, criticalTooltipInfo }
+  return payload
 }
 
 export const rollSkill = (character: Character, skill: Skill) => {

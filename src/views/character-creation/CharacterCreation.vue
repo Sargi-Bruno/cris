@@ -10,7 +10,8 @@ import ChooseBackground from './ChooseBackground/ChooseBackground.vue'
 import ChooseClass from './ChooseClass/ChooseClass.vue'
 import ChooseDescription from './ChooseDescription/ChooseDescription.vue'
 import ToastNotification from '../../components/ToastNotification.vue'
-import { Character, Background, Class, AttrKeys, Timestamp } from '../../types'
+import LoadingView from '../../components/LoadingView.vue'
+import { Character, Background, Class, AttrKeys, Timestamp, ToastInfo } from '../../types'
 import { 
   characterDefaultValue,
   changeAttribute,
@@ -40,10 +41,14 @@ const currentStep = ref(0)
 const character= ref<Character>(_.cloneDeep(characterDefaultValue))
 const chosenBackground = ref<Background | null>(null)
 const chosenClass = ref<Class | null>(null)
-const errorMessage = ref('')
-const toastAlive = ref(false)
-const toastTimeout = ref<number>()
 const loading = ref(false)
+
+const toastInfo = ref<ToastInfo>({
+  message: '',
+  type: 'error',
+  alive: false,
+  timeout: 0
+})
 
 const handleNavigation = (value: number) => currentStep.value = value
 
@@ -82,13 +87,13 @@ const handleFinishCreation =  async () => {
   if(!auth.currentUser) return
 
   if(chosenBackground.value === null) {
-    errorMessage.value = 'Escolha uma origem'
-    toastAlive.value = true
+    toastInfo.value.message = 'Escolha uma origem'
+    toastInfo.value.alive = true
     return
   }
   if(chosenClass.value === null) {
-    errorMessage.value = 'Escolha uma classe'
-    toastAlive.value = true
+    toastInfo.value.message = 'Escolha uma classe'
+    toastInfo.value.alive = true
     return
   }
 
@@ -107,47 +112,52 @@ onMounted(() => {
   if(!auth.currentUser) router.push({ name: 'home' })
 })
 
-watch(toastAlive, () => {
-  if(toastAlive.value === true) {
-    toastTimeout.value = window.setTimeout(() => toastAlive.value = false, 3000)
+watch(() => toastInfo.value.alive, () => {
+  if(toastInfo.value.alive === true) {
+    toastInfo.value.timeout = window.setTimeout(() => toastInfo.value.alive = false, 3000)
   }
 })
 
-const dismissToast = () => {
-  toastAlive.value = false
-  clearTimeout(toastTimeout.value)
+const dismissToastInfo = () => {
+  toastInfo.value.alive = false
+  clearTimeout(toastInfo.value.timeout)
 }
 </script>
 
 <template>
-  <StepperView
-    :current-step="currentStep"
-    :stepper-options="stepperOptions"
-    @handle-navigation="handleNavigation"
-  />
-  <KeepAlive>
-    <component
-      :is="componentOptions[currentStep]"
-      :character="character"
-      :chosen-background="chosenBackground"
-      :chosen-class="chosenClass"
-      :loading="loading"
-      @handle-change-attribute="handleChangeAttribute"
-      @handle-add-background="handleAddBackground"
-      @handle-remove-background="handleRemoveBackground"
-      @handle-add-class="handleAddClass"
-      @handle-remove-class="handleRemoveClass"
-      @handle-change-char="handleChangeChar"
-      @handle-update-description="handleUpdateDescription"
-      @handle-finish-creation="handleFinishCreation"
+  <div v-if="!loading">
+    <StepperView
+      :current-step="currentStep"
+      :stepper-options="stepperOptions"
+      @handle-navigation="handleNavigation"
     />
-  </KeepAlive>
+    <KeepAlive>
+      <component
+        :is="componentOptions[currentStep]"
+        :character="character"
+        :chosen-background="chosenBackground"
+        :chosen-class="chosenClass"
+        :loading="loading"
+        @handle-change-attribute="handleChangeAttribute"
+        @handle-add-background="handleAddBackground"
+        @handle-remove-background="handleRemoveBackground"
+        @handle-add-class="handleAddClass"
+        @handle-remove-class="handleRemoveClass"
+        @handle-change-char="handleChangeChar"
+        @handle-update-description="handleUpdateDescription"
+        @handle-finish-creation="handleFinishCreation"
+      />
+    </KeepAlive>
+  </div>
+  <div v-else>
+    <LoadingView />
+  </div>
   <transition name="toast">
     <ToastNotification
-      v-if="toastAlive"
-      :value="errorMessage"
+      v-if="toastInfo.alive"
+      :toast="toastInfo"
       type="error"
-      @dismiss="dismissToast"
+      @dismiss="dismissToastInfo"
     />
   </transition>
 </template>

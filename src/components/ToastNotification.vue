@@ -1,16 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { ToastInfo } from '../types'
 
-const props = defineProps({
-  value: {
-    type: String,
-    required: true
-  },
-  type: {
-    type: String,
-    required: true
-  }
-})
+const props =  defineProps<{toast: ToastInfo}>()
 
 defineEmits(['dismiss'])
 
@@ -20,9 +12,9 @@ const redColor = '#d9534f'
 const grayColor = '#1F1F1F'
 
 const toastColor = computed(() => {
-  if(props.type === 'success') return greenColor
-  if(props.type === 'error') return redColor
-  if(props.type === 'dice') return grayColor
+  if(props.toast.type === 'success') return greenColor
+  if(props.toast.type === 'error') return redColor
+  if(props.toast.type === 'dice') return grayColor
   return blueColor
 })
 </script>
@@ -35,24 +27,24 @@ const toastColor = computed(() => {
     <div class="toast">
       <div class="toast-content">
         <img
-          v-if="type === 'success'"
+          v-if="toast.type === 'success'"
           class="toast-icon"
           src="../assets/check-icon.svg" 
           alt="sucesso"
         >
         <img
-          v-if="type === 'info'"
+          v-if="toast.type === 'info'"
           class="toast-icon"
           src="../assets/info-icon.svg" 
           alt="info"
         >
         <img
-          v-if="type === 'error'"
+          v-if="toast.type === 'error'"
           class="toast-icon"
           src="../assets/error-icon.svg" 
           alt="erro"
         >
-        <h3>{{ value }}</h3>
+        <h3>{{ toast.message }}</h3>
         <button 
           class="close-icon"
           @click="$emit('dismiss')"

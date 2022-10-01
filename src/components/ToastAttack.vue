@@ -1,36 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { ToastAttackInterface } from '../types'
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  totalAttack: {
-    type: Number,
-    required: true
-  },
-  totalDamage: {
-    type: Number,
-    required: true
-  },
-  critical: {
-    type: Number,
-    required: true
-  },
-  attackTooltip: {
-    type: String,
-    required: true
-  },
-  damageTooltip: {
-    type: String,
-    required: true
-  },
-  criticalTooltip: {
-    type: String,
-    required: true
-  }
-})
+const props =  defineProps<{toast: ToastAttackInterface}>()
 
 defineEmits(['dismiss'])
 
@@ -39,8 +11,8 @@ const redColor = '#d9534f'
 const whiteColor = '#fff'
 
 const attackColor = computed(() => {
-  if(props.critical === 1) return greenColor
-  if(props.critical === -1) return redColor
+  if(props.toast.critical === 1) return greenColor
+  if(props.toast.critical === -1) return redColor
   return whiteColor
 })
 </script>
@@ -59,22 +31,28 @@ const attackColor = computed(() => {
         >
         <div class="text">
           <h3 class="title">
-            {{ title }}
+            {{ toast.title }}
           </h3>
           <div class="result">
             <div class="attack-container">
               <div class="attack-tooltip">
-                <span>{{ attackTooltip }}</span>
+                <div class="tooltip-container">
+                  <h5>{{ toast.attackTooltip }}</h5>
+                  <h5>{{ toast.attackRollTooltip }}</h5>
+                </div>
               </div>
-              <h3>{{ totalAttack }}</h3>
+              <h3>{{ toast.totalAttack }}</h3>
               <h4>ATAQUE</h4>
             </div>
             <div class="divider" />
             <div class="damage-container">
               <div class="damage-tooltip">
-                <span>{{ damageTooltip }} | {{ criticalTooltip }}</span>
+                <div class="tooltip-container">
+                  <h5>{{ toast.damageTooltip }} | {{ toast.criticalTooltip }}</h5>
+                  <h5>{{ toast.damageRollTooltip }}</h5>
+                </div>
               </div>
-              <h3>{{ totalDamage }}</h3>
+              <h3>{{ toast.totalDamage }}</h3>
               <h4>DANO</h4>
             </div>
           </div>
@@ -148,22 +126,32 @@ const attackColor = computed(() => {
 }
 .attack-tooltip {
   position: absolute;
-  top: -60px;
+  top: -80px;
   opacity: 0;
   background-color: var(--color-smoky-black);
   border-radius: 8px;
   border: 1px solid var(--color-gray);
   display: none;
-  width: 10rem;
-  height: 3rem;
+  width: 14rem;
+  height: 4rem;
+  padding: .5rem;
 }
-.attack-tooltip span {
+.tooltip-container {
+  margin: 0 auto;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.tooltip-container h5 {
   color: var(--color-white);
   margin: 0 auto;
   margin-top: auto;
   margin-bottom: auto;
   font-size: 12px;
   font-weight: normal;
+  text-align: center;
+}
+.tooltip-container h5:first-of-type {
+  color: var(--color-off-white);
 }
 .attack-container:hover > .attack-tooltip {
   opacity: 1;
@@ -183,14 +171,14 @@ const attackColor = computed(() => {
 }
 .damage-tooltip {
   position: absolute;
-  top: -60px;
+  top: -80px;
   opacity: 0;
   background-color: var(--color-smoky-black);
   border-radius: 8px;
   border: 1px solid var(--color-gray);
   display: none;
-  width: 10rem;
-  height: 3rem;
+  width: 14rem;
+  height: 4rem;
   padding: .5rem;
 }
 .damage-tooltip span {

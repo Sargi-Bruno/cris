@@ -221,6 +221,34 @@ export interface Character {
   timestamp?: Timestamp
 }
 
+export interface ToastInfo {
+  message: string
+  type: string
+  alive: boolean
+  timeout: number
+}
+
+export interface ToastRoll {
+  title: string 
+  total: number
+  output: string
+  notation: string
+  alive: boolean
+}
+
+export interface ToastAttackInterface {
+  title: string
+  totalAttack: number
+  totalDamage: number
+  critical: number
+  attackTooltip: string
+  damageTooltip: string
+  criticalTooltip: string
+  attackRollTooltip: string
+  damageRollTooltip: string
+  alive: boolean
+}
+
 const characterStringKeysList = ['name', 'player'] as const
 export type CharacterStringKeys = typeof characterStringKeysList[number]
 

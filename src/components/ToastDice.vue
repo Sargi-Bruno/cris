@@ -1,24 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { ToastRoll } from '../types'
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  total: {
-    type: Number,
-    required: true
-  },
-  output: {
-    type: String,
-    required: true
-  },
-  notation: {
-    type: String,
-    required: true
-  }
-})
+const props =  defineProps<{toast: ToastRoll}>()
 
 defineEmits(['dismiss'])
 
@@ -29,9 +13,9 @@ const whiteColor = '#fff'
 const totalColor = computed(() => {
   let color = whiteColor
 
-  if(props.title === 'Resultado') return color
+  if(props.toast.title === 'Resultado') return color
   
-  const outputArray = props.output.substring(props.output.indexOf('['), props.output.indexOf(']')).split(',')
+  const outputArray = props.toast.output.substring(props.toast.output.indexOf('['), props.toast.output.indexOf(']')).split(',')
 
   if(outputArray.length > 1) {
     outputArray.map(value => {
@@ -41,7 +25,7 @@ const totalColor = computed(() => {
       }
     })
   } else {
-    const outputSubstring = props.output.substring(props.output.indexOf('[') + 1, props.output.indexOf(']'))
+    const outputSubstring = props.toast.output.substring(props.toast.output.indexOf('[') + 1, props.toast.output.indexOf(']'))
 
     if(parseInt(outputSubstring) === 20) color = greenColor
     if(parseInt(outputSubstring) === 1) color = redColor
@@ -65,18 +49,18 @@ const totalColor = computed(() => {
         >
         <div class="text">
           <h3 class="title">
-            {{ title }}
+            {{ toast.title }}
           </h3>
           <div class="result">
             <div class="result-container">
-              <h4>{{ output }}</h4>
-              <h4 v-if="title === 'Resultado'">
-                {{ notation }}
+              <h4>{{ toast.output }}</h4>
+              <h4 v-if="toast.title === 'Resultado'">
+                {{ toast.notation }}
               </h4>
             </div>
             <span>=</span>
             <div class="total-container">
-              <h3>{{ total }}</h3>
+              <h3>{{ toast.total }}</h3>
             </div>
           </div>
         </div>

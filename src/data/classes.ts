@@ -260,10 +260,6 @@ const classes: Array<Class> = [
         description: 'Quando faz um teste de uma perícia, você pode gastar 2 PE para receber os benefícios de ser treinado nesta perícia.'
       },
       {
-        name: 'Engenhosidade',
-        description: 'Em NEX 40%, quando usa sua habilidade Eclético, você pode gastar 2 PE adicionais para receber os benefícios de ser veterano na perícia. Em NEX 75%, pode gastar 4 PE adicionais para receber os benefícios de ser expert na perícia.'
-      },
-      {
         name: 'Perito',
         description: 'Escolha duas perícias nas quais você é treinado (exceto Luta e Pontaria). Quando faz um teste de uma dessas perícias, você pode gastar 2 PE para somar +1d6 no resultado do teste. Conforme avança de NEX, você pode gastar +1 PE para aumentar o dado de bônus. Por exemplo, em NEX 55%, pode gastar 4 PE para receber +1d12 no teste.'
       },
@@ -280,6 +276,10 @@ const classes: Array<Class> = [
       {
         name: 'Conhecimento Aplicado',
         description: '<p>Quando faz um teste de perícia (exceto Luta e Pontaria), você pode gastar 2 PE para mudar o atributo-base da perícia para Int. <em>Pré-requisito:</em> Int 2.</p>'
+      },
+      {
+        name: 'Engenhosidade',
+        description: 'Em NEX 40%, quando usa sua habilidade Eclético, você pode gastar 2 PE adicionais para receber os benefícios de ser veterano na perícia. Em NEX 75%, pode gastar 4 PE adicionais para receber os benefícios de ser expert na perícia.'
       },
       {
         name: 'Hacker',

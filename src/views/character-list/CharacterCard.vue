@@ -20,7 +20,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['handleRemove'])
+defineEmits(['handleRemove', 'handleOpenSheet'])
 
 const creationDate = computed(() => {
   const date = new Date(props.timestamp * 1000);
@@ -54,7 +54,7 @@ const creationDate = computed(() => {
       </button>
       <button 
         class="sheet-button button-primary"
-        @click="$router.push({ name: 'character-sheet', params: { id: charId }})"
+        @click="$emit('handleOpenSheet', charId)"
       >
         Ficha
       </button>

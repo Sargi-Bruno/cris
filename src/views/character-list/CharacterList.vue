@@ -7,6 +7,7 @@ import { compare } from '../../utils/functions'
 import LoadingView from '../../components/LoadingView.vue'
 import SearchInput from '../../components/SearchInput.vue'
 import CharacterCard from './CharacterCard.vue'
+import router from '../../router'
 
 const auth = getAuth()
 const firestore = getFirestore()
@@ -70,6 +71,16 @@ const handleCloseModal = () => {
   modalRemoveInput.value = ''
 }
 
+const handleNewAgent = () => {
+  loading.value = true
+  router.push({ name: 'character-creation'})
+}
+
+const handleOpenSheet = (charId: string) => {
+  loading.value = true
+  router.push({ name: 'character-sheet', params: { id: charId }})
+}
+
 const handleRemoveChar = () => {
   if(!modalChar.value) return
 
@@ -82,57 +93,56 @@ const handleRemoveChar = () => {
 </script>
 
 <template>
-  <div class="agents-container">
-    <div v-if="!loading">
-      <div v-if="characters.length > 0">
-        <button 
-          class="button-primary new-button"
-          :disabled="characters.length >= charLimit"
-          @click="$router.push({ name: 'character-creation'})"
-        >
-          Novo agente
-        </button>
-        <div>
-          <h3 v-if="!betaTester">
-            Agentes {{ characters.length }}/{{ charLimit }}
-          </h3>
-          <h3 v-else>
-            Agentes {{ characters.length }}/{{ charLimit }}
-          </h3>
-          <div v-if="betaTester">
-            <SearchInput 
-              :value="searchText"
-              @update="(value: string) => searchText = value"
+  <div 
+    v-if="!loading" 
+    class="agents-container"
+  >
+    <div v-if="characters.length > 0">
+      <button 
+        class="button-primary new-button"
+        :disabled="characters.length >= charLimit"
+        @click="handleNewAgent"
+      >
+        Novo agente
+      </button>
+      <div>
+        <h3 v-if="!betaTester">
+          Agentes {{ characters.length }}/{{ charLimit }}
+        </h3>
+        <h3 v-else>
+          Agentes {{ characters.length }}/{{ charLimit }}
+        </h3>
+        <div v-if="betaTester">
+          <SearchInput 
+            :value="searchText"
+            @update="(value: string) => searchText = value"
+          />
+        </div>
+        <div class="cards-container">
+          <div 
+            v-for="character in filteredChars"
+            :key="character.id"
+          >
+            <CharacterCard
+              :char-id="(character.id as string)"
+              :name="character.name"
+              :char-class="character.className"
+              :timestamp="(character.timestamp as Timestamp).seconds"
+              @handle-open-sheet="handleOpenSheet"
+              @handle-remove="handleOpenModal"
             />
-          </div>
-          <div class="cards-container">
-            <div 
-              v-for="character in filteredChars"
-              :key="character.id"
-            >
-              <CharacterCard
-                :char-id="(character.id as string)"
-                :name="character.name"
-                :char-class="character.className"
-                :timestamp="(character.timestamp as Timestamp).seconds"
-                @handle-remove="handleOpenModal"
-              />
-            </div>
           </div>
         </div>
       </div>
-      <div v-else class="no-agents-container">
-        <h3>Nenhum agente encontrado!</h3>
-        <button 
-          class="button-primary"
-          @click="$router.push({ name: 'character-creation'})"
-        >
-          Novo agente
-        </button>
-      </div>
     </div>
-    <div v-else>
-      <LoadingView />
+    <div v-else class="no-agents-container">
+      <h3>Nenhum agente encontrado!</h3>
+      <button 
+        class="button-primary"
+        @click="$router.push({ name: 'character-creation'})"
+      >
+        Novo agente
+      </button>
     </div>
     <div v-if="modalChar">
       <vue-final-modal 
@@ -158,6 +168,7 @@ const handleRemoveChar = () => {
                 v-model="modalRemoveInput"
                 type="text"
                 class="input-primary"
+                @keyup.enter="handleRemoveChar"
               />
               <button
                 class="button-remove"
@@ -171,6 +182,9 @@ const handleRemoveChar = () => {
         </div>
       </vue-final-modal>
     </div>
+  </div>
+  <div v-else>
+    <LoadingView />
   </div>
 </template>
 

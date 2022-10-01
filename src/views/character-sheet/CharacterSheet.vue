@@ -35,7 +35,10 @@ import {
   InventoryDropdownKeys,
   InventoryNumberKeys,
   ItemsLimitKeys,
-  Attack
+  Attack,
+  ToastInfo,
+  ToastRoll,
+  ToastAttackInterface
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -68,32 +71,6 @@ import diceSound from '../../assets/dice-roll.mp3'
 import router from '../../router'
 
 const { play } = useSound(diceSound)
-
-interface ToastInfo {
-  message: string
-  type: string
-  alive: boolean
-  timeout: number
-}
-
-interface ToastRoll {
-  title: string 
-  total: number
-  output: string
-  notation: string
-  alive: boolean
-}
-
-interface ToastAttackInterface {
-  title: string
-  totalAttack: number
-  totalDamage: number
-  critical: number
-  attackTooltip: string
-  damageTooltip: string
-  criticalTooltip: string
-  alive: boolean
-}
 
 const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal]
 const modals = {
@@ -133,6 +110,8 @@ const toastAttack = ref<ToastAttackInterface>({
   attackTooltip: '',
   damageTooltip: '',
   criticalTooltip: '',
+  attackRollTooltip: '',
+  damageRollTooltip: '',
   alive: false
 })
 
@@ -200,6 +179,8 @@ const handleShowAttackToast = (
   critical: number,
   attackTooltip: string,
   damageTooltip: string,
+  attackRollTooltip: string,
+  damageRollTooltip: string,
   criticalTooltip: string
 ) => {
   dismissToastInfo()
@@ -210,6 +191,8 @@ const handleShowAttackToast = (
   toast.critical = critical
   toast.attackTooltip = attackTooltip
   toast.damageTooltip = damageTooltip
+  toast.attackRollTooltip = attackRollTooltip
+  toast.damageRollTooltip = damageRollTooltip
   toast.criticalTooltip = criticalTooltip
   toast.alive = true
 }
@@ -394,8 +377,19 @@ const handleRollDices = (value: string) => {
 
 const handleRollAttack = (attack: Attack) => {
   try {
-    const { attackTotal, damageTotal, critical, attackTooltipInfo, damageTooltipInfo, criticalTooltipInfo } = rollAttack(character.value, attack)
-    handleShowAttackToast(toastAttack.value, attack.name, attackTotal, damageTotal, critical, attackTooltipInfo, damageTooltipInfo, criticalTooltipInfo)
+    const payload = rollAttack(character.value, attack)
+    handleShowAttackToast(
+      toastAttack.value, 
+      attack.name, 
+      payload.attackTotal, 
+      payload.damageTotal, 
+      payload.critical, 
+      payload.attackInfo, 
+      payload.damageInfo, 
+      payload.attackRollInfo,
+      payload.damageRollInfo,
+      payload.criticalInfo
+    )
     play()
 
   } catch(error) {
@@ -503,31 +497,21 @@ watch(() => toastInfo.value.alive, () => {
     <transition name="toast">
       <ToastNotification
         v-if="toastInfo.alive"
-        :value="toastInfo.message"
-        :type="toastInfo.type"
+        :toast="toastInfo"
         @dismiss="dismissToastInfo"
       />
     </transition>
     <transition name="toast">
       <ToastDice
         v-if="toastRoll.alive"
-        :title="toastRoll.title"
-        :total="toastRoll.total"
-        :output="toastRoll.output"
-        :notation="toastRoll.notation"
+        :toast="toastRoll"
         @dismiss="dismissToastRoll"
       />
     </transition>
     <transition name="toast">
       <ToastAttack
         v-if="toastAttack.alive"
-        :title="toastAttack.title"
-        :total-attack="toastAttack.totalAttack"
-        :total-damage="toastAttack.totalDamage"
-        :critical="toastAttack.critical"
-        :attack-tooltip="toastAttack.attackTooltip"
-        :damage-tooltip="toastAttack.damageTooltip"
-        :critical-tooltip="toastAttack.criticalTooltip"
+        :toast="toastAttack"
         @dismiss="dismissToastAttack"
       />
     </transition>
