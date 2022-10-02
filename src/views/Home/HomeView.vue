@@ -52,7 +52,7 @@ onMounted(() => {
 
 <template>
   <div class="home-container">
-    <div class="content-block">
+    <div class="fisrt content-block">
       <div class="first-block">
         <h1>Plataforma não oficial de <b>Ordem Paranormal</b> para criar e utilizar fichas digitais</h1>
       </div>
@@ -100,10 +100,13 @@ onMounted(() => {
 .content-block {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 2rem;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+.fisrt {
+  justify-content: center;
 }
 .first-block {
   width: 21.5rem;
@@ -126,6 +129,7 @@ onMounted(() => {
 .info {
   font-size: 16px;
   color: var(--color-off-white);
+  margin: 0;
 }
 .home-button {
   width: 6rem;
