@@ -75,9 +75,9 @@ const handleUpdateValue = (option: string) => {
 }
 .dropdown-content {
   z-index: 1;
-  width: 6rem;
+  width: 7.5rem;
   position: absolute;
-  left: 0;
+  left: -0.75rem;
   top: calc(100% + .25rem);
   padding: .5rem;
   border-radius: 4px;

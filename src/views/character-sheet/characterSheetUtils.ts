@@ -1,6 +1,7 @@
 import Skills from "../../data/skills"
 import { v4 as uuidv4 } from 'uuid'
 import { DiceRoll } from '@dice-roller/rpg-dice-roller'
+import classes from "../../data/classes"
 import { 
   Character,
   Attack,
@@ -16,7 +17,8 @@ import {
   InventoryNumberKeys,
   ItemsLimitKeys,
   AttrPtKeys,
-  AttrDamageKeys
+  AttrDamageKeys,
+  NexKeys
 } from "../../types"
 
 export const characterDefaultValue: Character = {
@@ -113,6 +115,29 @@ const attrLongToShortDic = {
   'Presença': 'PRE',
 }
 
+const nexAsLv = {
+  '5%': 1,
+  '10%': 2,
+  '15%': 3,
+  '20%': 4,
+  '25%': 5,
+  '30%': 6,
+  '35%': 7,
+  '40%': 8,
+  '45%': 9,
+  '50%': 10,
+  '55%': 11,
+  '60%': 12,
+  '65%': 13,
+  '70%': 14,
+  '75%': 15,
+  '80%': 16,
+  '85%': 17,
+  '90%': 18,
+  '95%': 19,
+  '99%': 20,
+}
+
 const formatValueNumbers = (value: number, limit: 1 | 2 | 3, floor = true, noNegative = true) => {
   const digitisLimit = {
     1: 9,
@@ -145,7 +170,43 @@ export const changeCharNumber = (character: Character, value: number, key: Chara
 }
 
 export const changeCharAttributes = (character: Character, value: number, key: AttrKeys) => {
-  character.attributes[key] = formatValueNumbers(value, 1, true, false)
+  const previousPre = character.attributes.pre
+  const previousStr = character.attributes.str
+  character.attributes[key] = formatValueNumbers(value, 1)
+
+  if(key === 'pre') {
+    if(character.attributes.pre > previousPre) {
+      const preDif = character.attributes.pre - previousPre
+
+      character.ritualsDc += preDif
+    } else {
+      const preDif = previousPre - character.attributes.pre
+
+      character.ritualsDc -= preDif
+    }
+  }
+
+  if(key === 'str') {
+    if(character.attributes.str === 0) {
+      character.maxLoad -= (previousStr - 1) * 5
+      character.maxLoad -= 3 
+    } else {
+      if(previousStr === 0) {
+        character.maxLoad += (character.attributes.str - 1) * 5
+        character.maxLoad += 3
+      } else {
+        if(character.attributes.str > previousStr) {
+          const strDif = character.attributes.str - previousStr
+    
+          character.maxLoad += strDif * 5
+        } else {
+          const strDif = previousStr - character.attributes.str
+    
+          character.maxLoad -= strDif * 5
+        }
+      }
+    }
+  }
 }
 
 export const changeMovementInSquares = (character: Character, value: number) => {
@@ -450,4 +511,37 @@ export const addItem = (character: Character, item: Weapon | Protection | Misc) 
 
 export const changeRitualDc = (character: Character, value: number) => {
   character.ritualsDc = formatValueNumbers(value, 3)
+}
+
+export const updateCharNexStats = (character: Character, previousNex: string) => {
+  if(character.nex === previousNex) return
+
+  const charClass = classes.find((ele) => ele.name === character.className)
+
+  if(!charClass) return
+
+  const currentNexAsLv = nexAsLv[character.nex as NexKeys]
+  const previousNexAsLv = nexAsLv[previousNex as NexKeys]
+
+  if(currentNexAsLv > previousNexAsLv) {
+    const lvDif = currentNexAsLv - previousNexAsLv
+ 
+    character.maxPv += (charClass.levelPv * lvDif)
+    character.currentPv += (charClass.levelPv * lvDif)
+    character.maxPe += (charClass.levelPe * lvDif)
+    character.currentPe += (charClass.levelPe * lvDif)
+    character.maxSan += (charClass.levelSan * lvDif)
+    character.currentSan += (charClass.levelSan * lvDif)
+    character.ritualsDc += lvDif
+  } else {
+    const lvDif = previousNexAsLv - currentNexAsLv
+
+    character.maxPv -= (charClass.levelPv * lvDif)
+    character.currentPv -= (charClass.levelPv * lvDif)
+    character.maxPe -= (charClass.levelPe * lvDif)
+    character.currentPe -= (charClass.levelPe * lvDif)
+    character.maxSan -= (charClass.levelSan * lvDif)
+    character.currentSan -= (charClass.levelSan * lvDif)
+    character.ritualsDc -= lvDif
+  }
 }

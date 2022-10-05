@@ -13,7 +13,7 @@ const handleRollAttribute = (attr: AttrKeys) => {
 <template>
   <div class="attr-container">
     <div class="image-container">
-      <img class="attr-image" src="../../../../assets/attributes.webp" alt="atributos">
+      <img class="attr-image" src="../../../../assets/attributes.png" alt="atributos">
       <button 
         class="attr str"
         @click="handleRollAttribute('str')"
@@ -49,25 +49,11 @@ const handleRollAttribute = (attr: AttrKeys) => {
 </template>
 
 <style scoped>
-.attr-container {
-  display: flex;
-}
-.image-container {
-  margin: 0 auto;
-  position: relative;
-}
-.attr-image {
-  height: 20rem;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-}
+@import './attributes.css';
 .attr {
   text-align: center;
   width: 2rem;
-  font-size: 28px;
+  font-size: 26px;
   color: var(--color-white);
   background-color: var(--color-smoky-black);
   border: none;
@@ -76,29 +62,5 @@ const handleRollAttribute = (attr: AttrKeys) => {
 .attr:hover {
   color: var(--color-primary);
 }
-.str {
-  position: absolute;
-  top: 30%;
-  left: 14%;
-}
-.dex {
-  position: absolute;
-  top: 10%;
-  left: 45%;
-}
-.int {
-  position: absolute;
-  top: 30%;
-  left: 76%;
-}
-.con {
-  position: absolute;
-  top: 67%;
-  left: 67%;
-}
-.pre {
-  position: absolute;
-  top: 67%;
-  left: 23%;
-}
+
 </style>

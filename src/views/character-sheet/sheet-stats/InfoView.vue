@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance } from 'vue'
-import { Character } from '../../../types'
+import { Character, NexKeys } from '../../../types'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
 
 const props = defineProps<{character: Character}>()
@@ -8,8 +8,6 @@ const props = defineProps<{character: Character}>()
 const emit = defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeCharDropdown', 'handleChangeMovementInSquares'])
 
 const nexOptions = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%']
-const nexList = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%'] as const
-type NexKeys = typeof nexList[number]
 const peOptions = {
   '5%': '1',
   '10%': '2',

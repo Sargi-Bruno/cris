@@ -29,7 +29,7 @@ const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con
       </p>
     </div>
     <div class="image-container">
-      <img class="att-image" src="../../../assets/attributes.webp" alt="atributos">
+      <img class="att-image" src="../../../assets/attributes.png" alt="atributos">
       <input 
         type="number" 
         class="input str"
@@ -85,6 +85,7 @@ const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con
   position: relative;
 }
 .att-image {
+  height: 32rem;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-drag: none;
@@ -107,27 +108,27 @@ const handleChangeAttribute = (e: Event, attribute: 'str' | 'dex' | 'int' | 'con
 }
 .str {
   position: absolute;
-  top: 31%;
-  left: 14%;
+  top: 33%;
+  left: 15%;
 }
 .dex {
   position: absolute;
-  top: 11%;
-  left: 45%;
+  top: 12%;
+  left: 46%;
 }
 .int {
   position: absolute;
-  top: 31%;
-  left: 76%;
+  top: 33%;
+  left: 77%;
 }
 .con {
   position: absolute;
-  top: 68%;
-  left: 67%;
+  top: 69.5%;
+  left: 66%;
 }
 .pre {
   position: absolute;
-  top: 68%;
-  left: 23%;
+  top: 69.5%;
+  left: 24.5%;
 }
 </style>

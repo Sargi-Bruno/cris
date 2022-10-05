@@ -64,7 +64,8 @@ import {
   formatRollNotation,
   rollDices,
   rollAttack,
-  changeRitualDc
+  changeRitualDc,
+  updateCharNexStats
 } from './characterSheetUtils'
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
@@ -216,7 +217,9 @@ const handleChangeAttributes = (payload: { e: Event, key: AttrKeys }) => {
 }
 
 const handleChangeCharDropdown = (payload: { value: string, key: CharacterDropdownKeys }) => {
+  const previousNex = character.value.nex
   character.value[payload.key] = payload.value
+  updateCharNexStats(character.value, previousNex)
   updateCharacter()
 }
 

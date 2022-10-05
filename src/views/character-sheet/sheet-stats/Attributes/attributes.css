@@ -1,0 +1,40 @@
+.attr-container {
+  display: flex;
+}
+.image-container {
+  margin: 0 auto;
+  position: relative;
+}
+.attr-image {
+  height: 20rem;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+.str {
+  position: absolute;
+  top: 32%;
+  left: 14.5%;
+}
+.dex {
+  position: absolute;
+  top: 11%;
+  left: 45.5%;
+}
+.int {
+  position: absolute;
+  top: 32%;
+  left: 77%;
+}
+.con {
+  position: absolute;
+  top: 68.5%;
+  left: 65.5%;
+}
+.pre {
+  position: absolute;
+  top: 68.5%;
+  left: 24.5%;
+}

@@ -291,6 +291,9 @@ export type InventoryNumberKeys = typeof inventoryNumberKeyList[number]
 const itemsLimitKeyList = ['I', 'II', 'III', 'IV'] as const
 export type ItemsLimitKeys = typeof itemsLimitKeyList[number]
 
+const nexList = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%'] as const
+export type NexKeys = typeof nexList[number]
+
 export interface Timestamp {
   seconds: number
   nanoseconds: number
