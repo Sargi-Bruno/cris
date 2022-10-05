@@ -169,44 +169,66 @@ export const changeCharNumber = (character: Character, value: number, key: Chara
   else character[key] = formatValueNumbers(value, 3)
 }
 
-export const changeCharAttributes = (character: Character, value: number, key: AttrKeys) => {
-  const previousPre = character.attributes.pre
-  const previousStr = character.attributes.str
-  character.attributes[key] = formatValueNumbers(value, 1)
+const handleChangePre = (character: Character, previousPre: number) => {
+  const preDif = Math.abs(character.attributes.pre - previousPre)
 
-  if(key === 'pre') {
-    if(character.attributes.pre > previousPre) {
-      const preDif = character.attributes.pre - previousPre
-
-      character.ritualsDc += preDif
-    } else {
-      const preDif = previousPre - character.attributes.pre
-
-      character.ritualsDc -= preDif
-    }
+  if(character.attributes.pre > previousPre) {
+    character.ritualsDc += preDif
+    character.maxPe += preDif
+    character.currentPe += preDif
+  } else {
+    character.ritualsDc -= preDif
+    character.maxPe -= preDif
+    character.currentPe -= preDif
   }
 
-  if(key === 'str') {
-    if(character.attributes.str === 0) {
-      character.maxLoad -= (previousStr - 1) * 5
-      character.maxLoad -= 3 
+  if(character.ritualsDc < 0) character.ritualsDc = 0
+  if(character.maxPe < 0) character.maxPe = 0
+}
+
+const handleChangeStr = (character: Character, previousStr: number) => {
+  if(character.attributes.str === 0) {
+    character.maxLoad -= (previousStr - 1) * 5
+    character.maxLoad -= 3 
+  } else {
+    if(previousStr === 0) {
+      character.maxLoad += (character.attributes.str - 1) * 5
+      character.maxLoad += 3
     } else {
-      if(previousStr === 0) {
-        character.maxLoad += (character.attributes.str - 1) * 5
-        character.maxLoad += 3
+      const strDif = Math.abs(character.attributes.str - previousStr)
+
+      if(character.attributes.str > previousStr) {
+        character.maxLoad += strDif * 5
       } else {
-        if(character.attributes.str > previousStr) {
-          const strDif = character.attributes.str - previousStr
-    
-          character.maxLoad += strDif * 5
-        } else {
-          const strDif = previousStr - character.attributes.str
-    
-          character.maxLoad -= strDif * 5
-        }
+        character.maxLoad -= strDif * 5
       }
     }
   }
+
+  if(character.maxLoad < 0) character.maxLoad = 0
+}
+
+const handleChangeCon = (character: Character, previousCon: number) => {
+  const conDif = Math.abs(character.attributes.con - previousCon)
+
+  if(character.attributes.con > previousCon) {
+    character.maxPv += conDif
+    character.currentPv += conDif
+  } else {
+    character.maxPv -= conDif
+    character.currentPv -= conDif
+  }
+
+  if(character.maxPv < 1) character.maxPv = 1
+}
+
+export const changeCharAttributes = (character: Character, value: number, key: AttrKeys) => {
+  const previousAttr = {...character.attributes}
+  character.attributes[key] = formatValueNumbers(value, 1)
+
+  if(key === 'str') handleChangeStr(character, previousAttr.str)
+  if(key === 'con') handleChangeCon(character, previousAttr.con)
+  if(key === 'pre') handleChangePre(character, previousAttr.pre)
 }
 
 export const changeMovementInSquares = (character: Character, value: number) => {
@@ -522,26 +544,31 @@ export const updateCharNexStats = (character: Character, previousNex: string) =>
 
   const currentNexAsLv = nexAsLv[character.nex as NexKeys]
   const previousNexAsLv = nexAsLv[previousNex as NexKeys]
+  const lvDif = Math.abs(currentNexAsLv - previousNexAsLv)
+  const pv = (charClass.levelPv + character.attributes.con) * lvDif
+  const pe = (charClass.levelPe + character.attributes.pre) * lvDif
+  const san = charClass.levelSan * lvDif
 
   if(currentNexAsLv > previousNexAsLv) {
-    const lvDif = currentNexAsLv - previousNexAsLv
- 
-    character.maxPv += (charClass.levelPv * lvDif)
-    character.currentPv += (charClass.levelPv * lvDif)
-    character.maxPe += (charClass.levelPe * lvDif)
-    character.currentPe += (charClass.levelPe * lvDif)
-    character.maxSan += (charClass.levelSan * lvDif)
-    character.currentSan += (charClass.levelSan * lvDif)
+    character.maxPv += pv
+    character.currentPv += pv
+    character.maxPe += pe
+    character.currentPe += pe
+    character.maxSan += san
+    character.currentSan += san
     character.ritualsDc += lvDif
   } else {
-    const lvDif = previousNexAsLv - currentNexAsLv
-
-    character.maxPv -= (charClass.levelPv * lvDif)
-    character.currentPv -= (charClass.levelPv * lvDif)
-    character.maxPe -= (charClass.levelPe * lvDif)
-    character.currentPe -= (charClass.levelPe * lvDif)
-    character.maxSan -= (charClass.levelSan * lvDif)
-    character.currentSan -= (charClass.levelSan * lvDif)
+    character.maxPv -= pv
+    character.currentPv -= pv
+    character.maxPe -= pe
+    character.currentPe -= pe
+    character.maxSan -= san
+    character.currentSan -= san
     character.ritualsDc -= lvDif
   }
+
+  if(character.maxPv < 1) character.maxPv = 1
+  if(character.maxPe < 0) character.maxPe = 0
+  if(character.maxSan < 1) character.maxSan = 1
+  if(character.ritualsDc < 0) character.ritualsDc = 0
 }
