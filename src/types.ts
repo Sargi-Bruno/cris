@@ -70,8 +70,7 @@ export interface Class {
     optionSkils: Array<Array<string>>
     quantity: number
   },
-  proficiencies: Array<string>
-  proficienciesGradeQuantity: number
+  proficiencies: string
   abilities: Array<Power>
   powers: Array<Power>
   paths: Array<Path>
@@ -193,6 +192,7 @@ export interface Character {
   bonusDefense: number
   currentProtection: string
   resistances: string
+  proficiencies: string
   skills: Array<Skill>
   attacks: Array<Attack>
   powers: Array<Power>

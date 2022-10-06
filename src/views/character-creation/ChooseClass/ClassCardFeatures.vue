@@ -3,30 +3,12 @@ import { PropType } from 'vue'
 import { Class } from '../../../types'
 import DividerView from '../../../components/DividerView.vue'
 
-const props = defineProps({
+defineProps({
   charClass: {
     type: Object as PropType<Class>,
     required: true
   }
 })
-
-const renderProficiences = () => {
-  let result = ''
-
-  for(const [i, proficience] of props.charClass.proficiencies.entries()) {
-    if(i === 0) {
-      result += `${proficience}, `
-    }
-    else if((i + 1) === props.charClass.proficiencies.length - 1) {
-      result += `${proficience.toLocaleLowerCase()} e `
-    }
-    else if((i + 1) === props.charClass.proficiencies.length) {
-      result += `${proficience.toLocaleLowerCase()}.`
-    }
-  }
-
-  return result
-}
 </script>
 
 <template>
@@ -81,7 +63,7 @@ const renderProficiences = () => {
     <div class="feat-card">
       <h4>PROFICIÊNCIAS</h4>
       <DividerView no-margin />
-      <h6>{{ renderProficiences() }}</h6>
+      <h6>{{ charClass.proficiencies }}.</h6>
     </div>
   </div>
 </template>

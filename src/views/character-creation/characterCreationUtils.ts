@@ -26,6 +26,7 @@ export const characterDefaultValue: Character = {
   bonusDefense: 0,
   currentProtection: '',
   resistances: '',
+  proficiencies: '',
   skills: Skills,
   attacks: [],
   powers: [],
@@ -88,6 +89,7 @@ export const addClass = (character: Character, charClass: Class | null) => {
   character.currentPe = character.maxPe
   character.maxSan = charClass.initialSan
   character.currentSan = character.maxSan
+  character.proficiencies = charClass.proficiencies
 
   if(character.attributes.str === 0) character.maxLoad = 2
   else character.maxLoad = 5 * character.attributes.str

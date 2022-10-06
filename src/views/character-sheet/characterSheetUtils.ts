@@ -45,6 +45,7 @@ export const characterDefaultValue: Character = {
   bonusDefense: 0,
   currentProtection: '',
   resistances: '',
+  proficiencies: '',
   skills: Skills,
   attacks: [],
   powers: [],

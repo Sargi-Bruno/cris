@@ -16,8 +16,7 @@ const classes: Array<Class> = [
       optionSkils: [['Luta', 'Pontaria'], ['Fortitude', 'Reflexos']],
       quantity: 1
     },
-    proficiencies: ['Armas simples', 'Armas táticas', 'Proteções leves'],
-    proficienciesGradeQuantity: 1,
+    proficiencies: 'Armas simples, armas táticas e proteções leves',
     abilities: [
       {
         name: 'Ataque Especial',
@@ -252,8 +251,7 @@ const classes: Array<Class> = [
       optionSkils: [],
       quantity: 7
     },
-    proficiencies: ['Armas simples', 'Proteções leves'],
-    proficienciesGradeQuantity: 5,
+    proficiencies: 'Armas simples e proteções leves',
     abilities: [
       {
         name: 'Eclético',
@@ -480,8 +478,7 @@ const classes: Array<Class> = [
       optionSkils: [],
       quantity: 3
     },
-    proficiencies: ['Armas simples'],
-    proficienciesGradeQuantity: 3,
+    proficiencies: 'Armas simples',
     abilities: [
       {
         name: 'Escolhido pelo Outro Lado',

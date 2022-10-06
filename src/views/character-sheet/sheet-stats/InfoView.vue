@@ -244,6 +244,15 @@ const handleChangeMovementInSquares = (e: Event) => {
         @blur="e => $emit('handleChangeCharText', {e, key: 'resistances'})"
       >
     </div>
+    <div class="info-line">
+      <h3>PROFICIÊNCIAS</h3>
+      <input 
+        class="sheet-input" 
+        type="text"
+        :value="character.proficiencies"
+        @blur="e => $emit('handleChangeCharText', {e, key: 'proficiencies'})"
+      >
+    </div>
   </div>
 </template>
 
@@ -435,6 +444,7 @@ const handleChangeMovementInSquares = (e: Event) => {
 }
 .info-line {
   margin-left: 2rem;
+  margin-top: .5rem;
   display: flex;
 }
 .info-line h3 {

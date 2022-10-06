@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Character, Attack } from '../../../types'
 import AttackCard from '../../../components/AttackCard.vue'
+import FilterInput from '../../../components/FilterInput.vue'
+import { compare } from '../../../utils/functions'
 
-defineProps<{character: Character}>()
+const props = defineProps<{character: Character}>()
 
 const emit = defineEmits([
   'handleAddAttack', 
@@ -16,6 +18,7 @@ const emit = defineEmits([
 ])
 
 const rollDicesValue = ref('')
+const filterText = ref('')
 
 const handleRollDices = () => {
   emit('handleRollDices', rollDicesValue.value)
@@ -25,19 +28,30 @@ const handleRollDices = () => {
 const handleRollAttack = (attack: Attack) => {
   emit('handleRollAttack', attack)
 }
+
+const attacksFiltered = computed(() => {
+  const attacks = [...props.character.attacks]
+  return attacks.filter((ele) => compare(ele.name, filterText.value))
+})
 </script>
   
 <template>
   <div class="attacks-tab">
-    <button 
-      class="button-primary add-button"
-      @click="$emit('handleAddAttack')"
-    >
-      Adicionar
-    </button>
-    <h3 class="roll-dice-text">
-      Rolar Dados
-    </h3>
+    <div class="tab-header">
+      <div v-if="character.attacks.length > 0">
+        <FilterInput
+          :value="filterText"
+          placeholder="Filtrar ataques"
+          @update="(value: string) => filterText = value"
+        />
+      </div>
+      <button 
+        class="button-primary add-button"
+        @click="$emit('handleAddAttack')"
+      >
+        Adicionar
+      </button>
+    </div>
     <div class="roll-dices-container">
       <button
         class="dice-button"
@@ -53,6 +67,7 @@ const handleRollAttack = (attack: Attack) => {
         v-model="rollDicesValue"
         type="text"
         class="roll-dice-input"
+        placeholder="Rolar dados"
         @keyup.enter="handleRollDices"
       >
     </div>
@@ -76,20 +91,25 @@ const handleRollAttack = (attack: Attack) => {
           CRÍTICO
         </h3>
       </div>
-      <div 
-        v-for="attack in character.attacks" 
-        :key="attack.id"
-        class="align-card"
-      >
-        <AttackCard 
-          :id="attack.id"
-          :attack="attack"
-          @handle-remove-attack="(id: string) => $emit('handleRemoveAttack', id)"
-          @handle-change-attack-text="payload => $emit('handleChangeAttackText', payload)"
-          @handle-change-attack-number="payload => $emit('handleChangeAttackNumber', payload)"
-          @handle-change-attack-dropdown="payload => $emit('handleChangeAttackDropdown', payload)"
-          @handle-roll-attack="handleRollAttack"
-        />
+      <div v-if="attacksFiltered.length > 0">
+        <div 
+          v-for="attack in attacksFiltered" 
+          :key="attack.id"
+          class="align-card"
+        >
+          <AttackCard 
+            :id="attack.id"
+            :attack="attack"
+            @handle-remove-attack="(id: string) => $emit('handleRemoveAttack', id)"
+            @handle-change-attack-text="payload => $emit('handleChangeAttackText', payload)"
+            @handle-change-attack-number="payload => $emit('handleChangeAttackNumber', payload)"
+            @handle-change-attack-dropdown="payload => $emit('handleChangeAttackDropdown', payload)"
+            @handle-roll-attack="handleRollAttack"
+          />
+        </div>
+      </div>
+      <div v-else class="no-content">
+        <h3>Nenhum ataque encontrado</h3>
       </div>
     </div>
     <div v-else class="no-content">
@@ -99,12 +119,12 @@ const handleRollAttack = (attack: Attack) => {
 </template>
   
 <style scoped>
-.roll-dice-text {
-  font-size: 14px;
-  margin-bottom: .5rem;
-  margin-left: 2.25rem;
+.tab-header {
+  display: flex;
+  align-items: flex-end;
 }
 .roll-dices-container {
+  margin-top: 2rem;
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
