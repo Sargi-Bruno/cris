@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance } from 'vue'
-import { Character, Weapon, Protection, Misc } from '../../../types'
+import { Character, Weapon, Protection, Misc, CursedItem } from '../../../types'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
 import WeaponCard from '../../../components/WeaponCard.vue'
 import ProtectionCard from '../../../components/ProtectionCard.vue'
 import MiscCard from '../../../components/MiscCard.vue'
+import CursedItemCard from '../../../components/CursedItemCard.vue'
 import FilterInput from '../../../components/FilterInput.vue'
 import { compare } from '../../../utils/functions'
 
@@ -199,6 +200,15 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             <MiscCard
               :id="item.id"
               :misc="(item as Misc)"
+              only-show
+              sheet
+              @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+            />
+          </div>
+          <div v-if="item.itemType === 'cursedItem'">
+            <CursedItemCard
+              :id="item.id"
+              :cursed-item="(item as CursedItem)"
               only-show
               sheet
               @handle-remove="(id: string) => $emit('handleRemoveItem', id)"

@@ -36,6 +36,10 @@ export interface CursedItem {
   name: string
   description: string
   element: string
+  itemType: string
+  slots: number | string
+  category: string
+  equipped?: boolean
   id?: string
 }
 
@@ -200,7 +204,7 @@ export interface Character {
   ritualsDc: number
   patent: string
   prestigePoints: number
-  inventory: Array<Weapon | Protection | Misc>
+  inventory: Array<Weapon | Protection | Misc | CursedItem>
   itemsLimit: {
     I: number
     II: number

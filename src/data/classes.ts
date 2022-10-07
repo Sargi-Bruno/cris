@@ -16,7 +16,7 @@ const classes: Array<Class> = [
       optionSkils: [['Luta', 'Pontaria'], ['Fortitude', 'Reflexos']],
       quantity: 1
     },
-    proficiencies: 'Armas simples, armas táticas e proteções leves',
+    proficiencies: 'Armas simples, táticas e proteções leves',
     abilities: [
       {
         name: 'Ataque Especial',

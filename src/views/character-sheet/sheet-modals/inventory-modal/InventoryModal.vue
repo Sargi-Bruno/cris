@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Weapon, Protection, Misc } from '../../../../types'
+import { Weapon, Protection, Misc, CursedItem } from '../../../../types'
 import weapons from '../../../../data/weapons'
 import protections from '../../../../data/protections'
 import miscs from '../../../../data/miscs'
+import cursedItems from '../../../../data/cursedItems'
 import TabNav from '../../../../components/TabNav.vue'
 import WeaponCard from '../../../../components/WeaponCard.vue'
 import ProtectionCard from '../../../../components/ProtectionCard.vue'
 import MiscCard from '../../../../components/MiscCard.vue'
+import CursedItemCard from '../../../../components/CursedItemCard.vue'
 import SearchInput from '../../../../components/SearchInput.vue'
 import { compare } from '../../../../utils/functions'
 
@@ -25,16 +27,21 @@ const tabOptions = [
   {
     label: 'Geral',
     value: 2,
+  },
+  {
+    label: 'Itens Amaldiçoados',
+    value: 3
   }
 ]
 
 const currentTab = ref(0)
 const searchTextWeapons = ref('')
 const searchTextMisc = ref('')
+const searchTextCursedItems = ref('')
 
 const handleAddItem = (item: Weapon | Protection | Misc) => emit('handleAddItem', item)
 
-const currentItems = computed<Weapon[] | Protection[] | Misc[]>(() => {
+const currentItems = computed<Weapon[] | Protection[] | Misc[] | CursedItem[]>(() => {
   if(currentTab.value === 0) 
     return weapons
             .filter((ele) => compare(ele.name, searchTextWeapons.value))
@@ -47,6 +54,10 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[]>(() => {
   if(currentTab.value === 2) 
     return miscs
             .filter((ele) => compare(ele.name, searchTextMisc.value))
+            .sort((a, b) => a.name.localeCompare(b.name))
+  if(currentTab.value === 3) 
+    return cursedItems
+            .filter((ele) => compare(ele.name, searchTextCursedItems.value))
             .sort((a, b) => a.name.localeCompare(b.name))
   return []
 })
@@ -92,6 +103,16 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[]>(() => {
           />
         </div>
         <div
+          v-if="currentTab === 3"
+          class="search-container"
+        >
+          <SearchInput 
+            :value="searchTextCursedItems"
+            dark
+            @update="value => searchTextCursedItems = value"
+          />
+        </div>
+        <div
           v-if="currentItems.length > 0"
           class="class-abilities-content"
         >
@@ -115,6 +136,12 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[]>(() => {
             <div v-if="item.itemType === 'misc'">
               <MiscCard
                 :misc="(item as Misc)"
+                @handle-add="handleAddItem"
+              />
+            </div>
+            <div v-if="item.itemType === 'cursedItem'">
+              <CursedItemCard
+                :cursed-item="(item as CursedItem)"
                 @handle-add="handleAddItem"
               />
             </div>

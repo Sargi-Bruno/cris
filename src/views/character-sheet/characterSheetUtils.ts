@@ -455,6 +455,9 @@ export const unequipItem = (character: Character, index: number) => {
 
 export const handleItem = (character: Character, id: string) => {
   const index = character.inventory.findIndex((e) => e.id === id)
+
+  if(character.inventory[index].itemType === 'misc' || character.inventory[index].itemType === 'cursedItem') return
+  
   character.inventory[index].equipped = !character.inventory[index].equipped
 
   if(character.inventory[index].equipped) equipItem(character, index)

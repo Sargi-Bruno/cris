@@ -3,13 +3,14 @@ import { ref } from 'vue'
 import { Character, Power } from '../../../../types'
 import TabNav from '../../../../components/TabNav.vue'
 import ClassAbilities from './ClassAbilities.vue'
+import BackgroundPower from './BackgroundPower.vue'
 import ParanormalPowers from './ParanormalPowers.vue'
 
 defineProps<{character: Character}>()
 
 const emit = defineEmits(['handleCloseModal', 'handleAddPower'])
 
-const componentOptions = [ClassAbilities, ParanormalPowers]
+const componentOptions = [ClassAbilities, BackgroundPower, ParanormalPowers]
 
 const tabOptions = [
   {
@@ -17,8 +18,12 @@ const tabOptions = [
     value: 0
   },
   {
-    label: 'Poderes Paranormais',
+    label: 'Origem',
     value: 1
+  },
+  {
+    label: 'Poderes Paranormais',
+    value: 2
   }
 ]
 
