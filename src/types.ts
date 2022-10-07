@@ -207,6 +207,12 @@ export interface Character {
     III: number
     IV: number
   },
+  currentItemsLimit: {
+    I: number
+    II: number
+    III: number
+    IV: number
+  },
   creditsLimit: string
   maxLoad: number
   currentLoad: number

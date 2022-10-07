@@ -130,6 +130,18 @@ onMounted(async() => {
   character.value = querySnapshot.data() as Character
   character.value.id = querySnapshot?.id
 
+  // Remove in the future
+  if(!character.value.currentItemsLimit) {
+    const defaultCurrentItemsLimit = {
+      I: 0,
+      II: 0,
+      III: 0,
+      IV: 0
+    }
+
+    character.value.currentItemsLimit = defaultCurrentItemsLimit
+  }
+
   loading.value = false
 })
 

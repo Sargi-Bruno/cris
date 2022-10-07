@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType, getCurrentInstance } from 'vue'
+import { PropType, getCurrentInstance, computed } from 'vue'
 import { Skill } from '../../../types'
 import SkillsDropdown from './SkillsDropdown.vue'
 
@@ -22,8 +22,20 @@ const emit = defineEmits(['handleOpenSkillModal', 'handleChangeSkillOtherBonus',
 
 const attrOptions = ['AGI', 'FOR', 'INT', 'PRE', 'VIG']
 const trainingOptions = ['0', '5', '10', '15']
+const skillColors = {
+  trained: '#3d8b40',
+  veteran: '#0a69b7',
+  expert: '#b36b00',
+}
 
 const instance = getCurrentInstance()
+
+const currentSkillColor = computed(() => {
+  if(props.skill.trainingDegree === '5') return skillColors.trained
+  if(props.skill.trainingDegree === '10') return skillColors.veteran
+  if(props.skill.trainingDegree === '15') return skillColors.expert
+  return '#fff'
+})
 
 const handleOpenSkill = () => {
   emit('handleOpenSkillModal', props.skill)
@@ -61,6 +73,7 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
     <SkillsDropdown 
       :value="skill.attribute" 
       :options="attrOptions"
+      :color="currentSkillColor"
       up
       @update-value="(value: string) => handleChangeSkillDropdown(value, skill.name, 'attribute')"
     />
@@ -69,6 +82,7 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
     <SkillsDropdown 
       :value="skill.attribute" 
       :options="attrOptions"
+      :color="currentSkillColor"
       @update-value="(value: string) => handleChangeSkillDropdown(value, skill.name, 'attribute')"
     />
   </td>
@@ -81,6 +95,7 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
     <SkillsDropdown 
       :value="skill.trainingDegree" 
       :options="trainingOptions"
+      :color="currentSkillColor"
       underline
       up
       @update-value="(value: string) => handleChangeSkillDropdown(value, skill.name, 'trainingDegree')"
@@ -90,6 +105,7 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
     <SkillsDropdown 
       :value="skill.trainingDegree" 
       :options="trainingOptions"
+      :color="currentSkillColor"
       underline
       @update-value="(value: string) => handleChangeSkillDropdown(value, skill.name, 'trainingDegree')"
     />
@@ -128,7 +144,7 @@ td {
 }
 td span {
   font-size: 14px;
-  color: var(--color-white);
+  color: v-bind(currentSkillColor);
 }
 .input-container {
   display: flex;
@@ -138,7 +154,7 @@ td span {
 .naked-button {
   background-color: transparent;
   border: none;
-  color: var(--color-white);
+  color: v-bind(currentSkillColor);
   padding: 0;
   font-size: 14px;
   cursor: pointer;
@@ -155,12 +171,13 @@ td span {
   font-size: 14px;
   margin: 0;
   font-weight: normal;
+  color: v-bind(currentSkillColor);
 }
 .underline-input {
   background-color: transparent;
   border: none;
-  border-bottom: 1px solid var(--color-white);
-  color: var(--color-white);
+  border-bottom: 1px solid v-bind(currentSkillColor);
+  color: v-bind(currentSkillColor);
   padding: 0;
   font-size: 14px;
   width: 2.25rem;

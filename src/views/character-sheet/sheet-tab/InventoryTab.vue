@@ -123,6 +123,25 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
         </div>
       </div>
       <div class="inventory-row">
+        <div class="input-container">
+          <h4 class="sheet-subtitle width-to-align">
+            NO INVENTÁRIO
+          </h4>
+          <div class="sheet-div">
+            {{ character.currentItemsLimit?.I || '0' }}
+          </div>
+          <div class="sheet-div">
+            {{ character.currentItemsLimit?.II || '0' }}
+          </div>
+          <div class="sheet-div">
+            {{ character.currentItemsLimit?.III || '0' }}
+          </div>
+          <div class="sheet-div">
+            {{ character.currentItemsLimit?.IV || '0' }}
+          </div>
+        </div>
+      </div>
+      <div class="inventory-row">
         <SheetDropdown
           title="LIMITE DE CRÉDITO"
           :value="character.creditsLimit"
@@ -229,5 +248,20 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
 }
 .current-load-color {
   color: v-bind(currentLoadColor)
+}
+.width-to-align {
+  width: 6.611rem;
+}
+.sheet-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 2.25rem;
+  background-color: transparent;
+  border: 1px solid var(--color-white);
+  color: var(--color-white);
+  font-size: 14px;
+  font-weight: bold;
 }
 </style>

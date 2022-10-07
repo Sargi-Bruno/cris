@@ -60,6 +60,12 @@ export const characterDefaultValue: Character = {
     III: 0,
     IV: 0,
   },
+  currentItemsLimit: {
+    I: 0,
+    II: 0,
+    III: 0,
+    IV: 0,
+  },
   creditsLimit: '',
   maxLoad: 0,
   currentLoad: 0,
@@ -466,12 +472,26 @@ export const removeItem = (character: Character, id: string) => {
 
   if(aux.itemType === 'weapon') {
     const weapon = aux as Weapon
-    if(weapon.ammunition) removedLoad += weapon.ammunition.slots as number
+
+    if(weapon.ammunition) {
+      removedLoad += weapon.ammunition.slots as number
+
+      if(weapon.ammunition.category !== '-' && weapon.ammunition.category !== '0') {
+        character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] -= 1
+
+        if(character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] < 0) character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] = 0
+      }
+    }
   }
+
+  if(aux.category !== '-' && aux.category !== '0') {
+    character.currentItemsLimit[aux.category as ItemsLimitKeys] -= 1
+
+    if(character.currentItemsLimit[aux.category as ItemsLimitKeys] < 0) character.currentItemsLimit[aux.category as ItemsLimitKeys] = 0
+  } 
 
   character.currentLoad -= removedLoad
 
-  console.log(character.inventory[index])
   if(character.inventory[index].equipped) unequipItem(character, index)
 
   character.inventory.splice(index, 1)
@@ -525,8 +545,14 @@ export const addItem = (character: Character, item: Weapon | Protection | Misc) 
 
   if(aux.itemType === 'weapon') {
     const weapon = aux as Weapon
-    if(weapon.ammunition) addedLoad += weapon.ammunition.slots as number
+    if(weapon.ammunition) {
+      addedLoad += weapon.ammunition.slots as number
+
+      if(weapon.ammunition.category !== '-' && weapon.ammunition.category !== '0') character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] += 1
+    }
   }
+
+  if(aux.category !== '-' && aux.category !== '0') character.currentItemsLimit[aux.category as ItemsLimitKeys] += 1
 
   character.currentLoad += addedLoad
   character.inventory.push(aux)

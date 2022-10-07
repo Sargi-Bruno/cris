@@ -52,19 +52,21 @@ onMounted(() => {
 
 <template>
   <div class="home-container">
-    <div class="fisrt content-block">
-      <div class="first-block">
-        <h1>Plataforma não oficial de <b>Ordem Paranormal</b> para criar e utilizar fichas digitais</h1>
+    <main>
+      <div class="fisrt content-block">
+        <div class="first-block">
+          <h1>Plataforma não oficial de <b>Ordem Paranormal</b> para criar e utilizar fichas digitais</h1>
+        </div>
+        <div class="second-block">
+          <button 
+            class="home-button button-primary"
+            @click="handleEnter"
+          >
+            ENTRAR
+          </button>
+        </div>
       </div>
-      <div class="second-block">
-        <button 
-          class="home-button button-primary"
-          @click="handleEnter"
-        >
-          ENTRAR
-        </button>
-      </div>
-    </div>
+    </main>
     <div class="divider" />
     <div class="content-block">
       <div class="topics">

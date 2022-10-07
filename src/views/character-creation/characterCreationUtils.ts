@@ -41,6 +41,12 @@ export const characterDefaultValue: Character = {
     III: 0,
     IV: 0,
   },
+  currentItemsLimit: {
+    I: 0,
+    II: 0,
+    III: 0,
+    IV: 0,
+  },
   creditsLimit: 'Baixo',
   maxLoad: 0,
   currentLoad: 0,
