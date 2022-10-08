@@ -11,6 +11,10 @@ defineProps({
     type: Array<string>,
     required: true
   },
+  color: {
+    type: String,
+    required: true
+  },
   up: Boolean,
   underline: Boolean
 })
@@ -65,21 +69,21 @@ const handleUpdateValue = (option: string) => {
   position: relative;
 }
 .span {
-  color: var(--color-white);
+  color: v-bind(color);
   font-size: 14px;
 }
 .dropdown-button {
   width: 2.25rem;
   background-color: transparent;
   border: none;
-  color: var(--color-white);
+  color: v-bind(color);
   padding: 0;
   font-size: 14px;
   cursor: pointer;
   text-align: center;
 }
 .dropdown-underline {
-  border-bottom: 1px solid var(--color-white);
+  border-bottom: 1px solid v-bind(color);
 }
 .dropdown-button:hover {
   color: var(--color-primary);

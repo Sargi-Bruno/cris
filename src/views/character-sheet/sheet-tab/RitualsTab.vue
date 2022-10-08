@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { computed, getCurrentInstance } from 'vue'
+import { ref, computed, getCurrentInstance } from 'vue'
 import { Character } from '../../../types'
 import RitualCard from '../../../components/RitualCard.vue'
+import FilterInput from '../../../components/FilterInput.vue'
+import { compare } from '../../../utils/functions'
 
 const props = defineProps<{character: Character}>()
 
 const emit = defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual', 'handleChangeRitualDc'])
 
 const instance = getCurrentInstance()
+const filterText = ref('')
 
 const ritualsOrdered = computed(() => {
   const rituals = [...props.character.rituals]
-  return rituals.sort((a, b) => a.name.localeCompare(b.name))
+  return rituals.filter((ele) => compare(ele.name, filterText.value)).sort((a, b) => a.name.localeCompare(b.name))
 })
 
 const handleChangeRitualDc = (e: Event) => {
@@ -22,12 +25,21 @@ const handleChangeRitualDc = (e: Event) => {
   
 <template>
   <div class="rituals-tab">
-    <button 
-      class="button-primary add-button"
-      @click="$emit('handleOpenRitualsModal')"
-    >
-      Adicionar
-    </button>
+    <div class="tab-header">
+      <div v-if="character.rituals.length > 0">
+        <FilterInput
+          :value="filterText"
+          placeholder="Filtrar rituais"
+          @update="(value: string) => filterText = value"
+        />
+      </div>
+      <button 
+        class="button-primary add-button"
+        @click="$emit('handleOpenRitualsModal')"
+      >
+        Adicionar
+      </button>
+    </div>
     <div class="ritual-dc-wrapper">
       <div class="ritual-dc-container">
         <h4 class="sheet-subtitle">
@@ -42,18 +54,23 @@ const handleChangeRitualDc = (e: Event) => {
       </div>
     </div>
     <div v-if="character.rituals.length > 0" class="sheet-cards-container">
-      <div 
-        v-for="ritual in ritualsOrdered" 
-        :key="ritual.id"
-        class="sheet-card-list"
-      >
-        <RitualCard 
-          :id="ritual.id"
-          :ritual="ritual"
-          only-show
-          sheet
-          @handle-remove="(id: string) => $emit('handleRemoveRitual', id)"
-        />
+      <div v-if="ritualsOrdered.length > 0">
+        <div 
+          v-for="ritual in ritualsOrdered" 
+          :key="ritual.id"
+          class="sheet-card-list"
+        >
+          <RitualCard 
+            :id="ritual.id"
+            :ritual="ritual"
+            only-show
+            sheet
+            @handle-remove="(id: string) => $emit('handleRemoveRitual', id)"
+          />
+        </div>
+      </div>
+      <div v-else class="no-content">
+        <h3>Nenhum ritual encontrado</h3>
       </div>
     </div>
     <div v-else class="no-content">
@@ -63,6 +80,10 @@ const handleChangeRitualDc = (e: Event) => {
 </template>
   
 <style scoped>
+.tab-header {
+  display: flex;
+  align-items: flex-end;
+}
 .ritual-dc-wrapper {
   display: flex;
   justify-content: flex-end;

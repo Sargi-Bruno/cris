@@ -36,6 +36,10 @@ export interface CursedItem {
   name: string
   description: string
   element: string
+  itemType: string
+  slots: number | string
+  category: string
+  equipped?: boolean
   id?: string
 }
 
@@ -70,8 +74,7 @@ export interface Class {
     optionSkils: Array<Array<string>>
     quantity: number
   },
-  proficiencies: Array<string>
-  proficienciesGradeQuantity: number
+  proficiencies: string
   abilities: Array<Power>
   powers: Array<Power>
   paths: Array<Path>
@@ -193,6 +196,7 @@ export interface Character {
   bonusDefense: number
   currentProtection: string
   resistances: string
+  proficiencies: string
   skills: Array<Skill>
   attacks: Array<Attack>
   powers: Array<Power>
@@ -200,8 +204,14 @@ export interface Character {
   ritualsDc: number
   patent: string
   prestigePoints: number
-  inventory: Array<Weapon | Protection | Misc>
+  inventory: Array<Weapon | Protection | Misc | CursedItem>
   itemsLimit: {
+    I: number
+    II: number
+    III: number
+    IV: number
+  },
+  currentItemsLimit: {
     I: number
     II: number
     III: number
@@ -290,6 +300,9 @@ export type InventoryNumberKeys = typeof inventoryNumberKeyList[number]
 
 const itemsLimitKeyList = ['I', 'II', 'III', 'IV'] as const
 export type ItemsLimitKeys = typeof itemsLimitKeyList[number]
+
+const nexList = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%'] as const
+export type NexKeys = typeof nexList[number]
 
 export interface Timestamp {
   seconds: number

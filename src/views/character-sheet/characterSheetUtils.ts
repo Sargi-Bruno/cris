@@ -1,6 +1,7 @@
 import Skills from "../../data/skills"
 import { v4 as uuidv4 } from 'uuid'
 import { DiceRoll } from '@dice-roller/rpg-dice-roller'
+import classes from "../../data/classes"
 import { 
   Character,
   Attack,
@@ -16,7 +17,8 @@ import {
   InventoryNumberKeys,
   ItemsLimitKeys,
   AttrPtKeys,
-  AttrDamageKeys
+  AttrDamageKeys,
+  NexKeys
 } from "../../types"
 
 export const characterDefaultValue: Character = {
@@ -43,6 +45,7 @@ export const characterDefaultValue: Character = {
   bonusDefense: 0,
   currentProtection: '',
   resistances: '',
+  proficiencies: '',
   skills: Skills,
   attacks: [],
   powers: [],
@@ -52,6 +55,12 @@ export const characterDefaultValue: Character = {
   prestigePoints: 0,
   inventory: [],
   itemsLimit: {
+    I: 0,
+    II: 0,
+    III: 0,
+    IV: 0,
+  },
+  currentItemsLimit: {
     I: 0,
     II: 0,
     III: 0,
@@ -113,6 +122,29 @@ const attrLongToShortDic = {
   'Presença': 'PRE',
 }
 
+const nexAsLv = {
+  '5%': 1,
+  '10%': 2,
+  '15%': 3,
+  '20%': 4,
+  '25%': 5,
+  '30%': 6,
+  '35%': 7,
+  '40%': 8,
+  '45%': 9,
+  '50%': 10,
+  '55%': 11,
+  '60%': 12,
+  '65%': 13,
+  '70%': 14,
+  '75%': 15,
+  '80%': 16,
+  '85%': 17,
+  '90%': 18,
+  '95%': 19,
+  '99%': 20,
+}
+
 const formatValueNumbers = (value: number, limit: 1 | 2 | 3, floor = true, noNegative = true) => {
   const digitisLimit = {
     1: 9,
@@ -144,8 +176,66 @@ export const changeCharNumber = (character: Character, value: number, key: Chara
   else character[key] = formatValueNumbers(value, 3)
 }
 
+const handleChangePre = (character: Character, previousPre: number) => {
+  const preDif = Math.abs(character.attributes.pre - previousPre)
+
+  if(character.attributes.pre > previousPre) {
+    character.ritualsDc += preDif
+    character.maxPe += preDif
+    character.currentPe += preDif
+  } else {
+    character.ritualsDc -= preDif
+    character.maxPe -= preDif
+    character.currentPe -= preDif
+  }
+
+  if(character.ritualsDc < 0) character.ritualsDc = 0
+  if(character.maxPe < 0) character.maxPe = 0
+}
+
+const handleChangeStr = (character: Character, previousStr: number) => {
+  if(character.attributes.str === 0) {
+    character.maxLoad -= (previousStr - 1) * 5
+    character.maxLoad -= 3 
+  } else {
+    if(previousStr === 0) {
+      character.maxLoad += (character.attributes.str - 1) * 5
+      character.maxLoad += 3
+    } else {
+      const strDif = Math.abs(character.attributes.str - previousStr)
+
+      if(character.attributes.str > previousStr) {
+        character.maxLoad += strDif * 5
+      } else {
+        character.maxLoad -= strDif * 5
+      }
+    }
+  }
+
+  if(character.maxLoad < 0) character.maxLoad = 0
+}
+
+const handleChangeCon = (character: Character, previousCon: number) => {
+  const conDif = Math.abs(character.attributes.con - previousCon)
+
+  if(character.attributes.con > previousCon) {
+    character.maxPv += conDif
+    character.currentPv += conDif
+  } else {
+    character.maxPv -= conDif
+    character.currentPv -= conDif
+  }
+
+  if(character.maxPv < 1) character.maxPv = 1
+}
+
 export const changeCharAttributes = (character: Character, value: number, key: AttrKeys) => {
-  character.attributes[key] = formatValueNumbers(value, 1, true, false)
+  const previousAttr = {...character.attributes}
+  character.attributes[key] = formatValueNumbers(value, 1)
+
+  if(key === 'str') handleChangeStr(character, previousAttr.str)
+  if(key === 'con') handleChangeCon(character, previousAttr.con)
+  if(key === 'pre') handleChangePre(character, previousAttr.pre)
 }
 
 export const changeMovementInSquares = (character: Character, value: number) => {
@@ -365,6 +455,9 @@ export const unequipItem = (character: Character, index: number) => {
 
 export const handleItem = (character: Character, id: string) => {
   const index = character.inventory.findIndex((e) => e.id === id)
+
+  if(character.inventory[index].itemType === 'misc' || character.inventory[index].itemType === 'cursedItem') return
+  
   character.inventory[index].equipped = !character.inventory[index].equipped
 
   if(character.inventory[index].equipped) equipItem(character, index)
@@ -382,12 +475,26 @@ export const removeItem = (character: Character, id: string) => {
 
   if(aux.itemType === 'weapon') {
     const weapon = aux as Weapon
-    if(weapon.ammunition) removedLoad += weapon.ammunition.slots as number
+
+    if(weapon.ammunition) {
+      removedLoad += weapon.ammunition.slots as number
+
+      if(weapon.ammunition.category !== '-' && weapon.ammunition.category !== '0') {
+        character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] -= 1
+
+        if(character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] < 0) character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] = 0
+      }
+    }
   }
+
+  if(aux.category !== '-' && aux.category !== '0') {
+    character.currentItemsLimit[aux.category as ItemsLimitKeys] -= 1
+
+    if(character.currentItemsLimit[aux.category as ItemsLimitKeys] < 0) character.currentItemsLimit[aux.category as ItemsLimitKeys] = 0
+  } 
 
   character.currentLoad -= removedLoad
 
-  console.log(character.inventory[index])
   if(character.inventory[index].equipped) unequipItem(character, index)
 
   character.inventory.splice(index, 1)
@@ -441,8 +548,14 @@ export const addItem = (character: Character, item: Weapon | Protection | Misc) 
 
   if(aux.itemType === 'weapon') {
     const weapon = aux as Weapon
-    if(weapon.ammunition) addedLoad += weapon.ammunition.slots as number
+    if(weapon.ammunition) {
+      addedLoad += weapon.ammunition.slots as number
+
+      if(weapon.ammunition.category !== '-' && weapon.ammunition.category !== '0') character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] += 1
+    }
   }
+
+  if(aux.category !== '-' && aux.category !== '0') character.currentItemsLimit[aux.category as ItemsLimitKeys] += 1
 
   character.currentLoad += addedLoad
   character.inventory.push(aux)
@@ -450,4 +563,42 @@ export const addItem = (character: Character, item: Weapon | Protection | Misc) 
 
 export const changeRitualDc = (character: Character, value: number) => {
   character.ritualsDc = formatValueNumbers(value, 3)
+}
+
+export const updateCharNexStats = (character: Character, previousNex: string) => {
+  if(character.nex === previousNex) return
+
+  const charClass = classes.find((ele) => ele.name === character.className)
+
+  if(!charClass) return
+
+  const currentNexAsLv = nexAsLv[character.nex as NexKeys]
+  const previousNexAsLv = nexAsLv[previousNex as NexKeys]
+  const lvDif = Math.abs(currentNexAsLv - previousNexAsLv)
+  const pv = (charClass.levelPv + character.attributes.con) * lvDif
+  const pe = (charClass.levelPe + character.attributes.pre) * lvDif
+  const san = charClass.levelSan * lvDif
+
+  if(currentNexAsLv > previousNexAsLv) {
+    character.maxPv += pv
+    character.currentPv += pv
+    character.maxPe += pe
+    character.currentPe += pe
+    character.maxSan += san
+    character.currentSan += san
+    character.ritualsDc += lvDif
+  } else {
+    character.maxPv -= pv
+    character.currentPv -= pv
+    character.maxPe -= pe
+    character.currentPe -= pe
+    character.maxSan -= san
+    character.currentSan -= san
+    character.ritualsDc -= lvDif
+  }
+
+  if(character.maxPv < 1) character.maxPv = 1
+  if(character.maxPe < 0) character.maxPe = 0
+  if(character.maxSan < 1) character.maxSan = 1
+  if(character.ritualsDc < 0) character.ritualsDc = 0
 }

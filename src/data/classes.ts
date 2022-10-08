@@ -16,8 +16,7 @@ const classes: Array<Class> = [
       optionSkils: [['Luta', 'Pontaria'], ['Fortitude', 'Reflexos']],
       quantity: 1
     },
-    proficiencies: ['Armas simples', 'Armas táticas', 'Proteções leves'],
-    proficienciesGradeQuantity: 1,
+    proficiencies: 'Armas simples, táticas e proteções leves',
     abilities: [
       {
         name: 'Ataque Especial',
@@ -252,8 +251,7 @@ const classes: Array<Class> = [
       optionSkils: [],
       quantity: 7
     },
-    proficiencies: ['Armas simples', 'Proteções leves'],
-    proficienciesGradeQuantity: 5,
+    proficiencies: 'Armas simples e proteções leves',
     abilities: [
       {
         name: 'Eclético',
@@ -471,7 +469,7 @@ const classes: Array<Class> = [
     description: '<p>Ao contrário da crendice popular, ocultistas não são intrinsecamente malignos. Seria como dizer que o cientista que inventou a pólvora é culpado pelo assassino que disparou o revólver. Para a Ordem, o Paranormal é uma força que pode ser usada para os mais diversos propósitos, de acordo com a intenção de seu usuário.</p><p>Ocultistas aplicam seu conhecimento acadêmico e suas capacidades de conjuração de rituais em missões para investigar e combater o Paranormal em todas as suas formas, principalmente quando munição convencional não é o suficiente para lidar com a tarefa.</p><p><span>Ocultistas Famosos:</span> Agatha Volkomenn, Dante, Arnaldo Fritz, Marc Menet, Kian.</p>',
     initialPv: 12,
     levelPv: 2,
-    initialPe: 1,
+    initialPe: 4,
     levelPe: 4,
     initialSan: 20,
     levelSan: 5,
@@ -480,8 +478,7 @@ const classes: Array<Class> = [
       optionSkils: [],
       quantity: 3
     },
-    proficiencies: ['Armas simples'],
-    proficienciesGradeQuantity: 3,
+    proficiencies: 'Armas simples',
     abilities: [
       {
         name: 'Escolhido pelo Outro Lado',

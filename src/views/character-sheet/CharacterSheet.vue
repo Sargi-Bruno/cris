@@ -64,7 +64,8 @@ import {
   formatRollNotation,
   rollDices,
   rollAttack,
-  changeRitualDc
+  changeRitualDc,
+  updateCharNexStats
 } from './characterSheetUtils'
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
@@ -128,6 +129,18 @@ onMounted(async() => {
 
   character.value = querySnapshot.data() as Character
   character.value.id = querySnapshot?.id
+
+  // Remove in the future
+  if(!character.value.currentItemsLimit) {
+    const defaultCurrentItemsLimit = {
+      I: 0,
+      II: 0,
+      III: 0,
+      IV: 0
+    }
+
+    character.value.currentItemsLimit = defaultCurrentItemsLimit
+  }
 
   loading.value = false
 })
@@ -216,7 +229,9 @@ const handleChangeAttributes = (payload: { e: Event, key: AttrKeys }) => {
 }
 
 const handleChangeCharDropdown = (payload: { value: string, key: CharacterDropdownKeys }) => {
+  const previousNex = character.value.nex
   character.value[payload.key] = payload.value
+  updateCharNexStats(character.value, previousNex)
   updateCharacter()
 }
 
