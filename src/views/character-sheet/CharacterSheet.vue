@@ -14,6 +14,7 @@ import AbilitiesModal from './sheet-modals/abilities-modal/AbilitiesModal.vue'
 import InventoryModal from './sheet-modals/inventory-modal/InventoryModal.vue'
 import RitualsModal from './sheet-modals/rituals-modal/RitualsModal.vue'
 import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
+import EditModal from './sheet-modals/edit-modal/EditModal.vue'
 import LoadingView from '../../components/LoadingView.vue'
 import {
   Character,
@@ -73,12 +74,16 @@ import router from '../../router'
 
 const { play } = useSound(diceSound)
 
-const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal]
+const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal, EditModal]
 const modals = {
   abilities: 0,
   inventory: 1,
   rituals: 2,
-  skill: 3
+  skill: 3,
+  edit: 4
+}
+const editModalOptions = {
+  power: 0
 }
 
 const auth = getAuth()
@@ -86,6 +91,7 @@ const firestore = getFirestore()
 const route = useRoute()
 const characterId = route.params.id as string
 const loading = ref(true)
+const editPower = ref<Power>()
 const character = ref<Character>(characterDefaultValue)
 
 const toastInfo = ref<ToastInfo>({
@@ -118,6 +124,7 @@ const toastAttack = ref<ToastAttackInterface>({
 
 const showModal = ref(false)
 const currentModal = ref(0)
+const currentEditModal = ref(0)
 const currentSkill = ref<Skill>()
 
 onMounted(async() => {
@@ -436,6 +443,22 @@ const handleAddItem = (item: Weapon | Protection | Misc) => {
   updateCharacter()
 }
 
+const handleEditPower = (power: Power) => {
+  currentModal.value = modals.edit
+  currentEditModal.value = editModalOptions.power
+  showModal.value = true
+  editPower.value = power
+}
+
+const handleEditPowerSheet = (editPower: Power) => {
+  const index = character.value.powers.findIndex((e) => e.id === editPower.id)
+  character.value.powers[index] = editPower
+  updateCharacter()
+  handleCloseModal()
+}
+
+const handleCloseModal = () => showModal.value = false
+
 watch(() => toastInfo.value.alive, () => {
   if(toastInfo.value.alive === true) {
     toastInfo.value.timeout = window.setTimeout(() => toastInfo.value.alive = false, 3000)
@@ -477,6 +500,7 @@ watch(() => toastInfo.value.alive, () => {
         @handle-add-attack="handleAddAttack"
         @handle-remove-attack="handleRemoveAttack"
         @handle-remove-power="handleRemovePower"
+        @handle-edit-power="handleEditPower"
         @handle-remove-ritual="handleRemoveRitual"
         @handle-remove-item="handleRemoveItem"
         @handle-equip-item="handleEquipItem"
@@ -495,17 +519,19 @@ watch(() => toastInfo.value.alive, () => {
     <div v-if="showModal">
       <vue-final-modal 
         v-model="showModal"
-        :lock-scroll="false" 
         classes="modal-container"
       >
         <component 
           :is="modalOptions[currentModal]"
+          :current-edit-option="currentEditModal"
           :character="character"
           :skill="currentSkill"
-          @handle-close-modal="showModal = false"
+          :edit-power="editPower"
+          @handle-edit-power-sheet="handleEditPowerSheet"
           @handle-add-power="handleAddPower"
           @handle-add-ritual="handleAddRitual"
           @handle-add-item="handleAddItem"
+          @handle-close-modal="handleCloseModal"
         />
       </vue-final-modal>
     </div>

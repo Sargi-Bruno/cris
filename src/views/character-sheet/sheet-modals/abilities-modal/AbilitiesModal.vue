@@ -5,12 +5,13 @@ import TabNav from '../../../../components/TabNav.vue'
 import ClassAbilities from './ClassAbilities.vue'
 import BackgroundPower from './BackgroundPower.vue'
 import ParanormalPowers from './ParanormalPowers.vue'
+import HomebrewAbilities from './homebrew-abilities/HomebrewAbilities.vue'
 
 defineProps<{character: Character}>()
 
 const emit = defineEmits(['handleCloseModal', 'handleAddPower'])
 
-const componentOptions = [ClassAbilities, BackgroundPower, ParanormalPowers]
+const componentOptions = [ClassAbilities, BackgroundPower, ParanormalPowers, HomebrewAbilities]
 
 const tabOptions = [
   {
@@ -24,6 +25,10 @@ const tabOptions = [
   {
     label: 'Poderes Paranormais',
     value: 2
+  },
+  {
+    label: 'Minhas Habilidades',
+    value: 3
   }
 ]
 

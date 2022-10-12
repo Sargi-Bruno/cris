@@ -22,6 +22,21 @@
   filter: brightness(90%);
 }
 
+.button-secondary {
+  height: 2.25rem;
+  background-color: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-white);
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.button-secondary:hover {
+  color: var(--color-primary);
+}
+
 .input-primary {
   height: 2rem;
   background-color: var(--color-dark-gray);
@@ -139,6 +154,21 @@
   border: solid 3px transparent;
 }
 
+.button-cancel {
+  height: 2.25rem;
+  background-color: transparent;
+  border: none;
+  color: var(--color-white);
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.button-cancel:hover {
+  color: var(--color-red);
+}
+
 .button-remove {
   background-color: transparent;
   border: none;
@@ -150,4 +180,36 @@
 
 .button-remove:hover {
   filter: brightness(90%);
+}
+
+.p-editor-container {
+  border: none !important;
+}
+
+.p-editor-toolbar {
+  display: none;
+}
+
+.p-editor-content {
+  background: var(--color-smoky-black);
+  font-family: 'Roboto', sans-serif !important;
+  font-size: 16px !important;
+  border: 1px solid var(--color-gray) !important;
+}
+
+.ql-toolbar .ql-stroke {
+  stroke: #fff !important;
+}
+
+.ql-toolbar .ql-fill {
+  fill: #fff !important;
+}
+
+.ql-snow { 
+  border: 1px solid var(--color-gray) !important;
+  border-radius: 4px !important;
+}
+
+.ql-font-roboto {
+  font-family: 'Roboto', sans-serif !important;
 }

@@ -2,6 +2,7 @@ export interface Power {
   name: string
   description: string
   id?: string
+  uid?: string
 }
 
 export interface Path {

@@ -103,7 +103,7 @@ const handleFinishCreation =  async () => {
   character.value.uid = auth.currentUser.uid
   character.value.timestamp = (serverTimestamp() as unknown) as Timestamp
 
-  const data = await  addDoc(collection(firestore, 'characters'), character.value)
+  const data = await addDoc(collection(firestore, 'characters'), character.value)
   
   router.push({ name: 'character-sheet', params: { id: data.id } })
 }

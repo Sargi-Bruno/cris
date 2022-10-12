@@ -18,7 +18,7 @@ const modalChar = ref<Character>()
 const modalRemoveInput = ref('')
 const betaTester = ref(false)
 const searchText = ref('')
-const charLimit = ref(3)
+const charLimit = ref(15)
 
 onMounted(async () => {
   if(!auth.currentUser?.email) return
@@ -72,6 +72,8 @@ const handleCloseModal = () => {
 }
 
 const handleNewAgent = () => {
+  if(characters.value.length > charLimit.value) return
+
   loading.value = true
   router.push({ name: 'character-creation'})
 }
@@ -112,7 +114,7 @@ const handleRemoveChar = () => {
         <h3 v-else>
           Agentes {{ characters.length }}/{{ charLimit }}
         </h3>
-        <div v-if="betaTester">
+        <div v-if="characters.length > 6">
           <SearchInput 
             :value="searchText"
             @update="(value: string) => searchText = value"
