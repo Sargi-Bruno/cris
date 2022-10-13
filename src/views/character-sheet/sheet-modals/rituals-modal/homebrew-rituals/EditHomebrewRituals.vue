@@ -2,35 +2,35 @@
 import { ref } from 'vue'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, updateDoc, doc } from 'firebase/firestore'
-import { Power } from '../../../../../types'
-import AbilitiesForm from '../../../../../components/AbilitiesForm.vue'
+import { Ritual } from '../../../../../types'
+import RitualsForm from '../../../../../components/RitualsForm.vue'
 import LoadingView from '../../../../../components/LoadingView.vue'
 
-defineProps<{power: Power}>()
+defineProps<{ritual: Ritual}>()
 
-const emit = defineEmits(['handleClose', 'handleEditPowerSheet'])
+const emit = defineEmits(['handleClose', 'handleEditRitualSheet'])
 
 const auth = getAuth()
 const firestore = getFirestore()
 const loading = ref(false)
 
 interface Payload {
-  power: Power
+  ritual: Ritual
   sheet: boolean
 }
 
-const handleEditPower = async (payload: Payload) => {
+const handleEditRitual = async (payload: Payload) => {
   if(!auth.currentUser) return
 
   loading.value = true
   
   if(payload.sheet) {
-    emit('handleEditPowerSheet', payload.power)
+    emit('handleEditRitualSheet', payload.ritual)
     return
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await updateDoc(doc(firestore, 'homebrewPowers', payload.power.id as string), payload.power as any)
+  await updateDoc(doc(firestore, 'homebrewRituals', payload.ritual.id as string), payload.ritual as any)
 
   loading.value = false
 
@@ -40,10 +40,10 @@ const handleEditPower = async (payload: Payload) => {
 
 <template>
   <div v-if="!loading">
-    <AbilitiesForm
-      :power="power"
+    <RitualsForm
+      :ritual="ritual"
       edit
-      @handle-edit-power="handleEditPower"
+      @handle-edit-ritual="handleEditRitual"
       @handle-close="$emit('handleClose')"
     />
   </div>

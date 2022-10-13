@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Character, Attack, Power } from '../../../types'
+import { Character, Attack, Power, Ritual } from '../../../types'
 import TabNav from '../../../components/TabNav.vue'
 import AttacksTab from './AttacksTab.vue'
 import AbilitiesTab from './AbilitiesTab.vue'
@@ -42,7 +42,8 @@ const emit = defineEmits([
   'handleRollDices',
   'handleRollAttack',
   'handleChangeRitualDc',
-  'handleEditPower'
+  'handleEditPower',
+  'handleEditRitual'
 ])
 
 const tabOptions = [
@@ -84,6 +85,8 @@ const handleRollAttack = (attack: Attack) => emit('handleRollAttack', attack)
 const handleChangeRitualDc = (e: Event) => emit('handleChangeRitualDc', e)
 
 const handleEditPower = (power: Power) => emit('handleEditPower', power)
+
+const handleEditRitual = (ritual: Ritual) => emit('handleEditRitual', ritual)
 </script>
 
 <template>
@@ -106,6 +109,7 @@ const handleEditPower = (power: Power) => emit('handleEditPower', power)
         @handle-add-attack="$emit('handleAddAttack')"
         @handle-remove-attack="(id: string) => $emit('handleRemoveAttack', id)"
         @handle-edit-power="handleEditPower"
+        @handle-edit-ritual="handleEditRitual"
         @handle-remove-power="(id: string) => $emit('handleRemovePower', id)"
         @handle-remove-ritual="(id: string) => $emit('handleRemoveRitual', id)"
         @handle-remove-item="(id: string) => $emit('handleRemoveItem', id)"

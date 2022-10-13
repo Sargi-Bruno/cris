@@ -83,7 +83,8 @@ const modals = {
   edit: 4
 }
 const editModalOptions = {
-  power: 0
+  power: 0,
+  ritual: 1
 }
 
 const auth = getAuth()
@@ -92,6 +93,7 @@ const route = useRoute()
 const characterId = route.params.id as string
 const loading = ref(true)
 const editPower = ref<Power>()
+const editRitual = ref<Ritual>()
 const character = ref<Character>(characterDefaultValue)
 
 const toastInfo = ref<ToastInfo>({
@@ -450,9 +452,23 @@ const handleEditPower = (power: Power) => {
   editPower.value = power
 }
 
+const handleEditRitual = (ritual: Ritual) => {
+  currentModal.value = modals.edit
+  currentEditModal.value = editModalOptions.ritual
+  showModal.value = true
+  editRitual.value = ritual
+}
+
 const handleEditPowerSheet = (editPower: Power) => {
   const index = character.value.powers.findIndex((e) => e.id === editPower.id)
   character.value.powers[index] = editPower
+  updateCharacter()
+  handleCloseModal()
+}
+
+const handleEditRitualSheet = (editRitual: Ritual) => {
+  const index = character.value.rituals.findIndex((e) => e.id === editRitual.id)
+  character.value.rituals[index] = editRitual
   updateCharacter()
   handleCloseModal()
 }
@@ -501,6 +517,7 @@ watch(() => toastInfo.value.alive, () => {
         @handle-remove-attack="handleRemoveAttack"
         @handle-remove-power="handleRemovePower"
         @handle-edit-power="handleEditPower"
+        @handle-edit-ritual="handleEditRitual"
         @handle-remove-ritual="handleRemoveRitual"
         @handle-remove-item="handleRemoveItem"
         @handle-equip-item="handleEquipItem"
@@ -527,7 +544,9 @@ watch(() => toastInfo.value.alive, () => {
           :character="character"
           :skill="currentSkill"
           :edit-power="editPower"
+          :edit-ritual="editRitual"
           @handle-edit-power-sheet="handleEditPowerSheet"
+          @handle-edit-ritual-sheet="handleEditRitualSheet"
           @handle-add-power="handleAddPower"
           @handle-add-ritual="handleAddRitual"
           @handle-add-item="handleAddItem"

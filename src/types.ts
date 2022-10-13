@@ -144,6 +144,7 @@ export interface Ritual {
   duration?: string
   save?: string
   id?: string
+  uid?: string
 }
 
 export interface Skill {

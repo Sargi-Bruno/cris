@@ -13,10 +13,11 @@ const props = defineProps({
     default: ''
   },
   onlyShow: Boolean,
-  sheet: Boolean
+  sheet: Boolean,
+  homebrew: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEdit'])
 
 const elementColors = {
   conhecimento: '#ff8c00',
@@ -44,6 +45,10 @@ const handleAdd = () => {
 
 const handleRemove = () => {
   emit('handleRemove', props.id)
+}
+
+const handleEdit = () => {
+  emit('handleEdit', props.ritual)
 }
 </script>
 
@@ -77,10 +82,10 @@ const handleRemove = () => {
             <h3>{{ ritual.element.toUpperCase() }} {{ ritual.circle }}</h3>
           </div>
           <div class="ritual-info">
-            <h3>Execução: <span>{{ ritual.execution }}</span></h3>
+            <h3>Execução: <span>{{ ritual.execution.toLocaleLowerCase() }}</span></h3>
           </div>
           <div class="ritual-info">
-            <h3>Alcance: <span>{{ ritual.range }}</span></h3>
+            <h3>Alcance: <span>{{ ritual.range.toLocaleLowerCase() }}</span></h3>
           </div>
           <div
             v-if="ritual.area"
@@ -115,13 +120,23 @@ const handleRemove = () => {
         </div>
         <div class="content">
           <div :class="{ 'sheet-content': sheet}" v-html="ritual.description" />
-          <button
+          <div
             v-if="sheet"
-            class="button-remove card-remove-button"
-            @click.stop="handleRemove"
+            class="card-footer"
           >
-            Remover
-          </button>
+            <button
+              class="button-remove"
+              @click.stop="handleRemove"
+            >
+              {{ homebrew ? 'Deletar' : 'Remover' }}
+            </button>
+            <button
+              class="button-remove button-edit"
+              @click.stop="handleEdit"
+            >
+              Editar
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -214,7 +229,12 @@ const handleRemove = () => {
 .sheet-content h3 span {
   font-size: 14px;
 }
-.card-remove-button {
+.card-footer {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: .5rem;
+}
+.button-edit {
+  color: var(--color-green);
 }
 </style>

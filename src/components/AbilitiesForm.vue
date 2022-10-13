@@ -56,13 +56,21 @@ const handleEdit = () => {
     <input 
       v-model="power.name"
       type="text" 
-      class="input-primary dark"
+      class="input-primary dark big-input"
     >
   </div>
   <div class="label">
     Descrição*
   </div>
-  <p-editor v-model="power.description" editor-style="height: 160px" />
+  <p-editor v-model="power.description" editor-style="height: 16rem">
+    <template #toolbar>
+      <span class="ql-formats">
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+        <button class="ql-underline"></button>
+      </span>
+    </template>
+  </p-editor>
   <div class="buttons-container">
     <button 
       class="button-cancel"
@@ -110,5 +118,8 @@ const handleEdit = () => {
 }
 .big {
   width: 6rem;
+}
+.big-input {
+  width: 20rem;
 }
 </style>

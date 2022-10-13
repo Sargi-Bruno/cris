@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, collection, addDoc } from 'firebase/firestore'
-import { Power } from '../../../../../types'
-import AbilitiesForm from '../../../../../components/AbilitiesForm.vue'
+import { Ritual } from '../../../../../types'
+import RitualsForm from '../../../../../components/RitualsForm.vue'
 import LoadingView from '../../../../../components/LoadingView.vue'
 
 const emit = defineEmits(['handleClose'])
@@ -12,13 +12,13 @@ const auth = getAuth()
 const firestore = getFirestore()
 const loading = ref(false)
 
-const handleCreatePower = async (power: Power) => {
+const handleCreateRitual = async (ritual: Ritual) => {
   if(!auth.currentUser) return
 
   loading.value = true
-  power.uid = auth.currentUser.uid
+  ritual.uid = auth.currentUser.uid
 
-  await addDoc(collection(firestore, 'homebrewPowers'), power)
+  await addDoc(collection(firestore, 'homebrewRituals'), ritual)
   loading.value = false
 
   emit('handleClose')
@@ -27,8 +27,8 @@ const handleCreatePower = async (power: Power) => {
 
 <template>
   <div v-if="!loading">
-    <AbilitiesForm
-      @handle-create-power="handleCreatePower"
+    <RitualsForm
+      @handle-create-ritual="handleCreateRitual"
       @handle-close="$emit('handleClose')"
     />
   </div>

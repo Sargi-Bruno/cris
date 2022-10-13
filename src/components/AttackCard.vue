@@ -2,7 +2,7 @@
 import { PropType, ref, getCurrentInstance } from 'vue'
 import { Attack } from '../types'
 import DividerView from './DividerView.vue'
-import AttackDropdown from '../components/AttackDropdown.vue'
+import DropdownSimple from './DropdownSimple.vue'
 
 const props = defineProps({
   attack: {
@@ -112,7 +112,7 @@ const handleRollAttack = () => {
           <div class="content-row">
             <div class="dropdown-container">
               <h3>TIPO DE DANO</h3>
-              <AttackDropdown
+              <DropdownSimple
                 :value="attack.damageType"
                 :options="damageTypeOptions"
                 @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'damageType'})"
@@ -120,7 +120,7 @@ const handleRollAttack = () => {
             </div>
             <div class="dropdown-container">
               <h3>ALCANCE</h3>
-              <AttackDropdown
+              <DropdownSimple
                 :value="attack.range"
                 :options="rangeOptions"
                 @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'range'})"
@@ -130,7 +130,7 @@ const handleRollAttack = () => {
           <div class="content-row">
             <div class="dropdown-container">
               <h3>PERÍCIA</h3>
-              <AttackDropdown
+              <DropdownSimple
                 :value="attack.skillUsed"
                 :options="skillUsedOptions"
                 @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'skillUsed'})"
@@ -138,7 +138,7 @@ const handleRollAttack = () => {
             </div>
             <div class="dropdown-container">
               <h3>ATRIBUTO DANO</h3>
-              <AttackDropdown
+              <DropdownSimple
                 :value="attack.damageAttribute"
                 :options="damageAttrOptions"
                 @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'damageAttribute'})"

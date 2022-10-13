@@ -48,6 +48,11 @@ p span {
   color: var(--color-primary);
 }
 
+p strong {
+  font-weight: normal;
+  color: var(--color-primary);
+}
+
 button {
   font-family: 'Roboto', sans-serif;
 }

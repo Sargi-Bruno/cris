@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
-import { Power } from '../../../../types'
+import { Power, Ritual } from '../../../../types'
 import AbilitiesForm from '../../../../components/AbilitiesForm.vue'
-import { powerDefault } from '../../../../utils/default'
+import RitualsForm from '../../../../components/RitualsForm.vue'
+import { powerDefault, ritualDefault } from '../../../../utils/default'
 
 defineProps({
   currentEditOption: {
@@ -12,14 +13,23 @@ defineProps({
   editPower: {
     type: Object as PropType<Power>,
     default: powerDefault
+  },
+  editRitual: {
+    type: Object as PropType<Ritual>,
+    default: ritualDefault
   }
 })
 
-const emit = defineEmits(['handleCloseModal', 'handleEditPowerSheet'])
+const emit = defineEmits(['handleCloseModal', 'handleEditPowerSheet', 'handleEditRitualSheet'])
 
-const componentOptions = [AbilitiesForm]
+const componentOptions = {
+  power: 0,
+  ritual: 1
+}
 
 const handleEditPowerSheet = (payload: { power: Power }) => emit('handleEditPowerSheet', payload.power)
+
+const handleEditRitualSheet = (payload: { ritual: Ritual }) => emit('handleEditRitualSheet', payload.ritual)
 </script>
 
 <template>
@@ -35,14 +45,24 @@ const handleEditPowerSheet = (payload: { power: Power }) => emit('handleEditPowe
       </button>
     </div>
     <div class="modal-body modal-height">
-      <component
-        :is="componentOptions[currentEditOption]"
-        :power="editPower"
-        edit
-        sheet
-        @handle-edit-power="handleEditPowerSheet"
-        @handle-close="$emit('handleCloseModal')"
-      />
+      <div v-if="currentEditOption === componentOptions.power">
+        <AbilitiesForm
+          :power="editPower"
+          edit
+          sheet
+          @handle-edit-power="handleEditPowerSheet"
+          @handle-close="$emit('handleCloseModal')"
+        />
+      </div>
+      <div v-if="currentEditOption === componentOptions.ritual">
+        <RitualsForm
+          :ritual="editRitual"
+          edit
+          sheet
+          @handle-edit-ritual="handleEditRitualSheet"
+          @handle-close="$emit('handleCloseModal')"
+        />
+      </div>
     </div>
   </div>
 </template>

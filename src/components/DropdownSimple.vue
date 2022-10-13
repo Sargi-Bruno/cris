@@ -10,7 +10,17 @@ defineProps({
   options: {
     type: Array<string>,
     required: true
-  }
+  },
+  width: {
+    type: String,
+    default: '6.25rem'
+  },
+  contentWidth: {
+    type: String,
+    default: '7.5rem'
+  },
+  formInput: Boolean,
+  circleInput: Boolean
 })
 
 const emit = defineEmits(['updateValue'])
@@ -31,17 +41,19 @@ const handleUpdateValue = (option: string) => {
     <div class="dropdown-button-container">
       <button
         class="dropdown-button"
+        :class="{'form-input-button': formInput, 'circle-input-button': circleInput}"
         @click="open = !open"
       >
         {{ value }}
       </button>
       <div 
         class="dropdown-content"
-        :class="{'dropdown-content-active': open}"
+        :class="{'dropdown-content-active': open, 'form-input-content': formInput}"
       >
         <div v-for="(option, i) in options" :key="i">
           <button 
             class="dropdown-content-button"
+            :class="{'form-input-button': formInput, 'circle-input': circleInput}"
             @click="handleUpdateValue(option)"
           >
             {{ option }}
@@ -56,11 +68,11 @@ const handleUpdateValue = (option: string) => {
 .dropdown-button-container {
   display: flex;
   justify-content: center;
-  width: 6rem;
+  width: v-bind(width);
   position: relative;
 }
 .dropdown-button {
-  width: 6rem;
+  width: v-bind(width);
   background-color: transparent;
   border: none;
   border-bottom: 1px solid var(--color-white);
@@ -70,12 +82,21 @@ const handleUpdateValue = (option: string) => {
   cursor: pointer;
   text-align: center;
 }
+.form-input-button {
+  height: 2rem;
+  background: var(--color-smoky-black);
+  border: 1px solid var(--color-gray);
+  border-radius: 4px;
+  font-size: 16px;
+  text-align: left;
+  padding-left: .5rem;
+}
 .dropdown-button:hover {
   color: var(--color-primary);
 }
 .dropdown-content {
   z-index: 1;
-  width: 7.5rem;
+  width: v-bind(contentWidth);
   position: absolute;
   left: -0.75rem;
   top: calc(100% + .25rem);
@@ -87,11 +108,12 @@ const handleUpdateValue = (option: string) => {
   transform: translateY(-10px);
   transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
 }
-.dropdown-position-up {
-  bottom: calc(100% + .25rem);
-}
-.dropdown-position-down {
-  top: calc(100% + .25rem);
+.form-input-content {
+  left: 0;
+  background-color: var(--color-smoky-black);
+  border: 1px solid var(--color-gray);
+  padding-left: 0;
+  padding-right: 0;
 }
 .dropdown-content-active {
   transform: translateY(0);
@@ -108,7 +130,17 @@ const handleUpdateValue = (option: string) => {
   height: 2.25rem;
   text-align: center;
 }
+.form-input-button {
+  text-align: left;
+}
 .dropdown-content-button:hover {
   color: var(--color-primary);
+}
+.circle-input-button {
+  text-align: center;
+  padding-left: 0;
+}
+.circle-input {
+  text-align: center;
 }
 </style>

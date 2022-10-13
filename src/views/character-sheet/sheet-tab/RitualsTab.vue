@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance } from 'vue'
-import { Character } from '../../../types'
+import { Character, Ritual } from '../../../types'
 import RitualCard from '../../../components/RitualCard.vue'
 import FilterInput from '../../../components/FilterInput.vue'
 import { compare } from '../../../utils/functions'
 
 const props = defineProps<{character: Character}>()
 
-const emit = defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual', 'handleChangeRitualDc'])
+const emit = defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual', 'handleChangeRitualDc', 'handleEditRitual'])
 
 const instance = getCurrentInstance()
 const filterText = ref('')
@@ -21,6 +21,8 @@ const handleChangeRitualDc = (e: Event) => {
  emit('handleChangeRitualDc', e)
  instance?.proxy?.$forceUpdate()
 }
+
+const handleEdit = (ritual: Ritual) => emit('handleEditRitual', ritual)
 </script>
   
 <template>
@@ -66,6 +68,7 @@ const handleChangeRitualDc = (e: Event) => {
             only-show
             sheet
             @handle-remove="(id: string) => $emit('handleRemoveRitual', id)"
+            @handle-edit="handleEdit"
           />
         </div>
       </div>

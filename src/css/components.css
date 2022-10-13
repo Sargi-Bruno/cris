@@ -187,7 +187,9 @@
 }
 
 .p-editor-toolbar {
-  display: none;
+  border-radius: 4px 4px 0 0;
+  background: var(--color-dark-gray);
+  border: 1px solid var(--color-gray) !important;
 }
 
 .p-editor-content {
@@ -195,6 +197,7 @@
   font-family: 'Roboto', sans-serif !important;
   font-size: 16px !important;
   border: 1px solid var(--color-gray) !important;
+  border-radius: 0 0 4px 4px;
 }
 
 .ql-toolbar .ql-stroke {
@@ -205,9 +208,12 @@
   fill: #fff !important;
 }
 
-.ql-snow { 
-  border: 1px solid var(--color-gray) !important;
-  border-radius: 4px !important;
+.ql-active .ql-stroke { 
+  stroke: var(--color-primary) !important;
+}
+
+.ql-active .ql-fill { 
+  fill: var(--color-primary) !important;
 }
 
 .ql-font-roboto {
