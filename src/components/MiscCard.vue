@@ -27,7 +27,7 @@ const handleAdd = () => {
 
 const handleRemove = () => {
   const payload = {
-    id: props.id,
+    id: props.misc.id || props.id,
     itemType: props.misc.itemType
   }
   emit('handleRemove', payload)
@@ -53,10 +53,10 @@ const handleEdit = () => {
       </button>
       <div>
         <div class="first-row">
-          <h3 class="title" :class="{ 'sheet-title': sheet}">
+          <h3 class="title" :class="{ 'sheet-title': sheet && !homebrew}">
             {{ misc.name }}
           </h3>
-          <div v-if="!sheet" class="item-info-category">
+          <div v-if="!sheet || homebrew" class="item-info-category">
             <h3><i>{{ misc.tag }}</i></h3>
           </div>
         </div>
@@ -201,6 +201,7 @@ const handleEdit = () => {
 .card-footer {
   display: flex;
   justify-content: space-between;
+  margin-top: .5rem;
   margin-bottom: .5rem;
 }
 .button-edit {

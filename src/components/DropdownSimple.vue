@@ -102,6 +102,7 @@ const handleUpdateValue = (option: string) => {
   left: -0.75rem;
   top: calc(100% + .25rem);
   padding: .5rem;
+  border: 1px solid var(--color-gray);
   border-radius: 4px;
   background-color: var(--color-light-black);
   pointer-events: none;

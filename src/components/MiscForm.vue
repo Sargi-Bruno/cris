@@ -46,7 +46,7 @@ const handleEdit = () => {
   if(disabled.value) return
 
   const payload = {
-    misc: misc.value,
+    item: misc.value,
     sheet: props.sheet
   }
 
@@ -77,7 +77,7 @@ const handleEdit = () => {
         width="2.75rem"
         content-width="2.75rem"
         form-input
-        circle-input
+        small-input
         @update-value="(value: string) => misc.category = value"
       />
     </div>
@@ -98,8 +98,8 @@ const handleEdit = () => {
       <DropdownSimple
         :value="misc.tag"
         :options="tagOptions"
-        width="12rem"
-        content-width="12rem"
+        width="10rem"
+        content-width="10rem"
         form-input
         @update-value="(value: string) => misc.tag = value"
       />
@@ -108,7 +108,7 @@ const handleEdit = () => {
   <div class="label">
     Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="misc.description" editor-style="height: 16rem">
+  <p-editor v-model="misc.description" editor-style="height: 15rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>
@@ -178,5 +178,7 @@ const handleEdit = () => {
 .small {
   width: 2.75rem;
   text-align: center;
+  padding-left: .25rem;
+  padding-right: .25rem;
 }
 </style>

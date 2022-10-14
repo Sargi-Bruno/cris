@@ -17,7 +17,8 @@ const emit = defineEmits([
   'handleEquipItem', 
   'handleChangeInventoryNumber', 
   'handleChangeItemsLimit', 
-  'handleChangeInventoryDropdown'
+  'handleChangeInventoryDropdown',
+  'handleEditItem',
 ])
 
 const patentOptions = ['Recruta', 'Operador', 'Agente especial', 'Oficial de operações', 'Agente de elite']
@@ -36,6 +37,8 @@ const currentLoadColor = computed(() => {
   if(props.character.currentLoad > props.character.maxLoad) return '#ff8c00'
   return '#fff'
 })
+
+const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleEditItem', item)
 
 const handleChangeItemsLimit = (e: Event, key: string) => {
   const value = (e.target as HTMLInputElement).valueAsNumber
@@ -184,6 +187,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
               sheet
               @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
               @handle-equip="(id: string) => $emit('handleEquipItem', id)"
+              @handle-edit="handleEditItem"
             />
           </div>
           <div v-if="item.itemType === 'protection'">
@@ -194,6 +198,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
               sheet
               @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
               @handle-equip="(id: string) => $emit('handleEquipItem', id)"
+              @handle-edit="handleEditItem"
             />
           </div>
           <div v-if="item.itemType === 'misc'">
@@ -203,6 +208,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
               only-show
               sheet
               @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
+              @handle-edit="handleEditItem"
             />
           </div>
           <div v-if="item.itemType === 'cursedItem'">
@@ -212,6 +218,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
               only-show
               sheet
               @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
+              @handle-edit="handleEditItem"
             />
           </div>
         </div>

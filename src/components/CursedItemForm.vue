@@ -14,7 +14,7 @@ const props = defineProps({
   sheet: Boolean
 })
 
-const emit = defineEmits(['handleCreateMisc', 'handleClose', 'handleEditMisc'])
+const emit = defineEmits(['handleCreateCursedItem', 'handleClose', 'handleEditCursedItem'])
 
 const elementOptions = ['Conhecimento', 'Energia', 'Morte', 'Sangue', 'Varia']
 
@@ -35,7 +35,7 @@ const handleClose = () => {
 const handleCreate = () => {
   if(disabled.value) return
 
-  emit('handleCreateMisc', cursedItem.value)
+  emit('handleCreateCursedItem', cursedItem.value)
   cursedItem.value = _.clone(cursedItemDefault)
 }
 
@@ -43,11 +43,11 @@ const handleEdit = () => {
   if(disabled.value) return
 
   const payload = {
-    cursedItem: cursedItem.value,
+    item: cursedItem.value,
     sheet: props.sheet
   }
 
-  emit('handleEditMisc', payload)
+  emit('handleEditCursedItem', payload)
   cursedItem.value = _.clone(cursedItemDefault)
 }
 </script>
@@ -81,7 +81,7 @@ const handleEdit = () => {
   <div class="label">
     Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="cursedItem.description" editor-style="height: 16rem">
+  <p-editor v-model="cursedItem.description" editor-style="height: 15rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>

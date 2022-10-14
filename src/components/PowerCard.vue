@@ -148,6 +148,7 @@ const handleEdit = () => {
 .card-footer {
   display: flex;
   justify-content: space-between;
+  margin-top: .5rem;
   margin-bottom: .5rem;
 }
 .button-edit {

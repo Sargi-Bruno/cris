@@ -22,7 +22,6 @@ const protection = ref<Protection>(_.clone(props.protection))
 
 const disabled = computed(() => {
   if(protection.value.name === '') return true
-  if(protection.value.description === '') return true
   if(protection.value.category === '') return true
   if(protection.value.slots === '') return true
   if(protection.value.defense.toString() === '') return true
@@ -46,7 +45,7 @@ const handleEdit = () => {
   if(disabled.value) return
 
   const payload = {
-    protection: protection.value,
+    item: protection.value,
     sheet: props.sheet
   }
 
@@ -74,7 +73,7 @@ const handleEdit = () => {
       <input 
         v-model="protection.defense"
         type="number" 
-        class="input-primary dark small"
+        class="input-primary dark small input-align-center"
       >
     </div>
     <div class="input-container">
@@ -87,7 +86,7 @@ const handleEdit = () => {
         width="2.75rem"
         content-width="2.75rem"
         form-input
-        circle-input
+        small-input
         @update-value="(value: string) => protection.category = value"
       />
     </div>
@@ -98,14 +97,14 @@ const handleEdit = () => {
       <input 
         v-model="protection.slots"
         type="text" 
-        class="input-primary dark small"
+        class="input-primary dark small input-align-center"
       >
     </div>
   </div>
   <div class="label">
-    Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
+    Descrição<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="protection.description" editor-style="height: 16rem">
+  <p-editor v-model="protection.description" editor-style="height: 15rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>
@@ -175,5 +174,10 @@ const handleEdit = () => {
 .small {
   width: 2.75rem;
   text-align: center;
+}
+.input-align-center {
+  text-align: center;
+  padding-left: .25rem;
+  padding-right: .25rem;
 }
 </style>

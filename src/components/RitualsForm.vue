@@ -177,7 +177,7 @@ const handleEdit = () => {
   <div class="label">
     Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="ritual.description" editor-style="height: 16rem">
+  <p-editor v-model="ritual.description" editor-style="height: 15rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>

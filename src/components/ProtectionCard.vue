@@ -27,7 +27,7 @@ const handleAdd = () => {
 
 const handleRemove = () => {
   const payload = {
-    id: props.id,
+    id: props.protection.id || props.id,
     itemType: props.protection.itemType
   }
   emit('handleRemove', payload)
@@ -57,7 +57,7 @@ const handleEdit = () => {
       </button>
       <div>
         <div class="first-row">
-          <h3 class="title" :class="{ 'sheet-title': sheet}">
+          <h3 class="title" :class="{ 'sheet-title': sheet && !homebrew}">
             {{ protection.name }}
           </h3>
         </div>
@@ -65,7 +65,7 @@ const handleEdit = () => {
           <div class="item-info">
             <h3>Defesa: <span>+{{ protection.defense }}</span></h3>
           </div>
-          <div v-if="!sheet" class="flex-row">
+          <div v-if="!sheet || homebrew" class="flex-row">
             <div class="item-info">
               <h3>Categoria: <span>{{ protection.category }}</span></h3>
             </div>
@@ -80,7 +80,7 @@ const handleEdit = () => {
           <img src="../assets/add-icon.svg" alt="adicionar">
         </button>
       </div>
-      <div v-if="sheet" class="button-container">
+      <div v-if="sheet && !homebrew" class="button-container">
         <button 
           class="checkbox-button"
           @click.stop="handleEquip"
@@ -234,6 +234,7 @@ const handleEdit = () => {
 .card-footer {
   display: flex;
   justify-content: space-between;
+  margin-top: .5rem;
   margin-bottom: .5rem;
 }
 .button-edit {

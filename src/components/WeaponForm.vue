@@ -27,7 +27,6 @@ const weapon = ref<Weapon>(_.clone(props.weapon))
 
 const disabled = computed(() => {
   if(weapon.value.name === '') return true
-  if(weapon.value.description === '') return true
   if(weapon.value.category === '') return true
   if(weapon.value.slots === '') return true
   if(weapon.value.damage === '') return true
@@ -53,7 +52,7 @@ const handleEdit = () => {
   if(disabled.value) return
 
   const payload = {
-    weapon: weapon.value,
+    item: weapon.value,
     sheet: props.sheet
   }
 
@@ -81,8 +80,8 @@ const handleEdit = () => {
       <DropdownSimple
         :value="weapon.proficiencie"
         :options="proficienceOptions"
-        width="12rem"
-        content-width="12rem"
+        width="8.5rem"
+        content-width="8.5rem"
         form-input
         @update-value="(value: string) => weapon.proficiencie = value"
       />
@@ -94,8 +93,8 @@ const handleEdit = () => {
       <DropdownSimple
         :value="weapon.type"
         :options="typeOptions"
-        width="12rem"
-        content-width="12rem"
+        width="10rem"
+        content-width="10rem"
         form-input
         @update-value="(value: string) => weapon.type = value"
       />
@@ -107,8 +106,8 @@ const handleEdit = () => {
       <DropdownSimple
         :value="weapon.handling"
         :options="handlingOptions"
-        width="12rem"
-        content-width="12rem"
+        width="6.5rem"
+        content-width="6.5rem"
         form-input
         @update-value="(value: string) => weapon.handling = value"
       />
@@ -142,7 +141,7 @@ const handleEdit = () => {
       <input 
         v-model="weapon.criticalRange"
         type="number" 
-        class="input-primary dark small"
+        class="input-primary dark small input-align-center"
       >
     </div>
     <div class="input-container">
@@ -152,7 +151,7 @@ const handleEdit = () => {
       <input 
         v-model="weapon.criticalMult"
         type="number" 
-        class="input-primary dark small"
+        class="input-primary dark small input-align-center"
       >
     </div>
     <div class="input-container">
@@ -162,8 +161,8 @@ const handleEdit = () => {
       <DropdownSimple
         :value="weapon.damageType"
         :options="damageTypeOptions"
-        width="12rem"
-        content-width="12rem"
+        width="6.5rem"
+        content-width="6.5rem"
         form-input
         @update-value="(value: string) => weapon.damageType = value"
       />
@@ -177,8 +176,8 @@ const handleEdit = () => {
       <DropdownSimple
         :value="weapon.range"
         :options="rangeOptions"
-        width="12rem"
-        content-width="12rem"
+        width="5rem"
+        content-width="5rem"
         form-input
         @update-value="(value: string) => weapon.range = value"
       />
@@ -193,7 +192,7 @@ const handleEdit = () => {
         width="2.75rem"
         content-width="2.75rem"
         form-input
-        circle-input
+        small-input
         @update-value="(value: string) => weapon.category = value"
       />
     </div>
@@ -204,14 +203,14 @@ const handleEdit = () => {
       <input 
         v-model="weapon.slots"
         type="text" 
-        class="input-primary dark small"
+        class="input-primary dark small input-align-center"
       >
     </div>
   </div>
   <div class="label">
-    Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
+    Descrição<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="weapon.description" editor-style="height: 16rem">
+  <p-editor v-model="weapon.description" editor-style="height: 15rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>
@@ -283,6 +282,11 @@ const handleEdit = () => {
   text-align: center;
 }
 .medium {
-  width: 7.75rem;
+  width: 5rem;
+}
+.input-align-center {
+  text-align: center;
+  padding-left: .25rem;
+  padding-right: .25rem;
 }
 </style>

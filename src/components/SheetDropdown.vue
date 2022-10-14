@@ -98,12 +98,13 @@ const handleUpdateValue = (option: string) => {
 .dropdown-content {
   z-index: 1;
   width: inherit;
-  max-height: 12.5rem;
+  max-height: 13rem;
   overflow-y: scroll;
   position: absolute;
   left: 0;
   top: calc(100% + .25rem);
   padding: .5rem;
+  border: 1px solid var(--color-gray);
   border-radius: 4px;
   background-color: var(--color-light-black);
   pointer-events: none;

@@ -42,6 +42,7 @@ export interface CursedItem {
   category: string
   equipped?: boolean
   id?: string
+  uid?: string
 }
 
 export interface Ammunition {
@@ -103,6 +104,7 @@ export interface Weapon {
   id?: string
   itemType: string
   equipped?: boolean
+  uid?: string
 }
 
 export interface Protection {
@@ -116,6 +118,7 @@ export interface Protection {
   id?: string
   itemType: string
   equipped?: boolean
+  uid?: string
 }
 
 export interface Misc {
@@ -129,6 +132,7 @@ export interface Misc {
   id?: string
   itemType: string
   equipped?: boolean
+  uid?: string
 }
 
 export interface Ritual {

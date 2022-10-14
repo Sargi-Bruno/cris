@@ -66,76 +66,74 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[] | CursedItem[]>((
 </script>
 
 <template>
-  <div class="modal-content modal-width">
-    <div class="class-abilities-container">
-      <TabNav
-        :current-tab="currentTab"
-        :tab-options="tabOptions"
-        @handle-navigation="(value: number) => currentTab = value"
+  <div class="class-abilities-container">
+    <TabNav
+      :current-tab="currentTab"
+      :tab-options="tabOptions"
+      @handle-navigation="(value: number) => currentTab = value"
+    />
+    <div
+      v-if="currentTab === 0"
+      class="search-container"
+    >
+      <SearchInput 
+        :value="searchTextWeapons"
+        dark
+        @update="value => searchTextWeapons = value"
       />
+    </div>
+    <div
+      v-if="currentTab === 2"
+      class="search-container"
+    >
+      <SearchInput 
+        :value="searchTextMisc"
+        dark
+        @update="value => searchTextMisc = value"
+      />
+    </div>
+    <div
+      v-if="currentTab === 3"
+      class="search-container"
+    >
+      <SearchInput 
+        :value="searchTextCursedItems"
+        dark
+        @update="value => searchTextCursedItems = value"
+      />
+    </div>
+    <div
+      v-if="currentItems.length > 0"
+      class="class-abilities-content"
+    >
       <div
-        v-if="currentTab === 0"
-        class="search-container"
+        v-for="item in currentItems"
+        :key="item.name"
+        class="class-abilitie-card"
       >
-        <SearchInput 
-          :value="searchTextWeapons"
-          dark
-          @update="value => searchTextWeapons = value"
-        />
-      </div>
-      <div
-        v-if="currentTab === 2"
-        class="search-container"
-      >
-        <SearchInput 
-          :value="searchTextMisc"
-          dark
-          @update="value => searchTextMisc = value"
-        />
-      </div>
-      <div
-        v-if="currentTab === 3"
-        class="search-container"
-      >
-        <SearchInput 
-          :value="searchTextCursedItems"
-          dark
-          @update="value => searchTextCursedItems = value"
-        />
-      </div>
-      <div
-        v-if="currentItems.length > 0"
-        class="class-abilities-content"
-      >
-        <div
-          v-for="item in currentItems"
-          :key="item.name"
-          class="class-abilitie-card"
-        >
-          <div v-if="item.itemType === 'weapon'">
-            <WeaponCard
-              :weapon="(item as Weapon)"
-              @handle-add="handleAddItem"
-            />
-          </div>
-          <div v-if="item.itemType === 'protection'">
-            <ProtectionCard
-              :protection="(item as Protection)"
-              @handle-add="handleAddItem"
-            />
-          </div>
-          <div v-if="item.itemType === 'misc'">
-            <MiscCard
-              :misc="(item as Misc)"
-              @handle-add="handleAddItem"
-            />
-          </div>
-          <div v-if="item.itemType === 'cursedItem'">
-            <CursedItemCard
-              :cursed-item="(item as CursedItem)"
-              @handle-add="handleAddItem"
-            />
-          </div>
+        <div v-if="item.itemType === 'weapon'">
+          <WeaponCard
+            :weapon="(item as Weapon)"
+            @handle-add="handleAddItem"
+          />
+        </div>
+        <div v-if="item.itemType === 'protection'">
+          <ProtectionCard
+            :protection="(item as Protection)"
+            @handle-add="handleAddItem"
+          />
+        </div>
+        <div v-if="item.itemType === 'misc'">
+          <MiscCard
+            :misc="(item as Misc)"
+            @handle-add="handleAddItem"
+          />
+        </div>
+        <div v-if="item.itemType === 'cursedItem'">
+          <CursedItemCard
+            :cursed-item="(item as CursedItem)"
+            @handle-add="handleAddItem"
+          />
         </div>
       </div>
     </div>
@@ -143,13 +141,7 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[] | CursedItem[]>((
 </template>
 
 <style scoped>
-.modal-width {
-  width: 60rem;
-}
-.modal-height {
-  height: 32rem;
-}
-.secondary-tab-container {
+.class-abilities-container {
   margin-top: 1rem;
 }
 .search-container {

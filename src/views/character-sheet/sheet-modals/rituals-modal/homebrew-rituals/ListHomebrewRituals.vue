@@ -196,7 +196,7 @@ const handleDelete = (id: string) => {
 <style scoped>
 .list-ritual-header {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
 }
 .class-ritual-content {

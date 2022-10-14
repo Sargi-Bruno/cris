@@ -39,7 +39,8 @@ import {
   Attack,
   ToastInfo,
   ToastRoll,
-  ToastAttackInterface
+  ToastAttackInterface,
+CursedItem
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -84,7 +85,8 @@ const modals = {
 }
 const editModalOptions = {
   power: 0,
-  ritual: 1
+  ritual: 1,
+  item: 2,
 }
 
 const auth = getAuth()
@@ -94,6 +96,7 @@ const characterId = route.params.id as string
 const loading = ref(true)
 const editPower = ref<Power>()
 const editRitual = ref<Ritual>()
+const editItem = ref<Weapon | Protection | Misc | CursedItem>()
 const character = ref<Character>(characterDefaultValue)
 
 const toastInfo = ref<ToastInfo>({
@@ -459,6 +462,13 @@ const handleEditRitual = (ritual: Ritual) => {
   editRitual.value = ritual
 }
 
+const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => {
+  currentModal.value = modals.edit
+  currentEditModal.value = editModalOptions.item
+  showModal.value = true
+  editItem.value = item
+}
+
 const handleEditPowerSheet = (editPower: Power) => {
   const index = character.value.powers.findIndex((e) => e.id === editPower.id)
   character.value.powers[index] = editPower
@@ -469,6 +479,13 @@ const handleEditPowerSheet = (editPower: Power) => {
 const handleEditRitualSheet = (editRitual: Ritual) => {
   const index = character.value.rituals.findIndex((e) => e.id === editRitual.id)
   character.value.rituals[index] = editRitual
+  updateCharacter()
+  handleCloseModal()
+}
+
+const handleEditItemSheet = (editItem: Weapon | Protection | Misc | CursedItem) => {
+  const index = character.value.inventory.findIndex((e) => e.id === editItem.id)
+  character.value.inventory[index] = editItem
   updateCharacter()
   handleCloseModal()
 }
@@ -518,6 +535,7 @@ watch(() => toastInfo.value.alive, () => {
         @handle-remove-power="handleRemovePower"
         @handle-edit-power="handleEditPower"
         @handle-edit-ritual="handleEditRitual"
+        @handle-edit-item="handleEditItem"
         @handle-remove-ritual="handleRemoveRitual"
         @handle-remove-item="handleRemoveItem"
         @handle-equip-item="handleEquipItem"
@@ -545,8 +563,10 @@ watch(() => toastInfo.value.alive, () => {
           :skill="currentSkill"
           :edit-power="editPower"
           :edit-ritual="editRitual"
+          :edit-item="editItem"
           @handle-edit-power-sheet="handleEditPowerSheet"
           @handle-edit-ritual-sheet="handleEditRitualSheet"
+          @handle-edit-item-sheet="handleEditItemSheet"
           @handle-add-power="handleAddPower"
           @handle-add-ritual="handleAddRitual"
           @handle-add-item="handleAddItem"

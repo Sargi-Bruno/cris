@@ -48,8 +48,8 @@ export const weaponDefault: Weapon = {
   criticalRange: 20,
   damageType: 'Balístico',
   range: '-',
-  category: '-',
-  slots: '-',
+  category: '0',
+  slots: '1',
   itemType: 'weapon',
 }
 

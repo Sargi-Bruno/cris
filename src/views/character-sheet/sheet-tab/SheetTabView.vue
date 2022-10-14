@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Character, Attack, Power, Ritual } from '../../../types'
+import { Character, Attack, Power, Ritual, Weapon, Protection, Misc, CursedItem } from '../../../types'
 import TabNav from '../../../components/TabNav.vue'
 import AttacksTab from './AttacksTab.vue'
 import AbilitiesTab from './AbilitiesTab.vue'
@@ -43,7 +43,8 @@ const emit = defineEmits([
   'handleRollAttack',
   'handleChangeRitualDc',
   'handleEditPower',
-  'handleEditRitual'
+  'handleEditRitual',
+  'handleEditItem',
 ])
 
 const tabOptions = [
@@ -65,28 +66,18 @@ const componentOptions = [
 const currentTab = ref(0)
 
 const handleNavigation = (value: number) => currentTab.value = value
-
 const handleChangeAttackText = (payload: PayloadEvent) => emit('handleChangeAttackText', payload)
-
 const handleChangeAttackNumber = (payload: PayloadEvent) => emit('handleChangeAttackNumber', payload)
-
 const handleChangeAttackDropdown = (payload: PayloadValue) => emit('handleChangeAttackDropdown', payload)
-
 const handleChangeDescription = (payload: {value: string, key: string}) => emit('handleChangeDescription', payload)
-
 const handleChangeInventoryNumber = (payload: {value: number, key: string}) => emit('handleChangeInventoryNumber', payload)
-
 const handleChangeItemsLimit  = (payload: {value: number, key: string}) => emit('handleChangeItemsLimit', payload)
-
 const handleChangeInventoryDropdown = (payload: {value: string, key: string}) => emit('handleChangeInventoryDropdown', payload)
-
 const handleRollAttack = (attack: Attack) => emit('handleRollAttack', attack)
-
 const handleChangeRitualDc = (e: Event) => emit('handleChangeRitualDc', e)
-
 const handleEditPower = (power: Power) => emit('handleEditPower', power)
-
 const handleEditRitual = (ritual: Ritual) => emit('handleEditRitual', ritual)
+const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleEditItem', item)
 </script>
 
 <template>
@@ -110,6 +101,7 @@ const handleEditRitual = (ritual: Ritual) => emit('handleEditRitual', ritual)
         @handle-remove-attack="(id: string) => $emit('handleRemoveAttack', id)"
         @handle-edit-power="handleEditPower"
         @handle-edit-ritual="handleEditRitual"
+        @handle-edit-item="handleEditItem"
         @handle-remove-power="(id: string) => $emit('handleRemovePower', id)"
         @handle-remove-ritual="(id: string) => $emit('handleRemoveRitual', id)"
         @handle-remove-item="(id: string) => $emit('handleRemoveItem', id)"

@@ -3,7 +3,6 @@ import { computed, onMounted, ref } from 'vue'
 import { getFirestore, collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { Weapon, Protection, Misc, CursedItem } from '../../../../../types'
-import TabNav from '../../../../../components/TabNav.vue'
 import WeaponCard from '../../../../../components/WeaponCard.vue'
 import ProtectionCard from '../../../../../components/ProtectionCard.vue'
 import MiscCard from '../../../../../components/MiscCard.vue'
@@ -12,36 +11,21 @@ import SearchInput from '../../../../../components/SearchInput.vue'
 import { compare } from '../../../../../utils/functions'
 import LoadingView from '../../../../../components/LoadingView.vue'
 
+const props = defineProps({
+  currentTab: {
+    type: Number,
+    required: true
+  }
+})
+
 const emit = defineEmits([
   'handleAddItem',
   'handleCreateWeapon',
   'handleCreateProtection',
   'handleCreateMisc',
   'handleCreateCursedItem',
-  'handleEditWeapon',
-  'handleEditProtection',
-  'handleEditMisc',
-  'handleEditCursedItem',
+  'handleEditItem',
 ])
-
-const tabOptions = [
-  {
-    label: 'Armas',
-    value: 0,
-  },
-  {
-    label: 'Proteções',
-    value: 1,
-  },
-  {
-    label: 'Geral',
-    value: 2,
-  },
-  {
-    label: 'Itens Amaldiçoados',
-    value: 3
-  }
-]
 
 const auth = getAuth()
 const firestore = getFirestore()
@@ -50,17 +34,13 @@ const weapons = ref<Weapon[]>([])
 const protections = ref<Protection[]>([])
 const miscs = ref<Misc[]>([])
 const cursedItems = ref<CursedItem[]>([])
-const currentTab = ref(0)
 const searchTextWeapons = ref('')
 const searchTextProtections = ref('')
 const searchTextMisc = ref('')
 const searchTextCursedItems = ref('')
 
 const handleAddItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleAddItem', item)
-const handleEditWeapon = (weapon: Weapon) => emit('handleEditWeapon', weapon)
-const handleEditProtection = (protection: Protection) => emit('handleEditProtection', protection)
-const handleEditMisc = (misc: Misc) => emit('handleEditMisc', misc)
-const handleEditCursedItem = (cursedItem: CursedItem) => emit('handleEditCursedItem', cursedItem)
+const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleEditItem', item)
 
 onMounted(async () => {
   if(!auth.currentUser) return
@@ -92,22 +72,22 @@ onMounted(async () => {
 })
 
 const currentItems = computed(() => {
-  if(currentTab.value === 0) 
+  if(props.currentTab === 0) 
     return weapons.value
             .filter((ele) => compare(ele.name, searchTextWeapons.value))
             .sort((a, b) => a.name.localeCompare(b.name))
 
-  if(currentTab.value === 1) 
+  if(props.currentTab === 1) 
     return protections.value
             .filter((ele) => compare(ele.name, searchTextProtections.value))
             .sort((a, b) => a.name.localeCompare(b.name))
 
-  if(currentTab.value === 2) 
+  if(props.currentTab === 2) 
     return miscs.value
             .filter((ele) => compare(ele.name, searchTextMisc.value))
             .sort((a, b) => a.name.localeCompare(b.name))
 
-  if(currentTab.value === 3) 
+  if(props.currentTab === 3) 
     return cursedItems.value
             .filter((ele) => compare(ele.name, searchTextCursedItems.value))
             .sort((a, b) => a.name.localeCompare(b.name))
@@ -134,56 +114,47 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
   }
 
   if(payload.itemType === 'cursedItem') {
-    const index = currentItems.value.findIndex((e) => e.id === payload.id)
-    currentItems.value.splice(index, 1)
+    const index = cursedItems.value.findIndex((e) => e.id === payload.id)
+    cursedItems.value.splice(index, 1)
   }
 }
 </script>
 
 <template>
   <div v-if="!loading">
-    <div class="list-ritual-header">
-      <div>
-        <TabNav
-          :current-tab="currentTab"
-          :tab-options="tabOptions"
-          @handle-navigation="(value: number) => currentTab = value"
-        />
-      </div>
-      <div v-if="currentTab === 0">
-        <button
-          class="button-primary new-button"
-          @click="$emit('handleCreateWeapon')"
-        >
-          Adicionar Arma
-        </button>
-      </div>
-      <div v-if="currentTab === 1">
-        <button
-          class="button-primary new-button"
-          @click="$emit('handleCreateProtection')"
-        >
-          Adicionar Proteção
-        </button>
-      </div>
-      <div v-if="currentTab === 2">
-        <button
-          class="button-primary new-button"
-          @click="$emit('handleCreateMisc')"
-        >
-          Adicionar Item Geral
-        </button>
-      </div>
-      <div v-if="currentTab === 3">
-        <button
-          class="button-primary new-button"
-          @click="$emit('handleCreateCursedItem')"
-        >
-          Adicionar Item Amaldiçoado
-        </button>
-      </div>
+    <div v-if="currentTab === 0">
+      <button
+        class="button-primary new-button"
+        @click="$emit('handleCreateWeapon')"
+      >
+        Adicionar Arma
+      </button>
     </div>
-    <div v-if="currentItems.length > 0">
+    <div v-if="currentTab === 1">
+      <button
+        class="button-primary new-button"
+        @click="$emit('handleCreateProtection')"
+      >
+        Adicionar Proteção
+      </button>
+    </div>
+    <div v-if="currentTab === 2">
+      <button
+        class="button-primary new-button"
+        @click="$emit('handleCreateMisc')"
+      >
+        Adicionar Item Geral
+      </button>
+    </div>
+    <div v-if="currentTab === 3">
+      <button
+        class="button-primary new-button"
+        @click="$emit('handleCreateCursedItem')"
+      >
+        Adicionar Item Amaldiçoado
+      </button>
+    </div>
+    <div v-if="weapons.length > 0">
       <div
         v-if="currentTab === 0"
         class="search-container"
@@ -195,7 +166,7 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
         />
       </div>
     </div>
-    <div v-if="currentItems.length > 0">
+    <div v-if="protections.length > 0">
       <div
         v-if="currentTab === 1"
         class="search-container"
@@ -207,7 +178,7 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
         />
       </div>
     </div>
-    <div v-if="currentItems.length > 0">
+    <div v-if="miscs.length > 0">
       <div
         v-if="currentTab === 2"
         class="search-container"
@@ -219,7 +190,7 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
         />
       </div>
     </div>
-    <div v-if="currentItems.length > 0">
+    <div v-if="cursedItems.length > 0">
       <div
         v-if="currentTab === 3"
         class="search-container"
@@ -246,7 +217,7 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
             sheet
             homebrew
             @handle-remove="handleDelete"
-            @handle-edit="handleEditWeapon"
+            @handle-edit="handleEditItem"
             @handle-add="handleAddItem"
           />
         </div>
@@ -256,7 +227,7 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
             sheet
             homebrew
             @handle-remove="handleDelete"
-            @handle-edit="handleEditProtection"
+            @handle-edit="handleEditItem"
             @handle-add="handleAddItem"
           />
         </div>
@@ -266,7 +237,7 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
             sheet
             homebrew
             @handle-remove="handleDelete"
-            @handle-edit="handleEditMisc"
+            @handle-edit="handleEditItem"
             @handle-add="handleAddItem"
           />
         </div>
@@ -276,15 +247,36 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
             sheet
             homebrew
             @handle-remove="handleDelete"
-            @handle-edit="handleEditCursedItem"
+            @handle-edit="handleEditItem"
             @handle-add="handleAddItem"
           />
         </div>
       </div>
     </div>
     <div v-else>
-      <div class="no-content">
-        Você ainda não criou nova
+      <div 
+        v-if="currentTab === 0" 
+        class="no-content"
+      >
+        Você ainda não criou novas armas
+      </div>
+      <div 
+        v-if="currentTab === 1" 
+        class="no-content"
+      >
+        Você ainda não criou novas proteções
+      </div>
+      <div 
+        v-if="currentTab === 2" 
+        class="no-content"
+      >
+        Você ainda não criou novos equipamentos
+      </div>
+      <div 
+        v-if="currentTab === 3" 
+        class="no-content"
+      >
+        Você ainda não criou novos itens amaldiçoados
       </div>
     </div>
   </div>
@@ -294,6 +286,10 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
 </template>
 
 <style scoped>
+.new-button {
+  display: block;
+  margin-left: auto;
+}
 .class-abilities-content {
   margin-top: 1rem;
   border-radius: 4px;
