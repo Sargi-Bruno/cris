@@ -1,68 +1,87 @@
 <script setup lang="ts">
 import { computed,  PropType, ref } from 'vue'
-import { powerDefault } from '../utils/default'
-import { Power } from '../types'
+import { cursedItemDefault } from '../utils/default'
+import { CursedItem } from '../types'
 import _ from 'lodash'
+import DropdownSimple from './DropdownSimple.vue'
 
 const props = defineProps({
-  power: {
-    type: Object as PropType<Power>,
-    default: powerDefault
+  cursedItem: {
+    type: Object as PropType<CursedItem>,
+    default: cursedItemDefault
   },
   edit: Boolean,
   sheet: Boolean
 })
 
-const emit = defineEmits(['handleCreatePower', 'handleClose', 'handleEditPower'])
+const emit = defineEmits(['handleCreateMisc', 'handleClose', 'handleEditMisc'])
 
-const power = ref<Power>(_.clone(props.power))
+const elementOptions = ['Conhecimento', 'Energia', 'Morte', 'Sangue', 'Varia']
+
+const cursedItem = ref<CursedItem>(_.clone(props.cursedItem))
 
 const disabled = computed(() => {
-  if(power.value.name !== '' && power.value.description !== '') return false
+  if(cursedItem.value.name === '') return true
+  if(cursedItem.value.description === '') return true
 
-  return true
+  return false
 })
 
 const handleClose = () => {
-  power.value = _.clone(powerDefault)
+  cursedItem.value = _.clone(cursedItemDefault)
   emit('handleClose')
 }
 
 const handleCreate = () => {
   if(disabled.value) return
 
-  emit('handleCreatePower', power.value)
-  power.value = _.clone(powerDefault)
+  emit('handleCreateMisc', cursedItem.value)
+  cursedItem.value = _.clone(cursedItemDefault)
 }
 
 const handleEdit = () => {
   if(disabled.value) return
 
   const payload = {
-    power: power.value,
+    cursedItem: cursedItem.value,
     sheet: props.sheet
   }
 
-  emit('handleEditPower', payload)
-  power.value = _.clone(powerDefault)
+  emit('handleEditMisc', payload)
+  cursedItem.value = _.clone(cursedItemDefault)
 }
 </script>
 
 <template>
-  <div class="input-container">
-    <div class="label">
-      Nome*
+  <div class="input-row">
+    <div class="input-container">
+      <div class="label">
+        Nome*
+      </div>
+      <input 
+        v-model="cursedItem.name"
+        type="text" 
+        class="input-primary dark big-input"
+      >
     </div>
-    <input 
-      v-model="power.name"
-      type="text" 
-      class="input-primary dark big-input"
-    >
+    <div class="input-container">
+      <div class="label">
+        Elemento
+      </div>
+      <DropdownSimple
+        :value="cursedItem.element"
+        :options="elementOptions"
+        width="7.75rem"
+        content-width="7.75rem"
+        form-input
+        @update-value="(value: string) => cursedItem.element = value"
+      />
+    </div>
   </div>
   <div class="label">
     Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="power.description" editor-style="height: 16rem">
+  <p-editor v-model="cursedItem.description" editor-style="height: 16rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>
@@ -79,7 +98,7 @@ const handleEdit = () => {
       Cancelar
     </button>
     <div v-if="edit">
-      <button 
+      <button
         class="button-primary big"
         :disabled="disabled"
         @click="handleEdit"
@@ -118,6 +137,10 @@ const handleEdit = () => {
 }
 .big {
   width: 6rem;
+}
+.input-row {
+  display: flex;
+  gap: 1.5rem;
 }
 .big-input {
   width: 20rem;

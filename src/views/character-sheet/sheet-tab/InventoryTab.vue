@@ -182,7 +182,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
               :weapon="(item as Weapon)"
               only-show
               sheet
-              @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+              @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
               @handle-equip="(id: string) => $emit('handleEquipItem', id)"
             />
           </div>
@@ -192,7 +192,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
               :protection="(item as Protection)"
               only-show
               sheet
-              @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+              @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
               @handle-equip="(id: string) => $emit('handleEquipItem', id)"
             />
           </div>
@@ -202,7 +202,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
               :misc="(item as Misc)"
               only-show
               sheet
-              @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+              @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
             />
           </div>
           <div v-if="item.itemType === 'cursedItem'">
@@ -211,7 +211,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
               :cursed-item="(item as CursedItem)"
               only-show
               sheet
-              @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+              @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
             />
           </div>
         </div>

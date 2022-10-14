@@ -9,7 +9,7 @@ import { compare } from '../../../../../utils/functions'
 import LoadingView from '../../../../../components/LoadingView.vue'
 import TabNav from '../../../../../components/TabNav.vue'
 
-const emit = defineEmits(['handleAddRitual', 'handleEditRitual'])
+const emit = defineEmits(['handleAddRitual', 'handleEditRitual', 'handleCreateRitual'])
 
 const tabOptions = [
   {
@@ -129,18 +129,28 @@ const handleDelete = (id: string) => {
 <template>
   <div v-if="!loading">
     <div v-if="rituals.length > 0">
-      <TabNav
-        :current-tab="currentTab"
-        :tab-options="tabOptions"
-        @handle-navigation="(value: number) => currentTab = value"
-      />
-      <div class="secondary-tab-container">
-        <TabNav
-          :current-tab="currentSecondaryTab"
-          :tab-options="secondaryTabOptions"
-          secondary
-          @handle-navigation="(value: number) => currentSecondaryTab = value"
-        />
+      <div class="list-ritual-header">
+        <div>
+          <TabNav
+            :current-tab="currentTab"
+            :tab-options="tabOptions"
+            @handle-navigation="(value: number) => currentTab = value"
+          />
+          <div class="secondary-tab-container">
+            <TabNav
+              :current-tab="currentSecondaryTab"
+              :tab-options="secondaryTabOptions"
+              secondary
+              @handle-navigation="(value: number) => currentSecondaryTab = value"
+            />
+          </div>
+        </div>
+        <button
+          class="button-primary new-button"
+          @click="$emit('handleCreateRitual')"
+        >
+          Adicionar
+        </button>
       </div>
       <div class="search-container">
         <SearchInput 
@@ -184,6 +194,11 @@ const handleDelete = (id: string) => {
 </template>
 
 <style scoped>
+.list-ritual-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
 .class-ritual-content {
   margin-top: 1rem;
   border-radius: 4px;

@@ -20,7 +20,7 @@ defineProps({
     default: '7.5rem'
   },
   formInput: Boolean,
-  circleInput: Boolean
+  smallInput: Boolean
 })
 
 const emit = defineEmits(['updateValue'])
@@ -41,7 +41,7 @@ const handleUpdateValue = (option: string) => {
     <div class="dropdown-button-container">
       <button
         class="dropdown-button"
-        :class="{'form-input-button': formInput, 'circle-input-button': circleInput}"
+        :class="{'form-input-button': formInput, 'small-input-button': smallInput}"
         @click="open = !open"
       >
         {{ value }}
@@ -53,7 +53,7 @@ const handleUpdateValue = (option: string) => {
         <div v-for="(option, i) in options" :key="i">
           <button 
             class="dropdown-content-button"
-            :class="{'form-input-button': formInput, 'circle-input': circleInput}"
+            :class="{'form-input-button': formInput, 'small-input': smallInput}"
             @click="handleUpdateValue(option)"
           >
             {{ option }}
@@ -97,6 +97,7 @@ const handleUpdateValue = (option: string) => {
 .dropdown-content {
   z-index: 1;
   width: v-bind(contentWidth);
+  max-height: 20rem;
   position: absolute;
   left: -0.75rem;
   top: calc(100% + .25rem);
@@ -107,6 +108,19 @@ const handleUpdateValue = (option: string) => {
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  overflow-y: auto;
+}
+.dropdown-content::-webkit-scrollbar {
+  width: 4px;
+}
+.dropdown-content::-webkit-scrollbar-track {
+  background: transparent;
+  border: solid 3px transparent;
+}
+.dropdown-content::-webkit-scrollbar-thumb {
+  background: var(--color-smoky-black);
+  border-radius: 4px;
+  border: solid 3px transparent;
 }
 .form-input-content {
   left: 0;
@@ -136,11 +150,11 @@ const handleUpdateValue = (option: string) => {
 .dropdown-content-button:hover {
   color: var(--color-primary);
 }
-.circle-input-button {
+.small-input-button {
   text-align: center;
   padding-left: 0;
 }
-.circle-input {
+.small-input {
   text-align: center;
 }
 </style>

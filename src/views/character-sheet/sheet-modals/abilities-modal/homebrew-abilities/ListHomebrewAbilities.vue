@@ -56,7 +56,7 @@ const handleDelete = (id: string) => {
 <template>
   <div v-if="!loading">
     <div
-      v-if="powers.length > 6"
+      v-if="powers.length > 0"
       class="search-container"
     >
       <SearchInput 

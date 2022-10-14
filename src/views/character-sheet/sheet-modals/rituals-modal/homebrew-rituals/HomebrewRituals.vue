@@ -26,15 +26,8 @@ const handleEditRitual = (ritual: Ritual) => {
 <template>
   <div class="class-abilities-container">
     <div v-if="option === options.list">
-      <button
-        class="button-primary new-button"
-        @click="option = options.create"
-      >
-        Adicionar
-      </button>
-    </div>
-    <div v-if="option === options.list">
       <ListHomebrewRituals 
+        @handle-create-ritual="option = options.create"
         @handle-add-ritual="handleAddRitual"
         @handle-edit-ritual="handleEditRitual"
       />
@@ -56,10 +49,6 @@ const handleEditRitual = (ritual: Ritual) => {
 </template>
 
 <style scoped>
-.new-button {
-  display: block;
-  margin-left: auto;
-}
 .class-abilities-container {
   margin-top: 1rem;
 }

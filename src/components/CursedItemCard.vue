@@ -13,10 +13,11 @@ const props = defineProps({
     default: ''
   },
   onlyShow: Boolean,
-  sheet: Boolean
+  sheet: Boolean,
+  homebrew: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEdit'])
 
 const elementColors = {
   conhecimento: '#ff8c00',
@@ -43,7 +44,15 @@ const handleAdd = () => {
 }
 
 const handleRemove = () => {
-  emit('handleRemove', props.id)
+  const payload = {
+    id: props.id,
+    itemType: props.cursedItem.itemType
+  }
+  emit('handleRemove', payload)
+}
+
+const handleEdit = () => {
+  emit('handleEdit', props.cursedItem)
 }
 </script>
 
@@ -77,13 +86,23 @@ const handleRemove = () => {
         </div>
         <div class="content">
           <div :class="{ 'sheet-content': sheet}" v-html="cursedItem.description" />
-          <button
+          <div
             v-if="sheet"
-            class="button-remove card-remove-button"
-            @click.stop="handleRemove"
+            class="card-footer"
           >
-            Remover
-          </button>
+            <button
+              class="button-remove"
+              @click.stop="handleRemove"
+            >
+              {{ homebrew ? 'Deletar' : 'Remover' }}
+            </button>
+            <button
+              class="button-remove button-edit"
+              @click.stop="handleEdit"
+            >
+              Editar
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -157,7 +176,12 @@ const handleRemove = () => {
 .sheet-content :deep(p) {
   font-size: 14px;
 }
-.card-remove-button {
+.card-footer {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: .5rem;
+}
+.button-edit {
+  color: var(--color-green);
 }
 </style>

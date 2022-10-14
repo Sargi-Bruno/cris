@@ -1,4 +1,4 @@
-import { Power, Ritual } from '../types'
+import { Power, Ritual, Misc, Protection, Weapon, CursedItem } from '../types'
 
 export const powerDefault: Power = {
   name: '',
@@ -17,4 +17,47 @@ export const ritualDefault: Ritual = {
   effect: '',
   duration: '',
   save: '',
+}
+
+export const miscDefault: Misc = {
+  name: '',
+  description: '',
+  category: '0',
+  slots: 1,
+  tag: 'Acessórios',
+  itemType: 'misc',
+}
+
+export const protectionDefault: Protection = {
+  name: '',
+  description: '',
+  defense: 0,
+  category: '0',
+  slots: 1,
+  itemType: 'protection',
+}
+
+export const weaponDefault: Weapon = {
+  name: '',
+  description: '',
+  proficiencie: 'Armas Simples',
+  type: 'Corpo a Corpo',
+  handling: 'Leve',
+  damage: '1d4',
+  criticalMult: 2,
+  criticalRange: 20,
+  damageType: 'Balístico',
+  range: '-',
+  category: '-',
+  slots: '-',
+  itemType: 'weapon',
+}
+
+export const cursedItemDefault: CursedItem = {
+  name: '',
+  description: '',
+  element: 'Conhecimento',
+  category: '-',
+  slots: '*',
+  itemType: 'cursedItem',
 }

@@ -13,10 +13,11 @@ const props = defineProps({
     default: ''
   },
   onlyShow: Boolean,
-  sheet: Boolean
+  sheet: Boolean,
+  homebrew: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEquip'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEquip', 'handleEdit'])
 
 const showMore = ref(false)
 
@@ -25,11 +26,19 @@ const handleAdd = () => {
 }
 
 const handleRemove = () => {
-  emit('handleRemove', props.id)
+  const payload = {
+    id: props.id,
+    itemType: props.protection.itemType
+  }
+  emit('handleRemove', payload)
 }
 
 const handleEquip = () => {
   emit('handleEquip', props.id)
+}
+
+const handleEdit = () => {
+  emit('handleEdit', props.protection)
 }
 </script>
 
@@ -98,13 +107,23 @@ const handleEquip = () => {
             </div>
           </div>
           <div :class="{ 'sheet-content': sheet}" v-html="protection.description" />
-          <button
+          <div
             v-if="sheet"
-            class="button-remove card-remove-button"
-            @click.stop="handleRemove"
+            class="card-footer"
           >
-            Remover
-          </button>
+            <button
+              class="button-remove"
+              @click.stop="handleRemove"
+            >
+              {{ homebrew ? 'Deletar' : 'Remover' }}
+            </button>
+            <button
+              class="button-remove button-edit"
+              @click.stop="handleEdit"
+            >
+              Editar
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -186,9 +205,6 @@ const handleEquip = () => {
 .sheet-content h3 {
   font-size: 14px;
 }
-.card-remove-button {
-  margin-bottom: .5rem;
-}
 .only-sheet-content-container {
   margin-top: 1rem;
 }
@@ -214,5 +230,13 @@ const handleEquip = () => {
 }
 .checkbox-img-fade {
   opacity: 0;
+}
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: .5rem;
+}
+.button-edit {
+  color: var(--color-green);
 }
 </style>

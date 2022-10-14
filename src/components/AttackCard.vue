@@ -17,7 +17,7 @@ const props = defineProps({
 
 const emit = defineEmits(['handleRemoveAttack', 'handleChangeAttackText', 'handleChangeAttackNumber', 'handleChangeAttackDropdown', 'handleRollAttack'])
 
-const damageTypeOptions = ['-', 'Balístico', 'Conhecimento', 'Corte', 'Energia', 'Fogo', 'Impacto',  'Morte', 'Perfuração', 'Sangue']
+const damageTypeOptions = ['-', 'Balístico', 'Conhecimento', 'Corte', 'Eletricidade', 'Energia', 'Fogo', 'Frio', 'Impacto', 'Mental', 'Morte', 'Perfuração', 'Sangue', 'Químico']
 const rangeOptions = ['-', 'Curto', 'Médio', 'Longo']
 const skillUsedOptions = ['Luta', 'Ocultismo', 'Pontaria']
 const damageAttrOptions = ['Nenhum', 'Agilidade', 'Força', 'Intelecto', 'Presença', 'Vigor']

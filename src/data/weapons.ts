@@ -128,7 +128,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Arco',
     proficiencie: 'Armas Simples',
-    type: 'Armas de Disparo',
+    type: 'Arma de Disparo',
     handling: 'Duas Mãos',
     damage: '1d6',
     criticalMult: 3,
@@ -144,7 +144,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Besta',
     proficiencie: 'Armas Simples',
-    type: 'Armas de Disparo',
+    type: 'Arma de Disparo',
     handling: 'Duas Mãos',
     damage: '1d8',
     criticalMult: 2,
@@ -160,7 +160,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Pistola',
     proficiencie: 'Armas Simples',
-    type: 'Armas de Fogo',
+    type: 'Arma de Fogo',
     handling: 'Leve',
     damage: '1d12',
     criticalMult: 2,
@@ -176,7 +176,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Revólver',
     proficiencie: 'Armas Simples',
-    type: 'Armas de Fogo',
+    type: 'Arma de Fogo',
     handling: 'Leve',
     damage: '2d6',
     criticalMult: 3,
@@ -192,7 +192,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Fuzil de Caça',
     proficiencie: 'Armas Simples',
-    type: 'Armas de Fogo',
+    type: 'Arma de Fogo',
     handling: 'Duas Mãos',
     damage: '2d8',
     criticalMult: 3,
@@ -404,7 +404,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Arco Composto',
     proficiencie: 'Armas Táticas',
-    type: 'Armas de Disparo',
+    type: 'Arma de Disparo',
     handling: 'Duas Mãos',
     damage: '1d10',
     criticalMult: 3,
@@ -420,7 +420,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Balestra',
     proficiencie: 'Armas Táticas',
-    type: 'Armas de Disparo',
+    type: 'Arma de Disparo',
     handling: 'Duas Mãos',
     damage: '1d12',
     criticalMult: 2,
@@ -436,7 +436,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Submetralhadora',
     proficiencie: 'Armas Táticas',
-    type: 'Armas de Fogo',
+    type: 'Arma de Fogo',
     handling: 'Uma Mão',
     damage: '2d6',
     criticalMult: 3,
@@ -452,7 +452,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Espingarda',
     proficiencie: 'Armas Táticas',
-    type: 'Armas de Fogo',
+    type: 'Arma de Fogo',
     handling: 'Duas Mãos',
     damage: '4d6',
     criticalMult: 3,
@@ -468,7 +468,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Fuzil de Assalto',
     proficiencie: 'Armas Táticas',
-    type: 'Armas de Fogo',
+    type: 'Arma de Fogo',
     handling: 'Duas Mãos',
     damage: '2d10',
     criticalMult: 3,
@@ -484,7 +484,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Fuzil de Precisão',
     proficiencie: 'Armas Táticas',
-    type: 'À Distância',
+    type: 'Arma de Fogo',
     handling: 'Duas Mãos',
     damage: '2d10',
     criticalMult: 3,
@@ -500,7 +500,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Bazuca',
     proficiencie: 'Armas Pesadas',
-    type: 'À Distância',
+    type: 'Arma de Fogo',
     handling: 'Duas Mãos',
     damage: '10d8',
     criticalMult: 2,
@@ -516,7 +516,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Lança-chamas',
     proficiencie: 'Armas Pesadas',
-    type: 'À Distância',
+    type: 'Arma de Fogo',
     handling: 'Duas Mãos',
     damage: '6d6',
     criticalMult: 2,
@@ -532,7 +532,7 @@ const weapons: Array<Weapon> = [
   {
     name: 'Metralhadora',
     proficiencie: 'Armas Pesadas',
-    type: 'À Distância',
+    type: 'Arma de Fogo',
     handling: 'Duas Mãos',
     damage: '2d12',
     criticalMult: 3,

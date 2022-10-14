@@ -89,7 +89,7 @@ const handleEdit = () => {
         width="2.75rem"
         content-width="2.75rem"
         form-input
-        circle-input
+        small-input
         @update-value="(value: string) => ritual.circle = value"
       />
     </div>
@@ -175,7 +175,7 @@ const handleEdit = () => {
     </div>
   </div>
   <div class="label">
-    Descrição*<span> (utilize negrito para aplicar a cor roxa)</span>
+    Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
   <p-editor v-model="ritual.description" editor-style="height: 16rem">
     <template #toolbar>
