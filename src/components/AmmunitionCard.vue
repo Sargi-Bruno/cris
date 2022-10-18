@@ -11,7 +11,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="card">
+  <div class="ammunition-card">
     <div class="header">
       <div class="title">
         <h3>{{ ammunition.name }}</h3>
@@ -29,7 +29,7 @@ defineProps({
 </template>
 
 <style scoped>
-.card {
+.ammunition-card {
   box-shadow: 0 5px 10px rgb(0 0 0 / 12%);
   border-radius: 4px;
   background-color: var(--color-smoky-black);
