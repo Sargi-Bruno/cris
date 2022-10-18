@@ -2,6 +2,7 @@
 import { PropType, ref } from 'vue'
 import { Weapon } from '../types'
 import DividerView from './DividerView.vue'
+import AmmunitionCard from './AmmunitionCard.vue'
 
 const props = defineProps({
   weapon: {
@@ -137,16 +138,9 @@ const handleEdit = () => {
           </div>
           <div
             v-if="weapon.ammunition"
-            class="item-ammunition"
             :class="{ 'sheet-content': sheet && !homebrew}"
           >
-            <h3>{{ weapon.ammunition.name }}</h3>
-            <div class="item-info">
-              <h3>Categoria: <span>{{ weapon.ammunition.category }}</span></h3>
-            </div>
-            <div class="item-info">
-              <h3>Espaços: <span>{{ weapon.ammunition.slots }}</span></h3>
-            </div>
+            <AmmunitionCard :ammunition="weapon.ammunition" />
           </div>
           <div :class="{ 'sheet-content': sheet && !homebrew}" v-html="weapon.description" />
           <div
@@ -251,15 +245,6 @@ const handleEdit = () => {
   margin-left: 1rem;
   margin-right: 1rem;
   padding-bottom: .1rem;
-}
-.item-ammunition {
-  display: flex;
-  margin-top: 1rem;
-}
-.item-ammunition h3 {
-  margin: 0;
-  margin-right: 1rem;
-  font-size: 16px;
 }
 .sheet-title {
   font-size: 14px;

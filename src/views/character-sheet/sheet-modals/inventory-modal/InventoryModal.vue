@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Character, Weapon, Protection, Misc, CursedItem } from '../../../../types'
-import TabNav from '../../../../components/TabNav.vue'
+import SwitchButton from '../../../../components/SwitchButton.vue'
 import InventoryModalContent from './InventoryModalContent.vue'
 import HomebrewItems from './homebrew-items/HomebrewItems.vue'
 
@@ -11,7 +11,7 @@ const emit = defineEmits(['handleAddItem', 'handleCloseModal'])
 
 const componentOptions = [InventoryModalContent, HomebrewItems]
 
-const tabOptions = [
+const options = [
   {
     label: 'Itens',
     value: 0
@@ -22,9 +22,9 @@ const tabOptions = [
   }
 ]
 
-const currentTab = ref(0)
+const currentButtonValue = ref(0)
 
-const handleNavigation = (value: number) => currentTab.value = value
+const handleNavigation = (value: number) => currentButtonValue.value = value
 
 const handleAddItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleAddItem', item)
 </script>
@@ -32,7 +32,7 @@ const handleAddItem = (item: Weapon | Protection | Misc | CursedItem) => emit('h
 <template>
   <div class="modal-content modal-width">
     <div class="modal-header">
-      <h2>Itens</h2>
+      <h2>Adicionar Itens</h2>
       <button @click="$emit('handleCloseModal')">
         <img
           class="close-icon"
@@ -42,14 +42,14 @@ const handleAddItem = (item: Weapon | Protection | Misc | CursedItem) => emit('h
       </button>
     </div>
     <div class="modal-body modal-height">
-      <TabNav
-        :current-tab="currentTab"
-        :tab-options="tabOptions"
+      <SwitchButton
+        :value="currentButtonValue"
+        :options="options"
         @handle-navigation="handleNavigation"
       />
       <KeepAlive>
         <component
-          :is="componentOptions[currentTab]"
+          :is="componentOptions[currentButtonValue]"
           :character="character"
           @handle-add-item="handleAddItem"
         />

@@ -57,7 +57,10 @@ const handleCreateOption = (createOption: string) => {
 
 <template>
   <div class="class-abilities-container">
-    <div :class="{ 'tab-margin': option !== options.list }">
+    <div
+      v-if="option === options.list"
+      :class="{ 'tab-margin': option !== options.list }"
+    >
       <TabNav
         :current-tab="currentTab"
         :tab-options="tabOptions"

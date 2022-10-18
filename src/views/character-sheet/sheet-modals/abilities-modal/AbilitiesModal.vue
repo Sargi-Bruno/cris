@@ -1,40 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Character, Power } from '../../../../types'
-import TabNav from '../../../../components/TabNav.vue'
-import ClassAbilities from './ClassAbilities.vue'
-import BackgroundPower from './BackgroundPower.vue'
-import ParanormalPowers from './ParanormalPowers.vue'
+import SwitchButton from '../../../../components/SwitchButton.vue'
+import AbilitiesModalContentVue from './AbilitiesModalContent.vue'
 import HomebrewAbilities from './homebrew-abilities/HomebrewAbilities.vue'
 
 defineProps<{character: Character}>()
 
-const emit = defineEmits(['handleCloseModal', 'handleAddPower'])
+const emit = defineEmits(['handleAddPower', 'handleCloseModal'])
 
-const componentOptions = [ClassAbilities, BackgroundPower, ParanormalPowers, HomebrewAbilities]
+const componentOptions = [AbilitiesModalContentVue, HomebrewAbilities]
 
-const tabOptions = [
+const options = [
   {
-    label: 'Classe',
+    label: 'Habilidades',
     value: 0
   },
   {
-    label: 'Origem',
-    value: 1
-  },
-  {
-    label: 'Poderes Paranormais',
-    value: 2
-  },
-  {
     label: 'Minhas Habilidades',
-    value: 3
+    value: 1
   }
 ]
 
-const currentTab = ref(0)
+const currentButtonValue = ref(0)
 
-const handleNavigation = (value: number) => currentTab.value = value
+const handleNavigation = (value: number) => currentButtonValue.value = value
 
 const handleAddPower = (power: Power) => emit('handleAddPower', power)
 </script>
@@ -42,7 +32,7 @@ const handleAddPower = (power: Power) => emit('handleAddPower', power)
 <template>
   <div class="modal-content modal-width">
     <div class="modal-header">
-      <h2>Habilidades</h2>
+      <h2>Adicionar Habilidades</h2>
       <button @click="$emit('handleCloseModal')">
         <img
           class="close-icon"
@@ -52,14 +42,14 @@ const handleAddPower = (power: Power) => emit('handleAddPower', power)
       </button>
     </div>
     <div class="modal-body modal-height">
-      <TabNav
-        :current-tab="currentTab"
-        :tab-options="tabOptions"
+      <SwitchButton
+        :value="currentButtonValue"
+        :options="options"
         @handle-navigation="handleNavigation"
       />
       <KeepAlive>
         <component
-          :is="componentOptions[currentTab]"
+          :is="componentOptions[currentButtonValue]"
           :character="character"
           @handle-add-power="handleAddPower"
         />

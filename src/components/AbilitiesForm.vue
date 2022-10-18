@@ -2,6 +2,7 @@
 import { computed,  PropType, ref } from 'vue'
 import { powerDefault } from '../utils/default'
 import { Power } from '../types'
+import { validateAbilitiesForm } from '../utils/forms'
 import _ from 'lodash'
 
 const props = defineProps({
@@ -30,13 +31,14 @@ const handleClose = () => {
 
 const handleCreate = () => {
   if(disabled.value) return
-
+  validateAbilitiesForm(power.value)
   emit('handleCreatePower', power.value)
   power.value = _.clone(powerDefault)
 }
 
 const handleEdit = () => {
   if(disabled.value) return
+  validateAbilitiesForm(power.value)
 
   const payload = {
     power: power.value,
@@ -62,7 +64,7 @@ const handleEdit = () => {
   <div class="label">
     Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="power.description" editor-style="height: 15rem">
+  <p-editor v-model="power.description" editor-style="height: 12rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>

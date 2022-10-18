@@ -1,3 +1,4 @@
+import { CursedItem } from './../../types';
 import Skills from "../../data/skills"
 import { v4 as uuidv4 } from 'uuid'
 import { DiceRoll } from '@dice-roller/rpg-dice-roller'
@@ -464,42 +465,6 @@ export const handleItem = (character: Character, id: string) => {
   else unequipItem(character, index)
 }
 
-export const removeItem = (character: Character, id: string) => {
-  const index = character.inventory.findIndex((e) => e.id === id)
-  const aux = character.inventory[index]
-
-  let removedLoad
-
-  if(isNaN(aux.slots as number)) removedLoad = 0
-  else removedLoad = aux.slots as number
-
-  if(aux.itemType === 'weapon') {
-    const weapon = aux as Weapon
-
-    if(weapon.ammunition) {
-      removedLoad += weapon.ammunition.slots as number
-
-      if(weapon.ammunition.category !== '-' && weapon.ammunition.category !== '0') {
-        character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] -= 1
-
-        if(character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] < 0) character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] = 0
-      }
-    }
-  }
-
-  if(aux.category !== '-' && aux.category !== '0') {
-    character.currentItemsLimit[aux.category as ItemsLimitKeys] -= 1
-
-    if(character.currentItemsLimit[aux.category as ItemsLimitKeys] < 0) character.currentItemsLimit[aux.category as ItemsLimitKeys] = 0
-  } 
-
-  character.currentLoad -= removedLoad
-
-  if(character.inventory[index].equipped) unequipItem(character, index)
-
-  character.inventory.splice(index, 1)
-}
-
 export const changeAttackNumber = (character: Character, value: number, id: string, key: AttackNumberKeys) => {
   const index = character.attacks.findIndex((e) => e.id === id)
 
@@ -541,15 +506,15 @@ export const addItem = (character: Character, item: Weapon | Protection | Misc) 
   aux.id = uuidv4()
   aux.equipped = false
 
-  let addedLoad
+  let addedLoad: number
 
   if(isNaN(aux.slots as number)) addedLoad = 0
-  else addedLoad = aux.slots as number
+  else addedLoad = parseInt(aux.slots as string)
 
   if(aux.itemType === 'weapon') {
     const weapon = aux as Weapon
     if(weapon.ammunition) {
-      addedLoad += weapon.ammunition.slots as number
+      addedLoad += parseInt(weapon.ammunition.slots as string)
 
       if(weapon.ammunition.category !== '-' && weapon.ammunition.category !== '0') character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] += 1
     }
@@ -559,6 +524,42 @@ export const addItem = (character: Character, item: Weapon | Protection | Misc) 
 
   character.currentLoad += addedLoad
   character.inventory.push(aux)
+}
+
+export const removeItem = (character: Character, id: string) => {
+  const index = character.inventory.findIndex((e) => e.id === id)
+  const aux = character.inventory[index]
+
+  let removedLoad
+
+  if(isNaN(aux.slots as number)) removedLoad = 0
+  else removedLoad = aux.slots as number
+
+  if(aux.itemType === 'weapon') {
+    const weapon = aux as Weapon
+
+    if(weapon.ammunition) {
+      removedLoad += weapon.ammunition.slots as number
+
+      if(weapon.ammunition.category !== '-' && weapon.ammunition.category !== '0') {
+        character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] -= 1
+
+        if(character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] < 0) character.currentItemsLimit[weapon.ammunition.category as ItemsLimitKeys] = 0
+      }
+    }
+  }
+
+  if(aux.category !== '-' && aux.category !== '0') {
+    character.currentItemsLimit[aux.category as ItemsLimitKeys] -= 1
+
+    if(character.currentItemsLimit[aux.category as ItemsLimitKeys] < 0) character.currentItemsLimit[aux.category as ItemsLimitKeys] = 0
+  } 
+
+  character.currentLoad -= removedLoad
+
+  if(character.inventory[index].equipped) unequipItem(character, index)
+
+  character.inventory.splice(index, 1)
 }
 
 export const changeRitualDc = (character: Character, value: number) => {
@@ -601,4 +602,69 @@ export const updateCharNexStats = (character: Character, previousNex: string) =>
   if(character.maxPe < 0) character.maxPe = 0
   if(character.maxSan < 1) character.maxSan = 1
   if(character.ritualsDc < 0) character.ritualsDc = 0
+}
+
+export const editItemSheet = (character: Character, item: Weapon | Protection | Misc | CursedItem) => {
+  const index = character.inventory.findIndex((e) => e.id === item.id)
+  const oldItem = {...character.inventory[index]}
+
+  if(JSON.stringify(oldItem) === JSON.stringify(item)) return
+
+  character.inventory[index] = item
+
+  if(item.itemType === 'cursedItem') return
+
+  if(oldItem.slots !== item.slots) {
+    if(!isNaN(parseInt(item.slots as string))) {
+      const slotsDif = Math.abs((oldItem.slots as number) - (item.slots as number))
+
+      if(item.slots > oldItem.slots) character.currentLoad += slotsDif
+      else character.currentLoad -= slotsDif
+
+    } else {
+      character.currentLoad -= oldItem.slots as number
+    }
+
+    if(character.currentLoad < 0) character.currentLoad = 0
+  }
+
+  if(oldItem.category !== item.category) {
+    if(oldItem.category !== '-' && oldItem.category !== '0') character.currentItemsLimit[oldItem.category as ItemsLimitKeys] -= 1
+    if(item.category !== '-' && item.category !== '0') character.currentItemsLimit[item.category as ItemsLimitKeys] += 1
+  }
+
+  if(item.itemType === 'protection') {
+    if(item.equipped) {
+      const oldProtection = oldItem as Protection
+      const newProtection = item as Protection
+
+      if(oldProtection.defense !== newProtection.defense) {
+        const defenseDif = Math.abs(oldProtection.defense - newProtection.defense)
+
+        if(newProtection.defense > oldProtection.defense) character.protectionDefense += defenseDif
+        else character.protectionDefense -= defenseDif
+      }
+
+      if(oldProtection.name !== newProtection.name) {
+        if(character.currentProtection.includes(oldProtection.name)) {
+          character.currentProtection = character.currentProtection.replace(oldProtection.name, newProtection.name)
+        }
+      }
+    }
+  }
+
+  if(item.itemType === 'weapon') {
+    if(item.equipped) {
+      const oldWeapon = oldItem as Weapon
+      const newWeapon = item as Weapon
+      const attackIndex = character.attacks.findIndex((e) => e.itemId === item.id)
+
+      if(oldWeapon.name !== newWeapon.name) character.attacks[attackIndex].name = newWeapon.name
+      if(oldWeapon.damage !== newWeapon.damage) character.attacks[attackIndex].damage = newWeapon.damage
+      if(oldWeapon.criticalRange !== newWeapon.criticalRange) character.attacks[attackIndex].criticalRange = newWeapon.criticalRange
+      if(oldWeapon.criticalMult !== newWeapon.criticalMult) character.attacks[attackIndex].criticalMult = newWeapon.criticalMult
+      if(oldWeapon.damageType !== newWeapon.damageType) character.attacks[attackIndex].damageType = newWeapon.damageType
+      if(oldWeapon.range !== newWeapon.range) character.attacks[attackIndex].range = newWeapon.range
+    }
+  }
 }

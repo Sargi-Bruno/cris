@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Character, Ritual } from '../../../../types'
-import TabNav from '../../../../components/TabNav.vue'
+import SwitchButton from '../../../../components/SwitchButton.vue'
 import RitualsModalContent from './RitualsModalContent.vue'
 import HomebrewRituals from './homebrew-rituals/HomebrewRituals.vue'
 
@@ -11,7 +11,7 @@ const emit = defineEmits(['handleAddRitual', 'handleCloseModal'])
 
 const componentOptions = [RitualsModalContent, HomebrewRituals]
 
-const tabOptions = [
+const options = [
   {
     label: 'Rituais',
     value: 0
@@ -22,9 +22,9 @@ const tabOptions = [
   }
 ]
 
-const currentTab = ref(0)
+const currentButtonValue = ref(0)
 
-const handleNavigation = (value: number) => currentTab.value = value
+const handleNavigation = (value: number) => currentButtonValue.value = value
 
 const handleAddRitual = (ritual: Ritual) => emit('handleAddRitual', ritual)
 </script>
@@ -32,7 +32,7 @@ const handleAddRitual = (ritual: Ritual) => emit('handleAddRitual', ritual)
 <template>
   <div class="modal-content modal-width">
     <div class="modal-header">
-      <h2>Rituais</h2>
+      <h2>Adicionar Rituais</h2>
       <button @click="$emit('handleCloseModal')">
         <img
           class="close-icon"
@@ -42,14 +42,14 @@ const handleAddRitual = (ritual: Ritual) => emit('handleAddRitual', ritual)
       </button>
     </div>
     <div class="modal-body modal-height">
-      <TabNav
-        :current-tab="currentTab"
-        :tab-options="tabOptions"
+      <SwitchButton
+        :value="currentButtonValue"
+        :options="options"
         @handle-navigation="handleNavigation"
       />
       <KeepAlive>
         <component
-          :is="componentOptions[currentTab]"
+          :is="componentOptions[currentButtonValue]"
           :character="character"
           @handle-add-ritual="handleAddRitual"
         />

@@ -10,6 +10,7 @@ import CursedItemCard from '../../../../../components/CursedItemCard.vue'
 import SearchInput from '../../../../../components/SearchInput.vue'
 import { compare } from '../../../../../utils/functions'
 import LoadingView from '../../../../../components/LoadingView.vue'
+import ConfirmDelete from '../../../../../components/ConfirmDelete.vue'
 
 const props = defineProps({
   currentTab: {
@@ -38,6 +39,10 @@ const searchTextWeapons = ref('')
 const searchTextProtections = ref('')
 const searchTextMisc = ref('')
 const searchTextCursedItems = ref('')
+const deleteMode = ref(false)
+const deleteId = ref('')
+const deleteIndex = ref()
+const deleteItemType = ref('')
 
 const handleAddItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleAddItem', item)
 const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleEditItem', item)
@@ -96,187 +101,259 @@ const currentItems = computed(() => {
 })
 
 const handleDelete = (payload: { id: string, itemType: string }) => {
-  deleteDoc(doc(firestore, 'homebrewItems', payload.id))
-  
-  if(payload.itemType === 'weapon') {
-    const index = weapons.value.findIndex((e) => e.id === payload.id)
-    weapons.value.splice(index, 1)
-  }
+  deleteId.value = payload.id
+  deleteMode.value = true
+  deleteItemType.value = payload.itemType
 
-  if(payload.itemType === 'protection') {
-    const index = protections.value.findIndex((e) => e.id === payload.id)
-    protections.value.splice(index, 1)
-  }
+  if(payload.itemType === 'weapon') deleteIndex.value = weapons.value.findIndex((e) => e.id === payload.id)
+  if(payload.itemType === 'protection') deleteIndex.value = protections.value.findIndex((e) => e.id === payload.id)
+  if(payload.itemType === 'misc') deleteIndex.value = miscs.value.findIndex((e) => e.id === payload.id)
+  if(payload.itemType === 'cursedItem') deleteIndex.value = cursedItems.value.findIndex((e) => e.id === payload.id)
+}
 
-  if(payload.itemType === 'misc') {
-    const index = miscs.value.findIndex((e) => e.id === payload.id)
-    miscs.value.splice(index, 1)
-  }
+const handleCancelDelete = () => {
+  deleteId.value = ''
+  deleteMode.value = false
+  deleteIndex.value = undefined
+  deleteItemType.value = ''
+}
 
-  if(payload.itemType === 'cursedItem') {
-    const index = cursedItems.value.findIndex((e) => e.id === payload.id)
-    cursedItems.value.splice(index, 1)
-  }
+const handleConfirmDelete = () => {
+  deleteDoc(doc(firestore, 'homebrewItems', deleteId.value))
+
+  if(deleteItemType.value === 'weapon') weapons.value.splice(deleteIndex.value, 1)
+  if(deleteItemType.value === 'protection') protections.value.splice(deleteIndex.value, 1)
+  if(deleteItemType.value === 'misc') miscs.value.splice(deleteIndex.value, 1)
+  if(deleteItemType.value === 'cursedItem') cursedItems.value.splice(deleteIndex.value, 1)
+
+  deleteId.value = ''
+  deleteMode.value = false
+  deleteIndex.value = undefined
+  deleteItemType.value = ''
 }
 </script>
 
 <template>
   <div v-if="!loading">
-    <div v-if="currentTab === 0">
-      <button
-        class="button-primary new-button"
-        @click="$emit('handleCreateWeapon')"
-      >
-        Adicionar Arma
-      </button>
-    </div>
-    <div v-if="currentTab === 1">
-      <button
-        class="button-primary new-button"
-        @click="$emit('handleCreateProtection')"
-      >
-        Adicionar Proteção
-      </button>
-    </div>
-    <div v-if="currentTab === 2">
-      <button
-        class="button-primary new-button"
-        @click="$emit('handleCreateMisc')"
-      >
-        Adicionar Item Geral
-      </button>
-    </div>
-    <div v-if="currentTab === 3">
-      <button
-        class="button-primary new-button"
-        @click="$emit('handleCreateCursedItem')"
-      >
-        Adicionar Item Amaldiçoado
-      </button>
-    </div>
-    <div v-if="weapons.length > 0">
-      <div
-        v-if="currentTab === 0"
-        class="search-container"
-      >
-        <SearchInput 
-          :value="searchTextWeapons"
-          dark
-          @update="value => searchTextWeapons = value"
-        />
+    <div v-if="!deleteMode">
+      <div v-if="currentTab === 0">
+        <button
+          class="button-primary new-button"
+          @click="$emit('handleCreateWeapon')"
+        >
+          Adicionar Arma
+        </button>
       </div>
-    </div>
-    <div v-if="protections.length > 0">
-      <div
-        v-if="currentTab === 1"
-        class="search-container"
-      >
-        <SearchInput 
-          :value="searchTextProtections"
-          dark
-          @update="value => searchTextProtections = value"
-        />
+      <div v-if="currentTab === 1">
+        <button
+          class="button-primary new-button"
+          @click="$emit('handleCreateProtection')"
+        >
+          Adicionar Proteção
+        </button>
       </div>
-    </div>
-    <div v-if="miscs.length > 0">
-      <div
-        v-if="currentTab === 2"
-        class="search-container"
-      >
-        <SearchInput 
-          :value="searchTextMisc"
-          dark
-          @update="value => searchTextMisc = value"
-        />
+      <div v-if="currentTab === 2">
+        <button
+          class="button-primary new-button"
+          @click="$emit('handleCreateMisc')"
+        >
+          Adicionar Item Geral
+        </button>
       </div>
-    </div>
-    <div v-if="cursedItems.length > 0">
-      <div
-        v-if="currentTab === 3"
-        class="search-container"
-      >
-        <SearchInput 
-          :value="searchTextCursedItems"
-          dark
-          @update="value => searchTextCursedItems = value"
-        />
+      <div v-if="currentTab === 3">
+        <button
+          class="button-primary new-button"
+          @click="$emit('handleCreateCursedItem')"
+        >
+          Adicionar Item Amaldiçoado
+        </button>
       </div>
-    </div>
-    <div
-      v-if="currentItems.length > 0"
-      class="class-abilities-content"
-    >
-      <div
-        v-for="item in currentItems"
-        :key="item.id"
-        class="class-abilitie-card"
-      >
-        <div v-if="item.itemType === 'weapon'">
-          <WeaponCard
-            :weapon="(item as Weapon)"
-            sheet
-            homebrew
-            @handle-remove="handleDelete"
-            @handle-edit="handleEditItem"
-            @handle-add="handleAddItem"
+      <div v-if="weapons.length > 0">
+        <div
+          v-if="currentTab === 0"
+          class="search-container"
+        >
+          <SearchInput 
+            :value="searchTextWeapons"
+            dark
+            @update="value => searchTextWeapons = value"
           />
         </div>
-        <div v-if="item.itemType === 'protection'">
-          <ProtectionCard
-            :protection="(item as Protection)"
-            sheet
-            homebrew
-            @handle-remove="handleDelete"
-            @handle-edit="handleEditItem"
-            @handle-add="handleAddItem"
+      </div>
+      <div v-if="protections.length > 0">
+        <div
+          v-if="currentTab === 1"
+          class="search-container"
+        >
+          <SearchInput 
+            :value="searchTextProtections"
+            dark
+            @update="value => searchTextProtections = value"
           />
         </div>
-        <div v-if="item.itemType === 'misc'">
-          <MiscCard
-            :misc="(item as Misc)"
-            sheet
-            homebrew
-            @handle-remove="handleDelete"
-            @handle-edit="handleEditItem"
-            @handle-add="handleAddItem"
+      </div>
+      <div v-if="miscs.length > 0">
+        <div
+          v-if="currentTab === 2"
+          class="search-container"
+        >
+          <SearchInput 
+            :value="searchTextMisc"
+            dark
+            @update="value => searchTextMisc = value"
           />
         </div>
-        <div v-if="item.itemType === 'cursedItem'">
-          <CursedItemCard
-            :cursed-item="(item as CursedItem)"
-            sheet
-            homebrew
-            @handle-remove="handleDelete"
-            @handle-edit="handleEditItem"
-            @handle-add="handleAddItem"
+      </div>
+      <div v-if="cursedItems.length > 0">
+        <div
+          v-if="currentTab === 3"
+          class="search-container"
+        >
+          <SearchInput 
+            :value="searchTextCursedItems"
+            dark
+            @update="value => searchTextCursedItems = value"
           />
+        </div>
+      </div>
+      <div
+        v-if="currentItems.length > 0"
+        class="class-abilities-content"
+      >
+        <div
+          v-for="item in currentItems"
+          :key="item.id"
+          class="class-abilitie-card"
+        >
+          <div v-if="item.itemType === 'weapon'">
+            <WeaponCard
+              :weapon="(item as Weapon)"
+              sheet
+              homebrew
+              @handle-remove="handleDelete"
+              @handle-edit="handleEditItem"
+              @handle-add="handleAddItem"
+            />
+          </div>
+          <div v-if="item.itemType === 'protection'">
+            <ProtectionCard
+              :protection="(item as Protection)"
+              sheet
+              homebrew
+              @handle-remove="handleDelete"
+              @handle-edit="handleEditItem"
+              @handle-add="handleAddItem"
+            />
+          </div>
+          <div v-if="item.itemType === 'misc'">
+            <MiscCard
+              :misc="(item as Misc)"
+              sheet
+              homebrew
+              @handle-remove="handleDelete"
+              @handle-edit="handleEditItem"
+              @handle-add="handleAddItem"
+            />
+          </div>
+          <div v-if="item.itemType === 'cursedItem'">
+            <CursedItemCard
+              :cursed-item="(item as CursedItem)"
+              sheet
+              homebrew
+              @handle-remove="handleDelete"
+              @handle-edit="handleEditItem"
+              @handle-add="handleAddItem"
+            />
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div v-if="currentTab === 0">
+          <div
+            v-if="weapons.length > 0"
+            class="no-content"
+          >
+            Nenhuma arma encontrada
+          </div>
+          <div
+            v-else
+            class="no-content"
+          >
+            Você ainda não criou novas armas
+          </div>
+        </div>
+        <div v-if="currentTab === 1">
+          <div
+            v-if="protections.length > 0"
+            class="no-content"
+          >
+            Nenhuma proteção encontrada
+          </div>
+          <div
+            v-else
+            class="no-content"
+          >
+            Você ainda não criou novas proteções
+          </div>
+        </div>
+        <div v-if="currentTab === 2">
+          <div
+            v-if="miscs.length > 0"
+            class="no-content"
+          >
+            Nenhum equipamento encontrado
+          </div>
+          <div
+            v-else
+            class="no-content"
+          >
+            Você ainda não criou novos equipamentos
+          </div>
+        </div>
+        <div v-if="currentTab === 3">
+          <div
+            v-if="cursedItems.length > 0"
+            class="no-content"
+          >
+            Nenhum item amaldiçoado encontrado
+          </div>
+          <div
+            v-else
+            class="no-content"
+          >
+            Você ainda não criou novos itens amaldiçoados
+          </div>
         </div>
       </div>
     </div>
     <div v-else>
-      <div 
-        v-if="currentTab === 0" 
-        class="no-content"
-      >
-        Você ainda não criou novas armas
+      <div v-if="deleteItemType === 'weapon'">
+        <ConfirmDelete
+          :name="weapons[deleteIndex].name"
+          @handle-cancel="handleCancelDelete"
+          @handle-confirm="handleConfirmDelete"
+        />
       </div>
-      <div 
-        v-if="currentTab === 1" 
-        class="no-content"
-      >
-        Você ainda não criou novas proteções
+      <div v-if="deleteItemType === 'protection'">
+        <ConfirmDelete
+          :name="protections[deleteIndex].name"
+          @handle-cancel="handleCancelDelete"
+          @handle-confirm="handleConfirmDelete"
+        />
       </div>
-      <div 
-        v-if="currentTab === 2" 
-        class="no-content"
-      >
-        Você ainda não criou novos equipamentos
+      <div v-if="deleteItemType === 'misc'">
+        <ConfirmDelete
+          :name="miscs[deleteIndex].name"
+          @handle-cancel="handleCancelDelete"
+          @handle-confirm="handleConfirmDelete"
+        />
       </div>
-      <div 
-        v-if="currentTab === 3" 
-        class="no-content"
-      >
-        Você ainda não criou novos itens amaldiçoados
+      <div v-if="deleteItemType === 'cursedItem'">
+        <ConfirmDelete
+          :name="cursedItems[deleteIndex].name"
+          @handle-cancel="handleCancelDelete"
+          @handle-confirm="handleConfirmDelete"
+        />
       </div>
     </div>
   </div>

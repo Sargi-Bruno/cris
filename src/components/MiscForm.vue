@@ -2,6 +2,7 @@
 import { computed,  PropType, ref } from 'vue'
 import { miscDefault } from '../utils/default'
 import { Misc } from '../types'
+import { validateMiscForm } from '../utils/forms'
 import _ from 'lodash'
 import DropdownSimple from './DropdownSimple.vue'
 
@@ -37,7 +38,7 @@ const handleClose = () => {
 
 const handleCreate = () => {
   if(disabled.value) return
-
+  validateMiscForm(misc.value)
   emit('handleCreateMisc', misc.value)
   misc.value = _.clone(miscDefault)
 }
@@ -45,6 +46,7 @@ const handleCreate = () => {
 const handleEdit = () => {
   if(disabled.value) return
 
+  validateMiscForm(misc.value)
   const payload = {
     item: misc.value,
     sheet: props.sheet
@@ -108,7 +110,7 @@ const handleEdit = () => {
   <div class="label">
     Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="misc.description" editor-style="height: 15rem">
+  <p-editor v-model="misc.description" editor-style="height: 12rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>

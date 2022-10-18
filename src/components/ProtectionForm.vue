@@ -2,6 +2,7 @@
 import { computed,  PropType, ref } from 'vue'
 import { protectionDefault } from '../utils/default'
 import { Protection } from '../types'
+import { validateProtectionForm } from '../utils/forms'
 import _ from 'lodash'
 import DropdownSimple from './DropdownSimple.vue'
 
@@ -36,13 +37,14 @@ const handleClose = () => {
 
 const handleCreate = () => {
   if(disabled.value) return
-
+  validateProtectionForm(protection.value)
   emit('handleCreateProtection', protection.value)
   protection.value = _.clone(protectionDefault)
 }
 
 const handleEdit = () => {
   if(disabled.value) return
+  validateProtectionForm(protection.value)
 
   const payload = {
     item: protection.value,
@@ -104,7 +106,7 @@ const handleEdit = () => {
   <div class="label">
     Descrição<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="protection.description" editor-style="height: 15rem">
+  <p-editor v-model="protection.description" editor-style="height: 12rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>

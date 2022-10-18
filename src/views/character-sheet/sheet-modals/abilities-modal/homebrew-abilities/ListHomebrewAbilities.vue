@@ -7,6 +7,7 @@ import PowerCard from '../../../../../components/PowerCard.vue'
 import SearchInput from '../../../../../components/SearchInput.vue'
 import { compare } from '../../../../../utils/functions'
 import LoadingView from '../../../../../components/LoadingView.vue'
+import ConfirmDelete from '../../../../../components/ConfirmDelete.vue'
 
 const emit = defineEmits(['handleAddPower', 'handleEditPower'])
 
@@ -15,6 +16,9 @@ const firestore = getFirestore()
 const loading = ref(true)
 const powers = ref<Power[]>([])
 const searchText = ref('')
+const deleteMode = ref(false)
+const deleteId = ref('')
+const deleteIndex = ref()
 
 const handleAddPower = (power: Power) => emit('handleAddPower', power)
 
@@ -47,48 +51,80 @@ const currentPowers = computed<Power[]>(() => {
 })
 
 const handleDelete = (id: string) => {
-  deleteDoc(doc(firestore, 'homebrewPowers', id))
-  const index = powers.value.findIndex((e) => e.id === id)
-  powers.value.splice(index, 1)
+  deleteId.value = id
+  deleteMode.value = true
+  deleteIndex.value = powers.value.findIndex((e) => e.id === deleteId.value)
+}
+
+const handleCancelDelete = () => {
+  deleteId.value = ''
+  deleteMode.value = false
+  deleteIndex.value = undefined
+}
+
+const handleConfirmDelete = () => {
+  deleteDoc(doc(firestore, 'homebrewPowers', deleteId.value))
+  powers.value.splice(deleteIndex.value, 1)
+  deleteId.value = ''
+  deleteMode.value = false
+  deleteIndex.value = undefined
 }
 </script>
 
 <template>
   <div v-if="!loading">
-    <div
-      v-if="powers.length > 0"
-      class="search-container"
-    >
-      <SearchInput 
-        :value="searchText"
-        dark
-        @update="value => searchText = value"
-      />
-    </div>
-    <div
-      v-if="currentPowers.length > 0"
-      class="class-abilities-content"
-    >
+    <div v-if="!deleteMode">
       <div
-        v-for="power in currentPowers"
-        :key="power.id"
-        class="class-abilitie-card"
+        v-if="powers.length > 0"
+        class="search-container"
       >
-        <PowerCard
-          :id="power.id"
-          :power="power"
-          sheet
-          homebrew
-          @handle-remove="handleDelete"
-          @handle-add="handleAddPower"
-          @handle-edit="handleEditPower"
+        <SearchInput 
+          :value="searchText"
+          dark
+          @update="value => searchText = value"
         />
+      </div>
+      <div
+        v-if="currentPowers.length > 0"
+        class="class-abilities-content"
+      >
+        <div
+          v-for="power in currentPowers"
+          :key="power.id"
+          class="class-abilitie-card"
+        >
+          <PowerCard
+            :id="power.id"
+            :power="power"
+            sheet
+            homebrew
+            @handle-remove="handleDelete"
+            @handle-add="handleAddPower"
+            @handle-edit="handleEditPower"
+          />
+        </div>
+      </div>
+      <div v-else>
+        <div
+          v-if="powers.length > 0"
+          class="no-content"
+        >
+          Nenhuma habilidade encontrada
+        </div>
+        <div
+          v-else
+          class="no-content"
+        >
+          Você ainda não criou novas habilidades
+        </div>
       </div>
     </div>
     <div v-else>
-      <div class="no-content">
-        Você ainda não criou novas habilidades
-      </div>
+      <ConfirmDelete
+        :name="powers[deleteIndex].name"
+        @handle-cancel="handleCancelDelete"
+        @handle-confirm="handleConfirmDelete"
+      />
     </div>
   </div>
   <div v-else>

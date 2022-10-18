@@ -2,6 +2,7 @@
 import { computed,  PropType, ref } from 'vue'
 import { weaponDefault } from '../utils/default'
 import { Weapon } from '../types'
+import { validateWeaponForm } from '../utils/forms'
 import _ from 'lodash'
 import DropdownSimple from './DropdownSimple.vue'
 
@@ -43,13 +44,14 @@ const handleClose = () => {
 
 const handleCreate = () => {
   if(disabled.value) return
-
+  validateWeaponForm(weapon.value)
   emit('handleCreateWeapon', weapon.value)
   weapon.value = _.clone(weaponDefault)
 }
 
 const handleEdit = () => {
   if(disabled.value) return
+  validateWeaponForm(weapon.value)
 
   const payload = {
     item: weapon.value,
@@ -210,7 +212,7 @@ const handleEdit = () => {
   <div class="label">
     Descrição<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="weapon.description" editor-style="height: 15rem">
+  <p-editor v-model="weapon.description" editor-style="height: 12rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>

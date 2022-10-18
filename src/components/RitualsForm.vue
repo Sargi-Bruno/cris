@@ -2,6 +2,7 @@
 import { computed,  PropType, ref } from 'vue'
 import { ritualDefault } from '../utils/default'
 import { Ritual } from '../types'
+import { validateRitualForm } from '../utils/forms'
 import _ from 'lodash'
 import DropdownSimple from './DropdownSimple.vue'
 
@@ -36,13 +37,14 @@ const handleClose = () => {
 
 const handleCreate = () => {
   if(disabled.value) return
-
+  validateRitualForm(ritual.value)
   emit('handleCreateRitual', ritual.value)
   ritual.value = _.clone(ritualDefault)
 }
 
 const handleEdit = () => {
   if(disabled.value) return
+  validateRitualForm(ritual.value)
 
   const payload = {
     ritual: ritual.value,
@@ -177,7 +179,7 @@ const handleEdit = () => {
   <div class="label">
     Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="ritual.description" editor-style="height: 15rem">
+  <p-editor v-model="ritual.description" editor-style="height: 12rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>

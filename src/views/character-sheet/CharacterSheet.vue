@@ -67,7 +67,8 @@ import {
   rollDices,
   rollAttack,
   changeRitualDc,
-  updateCharNexStats
+  updateCharNexStats,
+  editItemSheet
 } from './characterSheetUtils'
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
@@ -484,8 +485,7 @@ const handleEditRitualSheet = (editRitual: Ritual) => {
 }
 
 const handleEditItemSheet = (editItem: Weapon | Protection | Misc | CursedItem) => {
-  const index = character.value.inventory.findIndex((e) => e.id === editItem.id)
-  character.value.inventory[index] = editItem
+  editItemSheet(character.value, editItem)
   updateCharacter()
   handleCloseModal()
 }

@@ -4,6 +4,7 @@ import { cursedItemDefault } from '../utils/default'
 import { CursedItem } from '../types'
 import _ from 'lodash'
 import DropdownSimple from './DropdownSimple.vue'
+import { validateCursedItemForm } from '../utils/forms'
 
 const props = defineProps({
   cursedItem: {
@@ -34,13 +35,14 @@ const handleClose = () => {
 
 const handleCreate = () => {
   if(disabled.value) return
-
+  validateCursedItemForm(cursedItem.value)
   emit('handleCreateCursedItem', cursedItem.value)
   cursedItem.value = _.clone(cursedItemDefault)
 }
 
 const handleEdit = () => {
   if(disabled.value) return
+  validateCursedItemForm(cursedItem.value)
 
   const payload = {
     item: cursedItem.value,
@@ -81,7 +83,7 @@ const handleEdit = () => {
   <div class="label">
     Descrição*<span> (utilize negrito para aplicar a cor roxo)</span>
   </div>
-  <p-editor v-model="cursedItem.description" editor-style="height: 15rem">
+  <p-editor v-model="cursedItem.description" editor-style="height: 12rem">
     <template #toolbar>
       <span class="ql-formats">
         <button class="ql-bold"></button>

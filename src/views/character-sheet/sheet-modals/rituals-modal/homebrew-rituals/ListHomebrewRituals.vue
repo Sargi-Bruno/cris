@@ -8,6 +8,7 @@ import SearchInput from '../../../../../components/SearchInput.vue'
 import { compare } from '../../../../../utils/functions'
 import LoadingView from '../../../../../components/LoadingView.vue'
 import TabNav from '../../../../../components/TabNav.vue'
+import ConfirmDelete from '../../../../../components/ConfirmDelete.vue'
 
 const emit = defineEmits(['handleAddRitual', 'handleEditRitual', 'handleCreateRitual'])
 
@@ -77,6 +78,9 @@ const rituals = ref<Ritual[]>([])
 const currentTab = ref(0)
 const currentSecondaryTab = ref(0)
 const searchText = ref('')
+const deleteMode = ref(false)
+const deleteId = ref('')
+const deleteIndex = ref()
 
 const handleAddRitual = (ritual: Ritual) => emit('handleAddRitual', ritual)
 
@@ -120,15 +124,29 @@ const currentRituals = computed<Ritual[]>(() => {
 })
 
 const handleDelete = (id: string) => {
-  deleteDoc(doc(firestore, 'homebrewRituals', id))
-  const index = rituals.value.findIndex((e) => e.id === id)
-  rituals.value.splice(index, 1)
+  deleteId.value = id
+  deleteMode.value = true
+  deleteIndex.value = rituals.value.findIndex((e) => e.id === deleteId.value)
+}
+
+const handleCancelDelete = () => {
+  deleteId.value = ''
+  deleteMode.value = false
+  deleteIndex.value = undefined
+}
+
+const handleConfirmDelete = () => {
+  deleteDoc(doc(firestore, 'homebrewRituals', deleteId.value))
+  rituals.value.splice(deleteIndex.value, 1)
+  deleteId.value = ''
+  deleteMode.value = false
+  deleteIndex.value = undefined
 }
 </script>
 
 <template>
   <div v-if="!loading">
-    <div v-if="rituals.length > 0">
+    <div v-if="!deleteMode">
       <div class="list-ritual-header">
         <div>
           <TabNav
@@ -152,15 +170,16 @@ const handleDelete = (id: string) => {
           Adicionar
         </button>
       </div>
-      <div class="search-container">
+      <div
+        v-if="rituals.length > 0" 
+        class="search-container"
+      >
         <SearchInput 
           :value="searchText"
           dark
           @update="value => searchText = value"
         />
       </div>
-    </div>
-    <div v-if="rituals.length > 0">
       <div 
         v-if="currentRituals.length > 0"
         class="class-ritual-content"
@@ -181,11 +200,27 @@ const handleDelete = (id: string) => {
           />
         </div>
       </div>
+      <div v-else>
+        <div
+          v-if="rituals.length > 0"
+          class="no-content"
+        >
+          Nenhum ritual encontrado
+        </div>
+        <div
+          v-else
+          class="no-content"
+        >
+          Você ainda não criou novos rituais
+        </div>
+      </div>
     </div>
     <div v-else>
-      <div class="no-content">
-        Você ainda não criou novas habilidades
-      </div>
+      <ConfirmDelete
+        :name="rituals[deleteIndex].name"
+        @handle-cancel="handleCancelDelete"
+        @handle-confirm="handleConfirmDelete"
+      />
     </div>
   </div>
   <div v-else>
