@@ -18,7 +18,7 @@ const props = defineProps({
 const emit = defineEmits(['handleCreateRitual', 'handleClose', 'handleEditRitual'])
 
 const circleOptions = ['1', '2', '3', '4']
-const elementOptions = ['Conhecimento', 'Energia', 'Morte', 'Sangue', 'Varia']
+const elementOptions = ['Conhecimento', 'Energia', 'Medo', 'Morte', 'Sangue', 'Varia']
 const executionOptions = ['Padrão', 'Movimento', 'Completa', 'Livre']
 const rangeOptions = ['Pessoal', 'Toque', 'Curto', 'Médio', 'Longo', 'Extremo', 'Ilimitado']
 

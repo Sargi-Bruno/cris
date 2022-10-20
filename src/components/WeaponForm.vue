@@ -20,8 +20,8 @@ const emit = defineEmits(['handleCreateWeapon', 'handleClose', 'handleEditWeapon
 const proficienceOptions = ['Armas Simples', 'Armas Táticas', 'Armas Pesadas']
 const typeOptions = ['Corpo a Corpo', 'Arma de Arremesso', 'Arma de Disparo', 'Arma de Fogo']
 const handlingOptions = ['Leve', 'Uma Mão', 'Duas Mãos']
-const damageTypeOptions = ['Balístico', 'Corte', 'Energia', 'Fogo', 'Impacto']
-const rangeOptions = ['-', 'Curto', 'Médio', 'Longo']
+const damageTypeOptions = ['Balístico', 'Corte', 'Energia', 'Fogo', 'Impacto', 'Perfuração']
+const rangeOptions = ['-', 'Curto', 'Médio', 'Longo', 'Extremo', 'Ilimitado']
 const categoryOptions = ['0', 'I', 'II', 'III', 'IV']
 
 const weapon = ref<Weapon>(_.clone(props.weapon))
