@@ -61,6 +61,7 @@ const toastColor = computed(() => {
 
 <style scoped>
 .toast-wrapper {
+  z-index: 1000;
   position: fixed;
   width: 18rem;
   bottom: 3rem;

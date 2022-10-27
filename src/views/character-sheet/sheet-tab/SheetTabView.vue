@@ -20,7 +20,7 @@ interface PayloadValue {
   key: string
 }
 
-defineProps<{character: Character}>()
+defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits([
   'handleOpenAbilitiesModal', 
@@ -94,6 +94,7 @@ const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => emit('
       <component
         :is="componentOptions[currentTab]"
         :character="character"
+        :disabled-sheet="disabledSheet"
         @handle-open-abilities-modal="$emit('handleOpenAbilitiesModal')"
         @handle-open-rituals-modal="$emit('handleOpenRitualsModal')"
         @handle-open-items-modal="$emit('handleOpenItemsModal')"

@@ -15,6 +15,10 @@ const props = defineProps({
   length: {
     type: Number,
     required: true
+  },
+  disabledSheet: {
+    type: Boolean,
+    required: true
   }
 })
 
@@ -56,14 +60,16 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
   <td class="small">
     <button 
       class="roll-button"
+      :class="{ 'disabled': disabledSheet }"
       @click="$emit('handleRollSkill', skill)"
     >
       <img src="../../../assets/d20-icon.png" alt="rolar">
     </button>
   </td>
-  <td>
+  <td :class="{ 'disabled': disabledSheet }">
     <button 
       class="naked-button left"
+      :class="{ 'disabled': disabledSheet }"
       @click="handleOpenSkill"
     >
       {{ skill.name }}<span v-if="skill.onlyTrained">*</span><span v-if="skill.loadPenalty">+</span>
@@ -74,6 +80,7 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
       :value="skill.attribute" 
       :options="attrOptions"
       :color="currentSkillColor"
+      :disabled="disabledSheet"
       up
       @update-value="(value: string) => handleChangeSkillDropdown(value, skill.name, 'attribute')"
     />
@@ -83,6 +90,7 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
       :value="skill.attribute" 
       :options="attrOptions"
       :color="currentSkillColor"
+      :disabled="disabledSheet"
       @update-value="(value: string) => handleChangeSkillDropdown(value, skill.name, 'attribute')"
     />
   </td>
@@ -96,6 +104,7 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
       :value="skill.trainingDegree" 
       :options="trainingOptions"
       :color="currentSkillColor"
+      :disabled="disabledSheet"
       underline
       up
       @update-value="(value: string) => handleChangeSkillDropdown(value, skill.name, 'trainingDegree')"
@@ -106,6 +115,7 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
       :value="skill.trainingDegree" 
       :options="trainingOptions"
       :color="currentSkillColor"
+      :disabled="disabledSheet"
       underline
       @update-value="(value: string) => handleChangeSkillDropdown(value, skill.name, 'trainingDegree')"
     />
@@ -114,7 +124,8 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
     <div class="input-container">
       <input 
         type="number" 
-        class="underline-input" 
+        class="underline-input"
+        :disabled="disabledSheet"
         :value="skill.otherBonus"
         @blur="e => handleChangeSkillOtherBonus(e, skill.name)"
       >
@@ -131,8 +142,10 @@ const handleChangeSkillOtherBonus = (e: Event, skillName: string) => {
   height: 1rem;
   background-color: transparent;
   border: none;
-  cursor: pointer;
   margin: 0;
+}
+.roll-button:hover {
+  cursor: pointer;
 }
 .roll-button img {
   width: 1rem;
@@ -157,15 +170,16 @@ td span {
   color: v-bind(currentSkillColor);
   padding: 0;
   font-size: 14px;
-  cursor: pointer;
   text-align: left;
 }
 .naked-button:hover {
   color: var(--color-primary);
+  cursor: pointer;
 }
 .naked-button:hover span {
   color: var(--color-primary);
   font-size: 14px;
+  cursor: pointer;
 }
 .skill-bonus {
   font-size: 14px;
@@ -189,5 +203,13 @@ td span {
 }
 .small {
   width: 1rem;
+}
+.disabled:hover {
+  color: v-bind(currentSkillColor);
+  cursor: default;
+}
+.disabled:hover span {
+  color: v-bind(currentSkillColor);
+  cursor: default;
 }
 </style>

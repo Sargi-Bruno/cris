@@ -16,6 +16,7 @@ import RitualsModal from './sheet-modals/rituals-modal/RitualsModal.vue'
 import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
 import EditModal from './sheet-modals/edit-modal/EditModal.vue'
 import LoadingView from '../../components/LoadingView.vue'
+import SheetTools from './sheet-tools/SheetTools.vue'
 import {
   Character,
   Skill, 
@@ -99,6 +100,7 @@ const editPower = ref<Power>()
 const editRitual = ref<Ritual>()
 const editItem = ref<Weapon | Protection | Misc | CursedItem>()
 const character = ref<Character>(characterDefaultValue)
+const disabledSheet = ref(true)
 
 const toastInfo = ref<ToastInfo>({
   message: '',
@@ -138,7 +140,7 @@ onMounted(async() => {
 
   if(!querySnapshot.data()) router.push({ name: 'home' })
 
-  if((querySnapshot?.data()?.uid as string) !== auth?.currentUser?.uid) router.push({ name: 'home' })
+  if((querySnapshot?.data()?.uid as string) === auth?.currentUser?.uid) disabledSheet.value = false
 
   character.value = querySnapshot.data() as Character
   character.value.id = querySnapshot?.id
@@ -159,6 +161,7 @@ onMounted(async() => {
 })
 
 const updateCharacter = () => {
+  if(disabledSheet.value) return
   updateDoc(doc(firestore, 'characters', character.value.id as string), character.value)
 }
 
@@ -492,6 +495,15 @@ const handleEditItemSheet = (editItem: Weapon | Protection | Misc | CursedItem) 
 
 const handleCloseModal = () => showModal.value = false
 
+const handleShareSheet = async () => {
+  await navigator.clipboard.writeText(window.location.href)
+  dismissToastRoll()
+  dismissToastAttack()
+  toastInfo.value.message = 'Link copiado'
+  toastInfo.value.type = 'info'
+  toastInfo.value.alive = true
+}
+
 watch(() => toastInfo.value.alive, () => {
   if(toastInfo.value.alive === true) {
     toastInfo.value.timeout = window.setTimeout(() => toastInfo.value.alive = false, 3000)
@@ -500,101 +512,106 @@ watch(() => toastInfo.value.alive, () => {
 </script>
 
 <template>
-  <div
-    v-if="!loading"
-    class="character-sheet"
-  >
-    <div class="sheet-stats">
-      <SheetStats
-        :character="character"
-        @handle-change-char-text="handleChangeCharText"
-        @handle-change-char-number="handleChangeCharNumber"
-        @handle-change-attribute="handleChangeAttributes"
-        @handle-change-char-dropdown="handleChangeCharDropdown"
-        @handle-change-movement-in-squares="handleChangeMovementInSquares"
-        @handle-roll-attribute="handleRollAttribute"
-      />
+  <div v-if="!loading" class="sheet-wrapper">
+    <div v-if="!disabledSheet">
+      <SheetTools @handle-share-sheet="handleShareSheet" />
     </div>
-    <div class="sheet-skills">
-      <SkillsView
-        :character="character"
-        @handle-open-skill-modal="handleOpenSkillModal"
-        @handle-change-skill-dropdown="handleChangeSkillDropdown"
-        @handle-change-skill-other-bonus="handleChangeSkillOtherBonus"
-        @handle-roll-skill="handleRollSkill"
-      />
-    </div>
-    <div class="sheet-tab">
-      <SheetTabView
-        :character="character"
-        @handle-open-abilities-modal="handleOpenAbilitiesModal"
-        @handle-open-rituals-modal="handleOpenRitualsModal"
-        @handle-open-items-modal="handleOpenItemsModal"
-        @handle-add-attack="handleAddAttack"
-        @handle-remove-attack="handleRemoveAttack"
-        @handle-remove-power="handleRemovePower"
-        @handle-edit-power="handleEditPower"
-        @handle-edit-ritual="handleEditRitual"
-        @handle-edit-item="handleEditItem"
-        @handle-remove-ritual="handleRemoveRitual"
-        @handle-remove-item="handleRemoveItem"
-        @handle-equip-item="handleEquipItem"
-        @handle-change-attack-text="handleChangeAttackText"
-        @handle-change-attack-number="handleChangeAttackNumber"
-        @handle-change-attack-dropdown="handleChangeAttackDropdown"
-        @handle-change-description="handleChangeDescription"
-        @handle-change-inventory-dropdown="handleChangeInventoryDropdown"
-        @handle-change-inventory-number="handleChangeInventoryNumber"
-        @handle-change-items-limit="handleChangeItemsLimit"
-        @handle-roll-dices="handleRollDices"
-        @handle-roll-attack="handleRollAttack"
-        @handle-change-ritual-dc="handleChangeRitualDc"
-      />
-    </div>
-    <div v-if="showModal">
-      <vue-final-modal 
-        v-model="showModal"
-        classes="modal-container"
-      >
-        <component 
-          :is="modalOptions[currentModal]"
-          :current-edit-option="currentEditModal"
+    <div class="character-sheet">
+      <div class="sheet-stats">
+        <SheetStats
           :character="character"
-          :skill="currentSkill"
-          :edit-power="editPower"
-          :edit-ritual="editRitual"
-          :edit-item="editItem"
-          @handle-edit-power-sheet="handleEditPowerSheet"
-          @handle-edit-ritual-sheet="handleEditRitualSheet"
-          @handle-edit-item-sheet="handleEditItemSheet"
-          @handle-add-power="handleAddPower"
-          @handle-add-ritual="handleAddRitual"
-          @handle-add-item="handleAddItem"
-          @handle-close-modal="handleCloseModal"
+          :disabled-sheet="disabledSheet"
+          @handle-change-char-text="handleChangeCharText"
+          @handle-change-char-number="handleChangeCharNumber"
+          @handle-change-attribute="handleChangeAttributes"
+          @handle-change-char-dropdown="handleChangeCharDropdown"
+          @handle-change-movement-in-squares="handleChangeMovementInSquares"
+          @handle-roll-attribute="handleRollAttribute"
         />
-      </vue-final-modal>
+      </div>
+      <div class="sheet-skills">
+        <SkillsView
+          :character="character"
+          :disabled-sheet="disabledSheet"
+          @handle-open-skill-modal="handleOpenSkillModal"
+          @handle-change-skill-dropdown="handleChangeSkillDropdown"
+          @handle-change-skill-other-bonus="handleChangeSkillOtherBonus"
+          @handle-roll-skill="handleRollSkill"
+        />
+      </div>
+      <div class="sheet-tab">
+        <SheetTabView
+          :character="character"
+          :disabled-sheet="disabledSheet"
+          @handle-open-abilities-modal="handleOpenAbilitiesModal"
+          @handle-open-rituals-modal="handleOpenRitualsModal"
+          @handle-open-items-modal="handleOpenItemsModal"
+          @handle-add-attack="handleAddAttack"
+          @handle-remove-attack="handleRemoveAttack"
+          @handle-remove-power="handleRemovePower"
+          @handle-edit-power="handleEditPower"
+          @handle-edit-ritual="handleEditRitual"
+          @handle-edit-item="handleEditItem"
+          @handle-remove-ritual="handleRemoveRitual"
+          @handle-remove-item="handleRemoveItem"
+          @handle-equip-item="handleEquipItem"
+          @handle-change-attack-text="handleChangeAttackText"
+          @handle-change-attack-number="handleChangeAttackNumber"
+          @handle-change-attack-dropdown="handleChangeAttackDropdown"
+          @handle-change-description="handleChangeDescription"
+          @handle-change-inventory-dropdown="handleChangeInventoryDropdown"
+          @handle-change-inventory-number="handleChangeInventoryNumber"
+          @handle-change-items-limit="handleChangeItemsLimit"
+          @handle-roll-dices="handleRollDices"
+          @handle-roll-attack="handleRollAttack"
+          @handle-change-ritual-dc="handleChangeRitualDc"
+        />
+      </div>
+      <div v-if="showModal">
+        <vue-final-modal 
+          v-model="showModal"
+          classes="modal-container"
+        >
+          <component 
+            :is="modalOptions[currentModal]"
+            :current-edit-option="currentEditModal"
+            :character="character"
+            :skill="currentSkill"
+            :edit-power="editPower"
+            :edit-ritual="editRitual"
+            :edit-item="editItem"
+            @handle-edit-power-sheet="handleEditPowerSheet"
+            @handle-edit-ritual-sheet="handleEditRitualSheet"
+            @handle-edit-item-sheet="handleEditItemSheet"
+            @handle-add-power="handleAddPower"
+            @handle-add-ritual="handleAddRitual"
+            @handle-add-item="handleAddItem"
+            @handle-close-modal="handleCloseModal"
+          />
+        </vue-final-modal>
+      </div>
+      <transition name="toast">
+        <ToastNotification
+          v-if="toastInfo.alive"
+          :toast="toastInfo"
+          @dismiss="dismissToastInfo"
+        />
+      </transition>
+      <transition name="toast">
+        <ToastDice
+          v-if="toastRoll.alive"
+          :toast="toastRoll"
+          @dismiss="dismissToastRoll"
+        />
+      </transition>
+      <transition name="toast">
+        <ToastAttack
+          v-if="toastAttack.alive"
+          :toast="toastAttack"
+          @dismiss="dismissToastAttack"
+        />
+      </transition>
     </div>
-    <transition name="toast">
-      <ToastNotification
-        v-if="toastInfo.alive"
-        :toast="toastInfo"
-        @dismiss="dismissToastInfo"
-      />
-    </transition>
-    <transition name="toast">
-      <ToastDice
-        v-if="toastRoll.alive"
-        :toast="toastRoll"
-        @dismiss="dismissToastRoll"
-      />
-    </transition>
-    <transition name="toast">
-      <ToastAttack
-        v-if="toastAttack.alive"
-        :toast="toastAttack"
-        @dismiss="dismissToastAttack"
-      />
-    </transition>
   </div>
   <div v-else>
     <LoadingView />
@@ -602,11 +619,13 @@ watch(() => toastInfo.value.alive, () => {
 </template>
 
 <style scoped>
+.sheet-wrapper {
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
 .character-sheet {
   display: flex;
   justify-content: space-between;
-  margin-top: 2.25rem;
-  margin-bottom: 2.25rem;
 }
 :deep(.modal-container) {
   display: flex;

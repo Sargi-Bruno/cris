@@ -7,7 +7,7 @@ interface DescriptionItems {
   placeholder: string
 }
 
-defineProps<{character: Character}>()
+defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits(['handleChangeDescription'])
 
@@ -51,6 +51,7 @@ const items: Array<DescriptionItems> = [
         <textarea
           class="textarea" 
           rows="6"
+          :disabled="disabledSheet"
           :placeholder="item.placeholder"
           :value="character.description[item.key]"
           @input="(e) => handleChangeDescription(e, item.key)"

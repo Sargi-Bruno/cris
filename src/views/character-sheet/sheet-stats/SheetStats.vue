@@ -3,7 +3,7 @@ import { Character, AttrKeys } from '../../../types'
 import InfoView from './InfoView.vue'
 import AttributesView from './Attributes/AttributesView.vue'
 
-defineProps<{character: Character}>()
+defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits([
   'handleChangeCharText', 
@@ -27,6 +27,7 @@ const handleRollAttribute = (attr: AttrKeys) => {
           type="text" 
           class="sheet-input-title"
           autocomplete="nope"
+          :disabled="disabledSheet"
           :value="character.name"
           @blur="e => $emit('handleChangeCharText', {e, key: 'name'})"
         >
@@ -37,6 +38,7 @@ const handleRollAttribute = (attr: AttrKeys) => {
           type="text" 
           class="sheet-input-title"
           autocomplete="nope"
+          :disabled="disabledSheet"
           :value="character.player"
           @blur="e => $emit('handleChangeCharText', {e, key: 'player'})"
         >
@@ -46,13 +48,15 @@ const handleRollAttribute = (attr: AttrKeys) => {
     <div class="char-attr">
       <AttributesView 
         :character="character"
-        @handle-change-attribute="(payload) => $emit('handleChangeAttribute', payload)"
+        :disabled-sheet="disabledSheet"
+        @handle-change-attribute="payload => $emit('handleChangeAttribute', payload)"
         @handle-roll-attribute="handleRollAttribute"
       />
     </div>
     <div class="char-info">
       <InfoView
         :character="character"
+        :disabled-sheet="disabledSheet"
         @handle-change-char-text="payload => $emit('handleChangeCharText', payload)"
         @handle-change-char-number="payload => $emit('handleChangeCharNumber', payload)"
         @handle-change-char-dropdown="payload => $emit('handleChangeCharDropdown', payload)"

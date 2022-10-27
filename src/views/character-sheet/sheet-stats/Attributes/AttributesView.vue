@@ -4,7 +4,7 @@ import { Character, AttrKeys } from '../../../../types'
 import AttributesEdit from './AttributesEdit.vue'
 import AttributesRoll from './AttributesRoll.vue'
 
-defineProps<{character: Character}>()
+defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits(['handleChangeAttribute', 'handleRollAttribute'])
 
@@ -28,14 +28,17 @@ const edit = ref(false)
     />
   </div>
   <div v-else>
-    <button class="change-button" @click="edit = true">
-      <img 
-        src="../../../../assets/edit-icon.svg" 
-        alt="editar"
-      >
-    </button>
+    <div v-if="!disabledSheet">
+      <button class="change-button" @click="edit = true">
+        <img 
+          src="../../../../assets/edit-icon.svg" 
+          alt="editar"
+        >
+      </button>
+    </div>
     <AttributesRoll
       :character="character"
+      :disabled-sheet="disabledSheet"
       @handle-roll-attribute="handleRollAttribute"
     />
   </div>

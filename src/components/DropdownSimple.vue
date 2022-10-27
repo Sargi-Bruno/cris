@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
-defineProps({
+const props = defineProps({
   value: {
     type: String,
     required: true
@@ -20,7 +20,8 @@ defineProps({
     default: '7.5rem'
   },
   formInput: Boolean,
-  smallInput: Boolean
+  smallInput: Boolean,
+  disabled: Boolean
 })
 
 const emit = defineEmits(['updateValue'])
@@ -29,6 +30,11 @@ const dropdown = ref(null)
 const open = ref(false)
 
 onClickOutside(dropdown, () => open.value = false)
+
+const handleOpen = () => {
+  if(props.disabled) return
+  open.value = !open.value
+}
 
 const handleUpdateValue = (option: string) => {
   open.value = false
@@ -41,8 +47,9 @@ const handleUpdateValue = (option: string) => {
     <div class="dropdown-button-container">
       <button
         class="dropdown-button"
-        :class="{'form-input-button': formInput, 'small-input-button': smallInput}"
-        @click="open = !open"
+        :disabled="disabled"
+        :class="{'form-input-button': formInput, 'small-input-button': smallInput, 'disabled': disabled}"
+        @click="handleOpen"
       >
         {{ value }}
       </button>
@@ -79,8 +86,11 @@ const handleUpdateValue = (option: string) => {
   color: var(--color-white);
   padding: 0;
   font-size: 14px;
-  cursor: pointer;
   text-align: center;
+}
+.dropdown-button:hover {
+  color: var(--color-primary);
+  cursor: pointer;
 }
 .form-input-button {
   height: 2rem;
@@ -90,9 +100,6 @@ const handleUpdateValue = (option: string) => {
   font-size: 16px;
   text-align: left;
   padding-left: .5rem;
-}
-.dropdown-button:hover {
-  color: var(--color-primary);
 }
 .dropdown-content {
   z-index: 1;
@@ -157,5 +164,9 @@ const handleUpdateValue = (option: string) => {
 }
 .small-input {
   text-align: center;
+}
+.disabled:hover {
+  color: var(--color-white);
+  cursor: default;
 }
 </style>

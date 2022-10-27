@@ -6,7 +6,7 @@ import FilterInput from '../../../components/FilterInput.vue'
 import { compare } from '../../../utils/functions'
 import { Power } from '../../../types'
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits(['handleOpenAbilitiesModal', 'handleRemovePower', 'handleEditPower'])
 
@@ -31,6 +31,7 @@ const handleEdit = (power: Power) => emit('handleEditPower', power)
         />
       </div>
       <button 
+        v-if="!disabledSheet"
         class="button-primary add-button"
         @click="$emit('handleOpenAbilitiesModal')"
       >
@@ -47,6 +48,7 @@ const handleEdit = (power: Power) => emit('handleEditPower', power)
           <PowerCard 
             :id="power.id"
             :power="power"
+            :disabled="disabledSheet"
             only-show
             sheet
             @handle-remove="(id: string) => $emit('handleRemovePower', id)"

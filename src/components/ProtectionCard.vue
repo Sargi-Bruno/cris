@@ -14,7 +14,8 @@ const props = defineProps({
   },
   onlyShow: Boolean,
   sheet: Boolean,
-  homebrew: Boolean
+  homebrew: Boolean,
+  disabled: Boolean
 })
 
 const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEquip', 'handleEdit'])
@@ -83,6 +84,8 @@ const handleEdit = () => {
       <div v-if="sheet && !homebrew" class="button-container">
         <button 
           class="checkbox-button"
+          :class="{ 'disabled': disabled }"
+          :disabled="disabled"
           @click.stop="handleEquip"
         >
           <img
@@ -108,7 +111,7 @@ const handleEdit = () => {
           </div>
           <div :class="{ 'sheet-content': sheet}" v-html="protection.description" />
           <div
-            v-if="sheet"
+            v-if="sheet && !disabled"
             class="card-footer"
           >
             <button
@@ -215,12 +218,12 @@ const handleEdit = () => {
   background-color: transparent;
   border: 1px solid var(--color-white);
   border-radius: 4px;
-  cursor: pointer;
   margin-right: .5rem;
   padding: 0;
   width: 2rem;
 }
 .checkbox-button:hover {
+  cursor: pointer;
   border: 1px solid var(--color-primary);
 }
 .checkbox-img {
@@ -239,5 +242,8 @@ const handleEdit = () => {
 }
 .button-edit {
   color: var(--color-green);
+}
+.disabled:hover {
+  border: 1px solid var(--color-white);
 }
 </style>

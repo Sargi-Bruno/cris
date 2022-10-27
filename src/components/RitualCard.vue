@@ -14,7 +14,8 @@ const props = defineProps({
   },
   onlyShow: Boolean,
   sheet: Boolean,
-  homebrew: Boolean
+  homebrew: Boolean,
+  disabled: Boolean
 })
 
 const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEdit'])
@@ -121,7 +122,7 @@ const handleEdit = () => {
         <div class="content">
           <div :class="{ 'sheet-content': sheet}" v-html="ritual.description" />
           <div
-            v-if="sheet"
+            v-if="sheet && !disabled"
             class="card-footer"
           >
             <button

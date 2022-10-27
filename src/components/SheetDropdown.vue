@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
@@ -19,7 +19,8 @@ defineProps({
     type: Array<string>,
     required: true
   },
-  bold: Boolean
+  bold: Boolean,
+  disabled: Boolean
 })
 
 const emit = defineEmits(['updateValue'])
@@ -28,6 +29,11 @@ const dropdown = ref(null)
 const open = ref(false)
 
 onClickOutside(dropdown, () => open.value = false)
+
+const handleOpen = () => {
+  if(props.disabled) return
+  open.value = !open.value
+}
 
 const handleUpdateValue = (option: string) => {
   open.value = false
@@ -43,8 +49,8 @@ const handleUpdateValue = (option: string) => {
     <div class="dropdown-button-container">
       <button
         class="dropdown-button"
-        :class="{ 'bold': bold }"
-        @click="open = !open"
+        :class="{ 'bold': bold, 'disabled': disabled }"
+        @click="handleOpen"
       >
         {{ value }}
       </button>
@@ -94,6 +100,10 @@ const handleUpdateValue = (option: string) => {
 }
 .dropdown-button:hover {
   color: var(--color-primary);
+}
+.disabled:hover {
+  color: var(--color-white);
+  cursor: auto;
 }
 .dropdown-content {
   z-index: 1;

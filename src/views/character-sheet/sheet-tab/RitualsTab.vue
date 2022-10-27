@@ -5,7 +5,7 @@ import RitualCard from '../../../components/RitualCard.vue'
 import FilterInput from '../../../components/FilterInput.vue'
 import { compare } from '../../../utils/functions'
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual', 'handleChangeRitualDc', 'handleEditRitual'])
 
@@ -35,7 +35,8 @@ const handleEdit = (ritual: Ritual) => emit('handleEditRitual', ritual)
           @update="(value: string) => filterText = value"
         />
       </div>
-      <button 
+      <button
+        v-if="!disabledSheet"
         class="button-primary add-button"
         @click="$emit('handleOpenRitualsModal')"
       >
@@ -50,6 +51,7 @@ const handleEdit = (ritual: Ritual) => emit('handleEditRitual', ritual)
         <input 
           type="number"
           class="sheet-input sheet-input-size"
+          :disabled="disabledSheet"
           :value="character.ritualsDc"
           @blur="handleChangeRitualDc"
         >
@@ -65,6 +67,7 @@ const handleEdit = (ritual: Ritual) => emit('handleEditRitual', ritual)
           <RitualCard 
             :id="ritual.id"
             :ritual="ritual"
+            :disabled="disabledSheet"
             only-show
             sheet
             @handle-remove="(id: string) => $emit('handleRemoveRitual', id)"

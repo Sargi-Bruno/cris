@@ -2,15 +2,17 @@
 import { Character, Skill } from '../../../types'
 import SkillCard from './SkillCard.vue'
 
-defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits(['handleOpenSkillModal', 'handleChangeSkillOtherBonus', 'handleChangeSkillDropdown', 'handleRollSkill'])
 
 const handleOpenSkill = (skill: Skill) => {
+  if(props.disabledSheet) return
   emit('handleOpenSkillModal', skill)
 }
 
 const handleRollSkill = (skill: Skill) => {
+  if(props.disabledSheet) return
   emit('handleRollSkill', skill)
 }
 </script>
@@ -39,6 +41,7 @@ const handleRollSkill = (skill: Skill) => {
             :skill="skill"
             :index="i"
             :length="character.skills.length"
+            :disabled-sheet="disabledSheet"
             @handle-open-skill-modal="handleOpenSkill"
             @handle-change-skill-dropdown="payload => $emit('handleChangeSkillDropdown', payload)"
             @handle-change-skill-other-bonus="payload => $emit('handleChangeSkillOtherBonus', payload)"

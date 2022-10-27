@@ -5,7 +5,7 @@ import AttackCard from '../../../components/AttackCard.vue'
 import FilterInput from '../../../components/FilterInput.vue'
 import { compare } from '../../../utils/functions'
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits([
   'handleAddAttack', 
@@ -21,11 +21,13 @@ const rollDicesValue = ref('')
 const filterText = ref('')
 
 const handleRollDices = () => {
+  if(props.disabledSheet) return
   emit('handleRollDices', rollDicesValue.value)
   rollDicesValue.value = ''
 }
 
 const handleRollAttack = (attack: Attack) => {
+  if(props.disabledSheet) return
   emit('handleRollAttack', attack)
 }
 
@@ -46,6 +48,7 @@ const attacksFiltered = computed(() => {
         />
       </div>
       <button 
+        v-if="!disabledSheet"
         class="button-primary add-button"
         @click="$emit('handleAddAttack')"
       >
@@ -55,6 +58,8 @@ const attacksFiltered = computed(() => {
     <div class="roll-dices-container">
       <button
         class="dice-button"
+        :class="{ 'disabled': disabledSheet }"
+        :disabled="disabledSheet"
         @click="handleRollDices"
       >
         <img
@@ -68,6 +73,7 @@ const attacksFiltered = computed(() => {
         type="text"
         class="roll-dice-input"
         placeholder="Rolar dados"
+        :disabled="disabledSheet"
         @keyup.enter="handleRollDices"
       >
     </div>
@@ -100,6 +106,7 @@ const attacksFiltered = computed(() => {
           <AttackCard 
             :id="attack.id"
             :attack="attack"
+            :disabled="disabledSheet"
             @handle-remove-attack="(id: string) => $emit('handleRemoveAttack', id)"
             @handle-change-attack-text="payload => $emit('handleChangeAttackText', payload)"
             @handle-change-attack-number="payload => $emit('handleChangeAttackNumber', payload)"
@@ -132,9 +139,11 @@ const attacksFiltered = computed(() => {
 .dice-button {
   background-color: transparent;
   border: none;
-  cursor: pointer;
   width: 2rem;
   height: 2rem;
+}
+.dice-button:hover {
+  cursor: pointer;
 }
 .roll-dice-input {
   width: 100%;
@@ -193,5 +202,8 @@ const attacksFiltered = computed(() => {
   display: flex;
   justify-content: center;
   margin-bottom: 2rem;
+}
+.disabled:hover {
+  cursor: default;
 }
 </style>

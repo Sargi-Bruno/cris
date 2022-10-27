@@ -37,6 +37,19 @@
   color: var(--color-primary);
 }
 
+.button-naked {
+  height: 2.25rem;
+  background-color: transparent;
+  color: var(--color-white);
+  border: none;
+  font-size: 14px;
+}
+
+.button-naked:hover {
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
 .input-primary {
   height: 2rem;
   background-color: var(--color-dark-gray);

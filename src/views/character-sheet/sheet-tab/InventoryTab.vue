@@ -9,7 +9,7 @@ import CursedItemCard from '../../../components/CursedItemCard.vue'
 import FilterInput from '../../../components/FilterInput.vue'
 import { compare } from '../../../utils/functions'
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits([
   'handleOpenItemsModal', 
@@ -64,6 +64,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
         />
       </div>
       <button 
+        v-if="!disabledSheet"
         class="button-primary add-button"
         @click="$emit('handleOpenItemsModal')"
       >
@@ -79,12 +80,14 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
           <input 
             type="number"
             class="sheet-input sheet-input-size"
+            :disabled="disabledSheet"
             :value="character.prestigePoints"
             @blur="e => handleChangeInventoryNumber(e, 'prestigePoints')"
           >
         </div>
         <SheetDropdown
           title="PATENTE"
+          :disabled="disabledSheet"
           :value="character.patent"
           button-width="10rem"
           :options="patentOptions"
@@ -100,6 +103,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="I"
+            :disabled="disabledSheet"
             :value="character.itemsLimit.I"
             @blur="e => handleChangeItemsLimit(e, 'I')"
           >
@@ -107,6 +111,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="II"
+            :disabled="disabledSheet"
             :value="character.itemsLimit.II"
             @blur="e => handleChangeItemsLimit(e, 'II')"
           >
@@ -114,6 +119,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="III"
+            :disabled="disabledSheet"
             :value="character.itemsLimit.III"
             @blur="e => handleChangeItemsLimit(e, 'III')"
           >
@@ -121,6 +127,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="IV"
+            :disabled="disabledSheet"
             :value="character.itemsLimit.IV"
             @blur="e => handleChangeItemsLimit(e, 'IV')"
           >
@@ -148,6 +155,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
       <div class="inventory-row">
         <SheetDropdown
           title="LIMITE DE CRÉDITO"
+          :disabled="disabledSheet"
           :value="character.creditsLimit"
           button-width="6rem"
           :options="creditOptions"
@@ -160,12 +168,14 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
           <input 
             type="number"
             class="sheet-input sheet-input-size current-load-color"
+            :disabled="disabledSheet"
             :value="character.currentLoad"
             @blur="e => handleChangeInventoryNumber(e, 'currentLoad')"
           >
           <input 
             type="number"
             class="sheet-input sheet-input-size"
+            :disabled="disabledSheet"
             :value="character.maxLoad"
             @blur="e => handleChangeInventoryNumber(e, 'maxLoad')"
           >
@@ -183,6 +193,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             <WeaponCard
               :id="item.id"
               :weapon="(item as Weapon)"
+              :disabled="disabledSheet"
               only-show
               sheet
               @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
@@ -194,6 +205,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             <ProtectionCard
               :id="item.id"
               :protection="(item as Protection)"
+              :disabled="disabledSheet"
               only-show
               sheet
               @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
@@ -205,6 +217,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             <MiscCard
               :id="item.id"
               :misc="(item as Misc)"
+              :disabled="disabledSheet"
               only-show
               sheet
               @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
@@ -215,6 +228,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             <CursedItemCard
               :id="item.id"
               :cursed-item="(item as CursedItem)"
+              :disabled="disabledSheet"
               only-show
               sheet
               @handle-remove="payload => $emit('handleRemoveItem', payload.id)"

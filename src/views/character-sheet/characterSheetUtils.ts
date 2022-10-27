@@ -146,16 +146,18 @@ const nexAsLv = {
   '99%': 20,
 }
 
-const formatValueNumbers = (value: number, limit: 1 | 2 | 3, floor = true, noNegative = true) => {
+const formatValueNumbers = (value: number, limit: 1 | 2 | 3 | 4, floor = true, noNegative = true) => {
   const digitisLimit = {
     1: 9,
     2: 99,
     3: 999,
+    4: 9999,
   }
   const negativeDigitisLimit = {
     1: -9,
     2: -99,
-    3: -999
+    3: -999,
+    4: -9999,
   }
 
   if(isNaN(value)) value = 0
@@ -168,19 +170,25 @@ const formatValueNumbers = (value: number, limit: 1 | 2 | 3, floor = true, noNeg
   }
 
   if(floor) return Math.floor(value)
-  else return value
+  return value
 }
 
 export const changeCharNumber = (character: Character, value: number, key: CharacterNumberKeys) => {
-  if(key === 'currentPv' || key === 'currentPe' || key === 'currentSan' || key === 'bonusDefense') character[key] = formatValueNumbers(value, 3, true, false)
+  if(key === 'maxPv' || key === 'maxPe' || key === 'maxSan') character[key] = formatValueNumbers(value, 4)
+  else if(key === 'currentPv' || key === 'currentPe' || key === 'currentSan') character[key] = formatValueNumbers(value, 4, true, false)
+  else if(key === 'bonusDefense') character[key] = formatValueNumbers(value, 3, true, false)
   else if(key === 'movement') character[key] = formatValueNumbers(value, 3, false, true)
   else character[key] = formatValueNumbers(value, 3)
 }
 
 const handleChangePre = (character: Character, previousPre: number) => {
-  const preDif = Math.abs(character.attributes.pre - previousPre)
+  let auxPre = character.attributes.pre
+  if(auxPre < 0) auxPre = 0
+  if(previousPre < 0) previousPre = 0
 
-  if(character.attributes.pre > previousPre) {
+  const preDif = Math.abs(auxPre - previousPre)
+
+  if(auxPre > previousPre) {
     character.ritualsDc += preDif
     character.maxPe += preDif
     character.currentPe += preDif
@@ -195,17 +203,24 @@ const handleChangePre = (character: Character, previousPre: number) => {
 }
 
 const handleChangeStr = (character: Character, previousStr: number) => {
-  if(character.attributes.str === 0) {
+  let auxStr = character.attributes.str
+  if(auxStr < 0) auxStr = 0
+  if(previousStr < 0) previousStr = 0
+
+  if(auxStr === previousStr) return
+
+  if(auxStr === 0) {
     character.maxLoad -= (previousStr - 1) * 5
     character.maxLoad -= 3 
   } else {
     if(previousStr === 0) {
-      character.maxLoad += (character.attributes.str - 1) * 5
+      if(character.attributes.str < 0) return
+      character.maxLoad += (auxStr - 1) * 5
       character.maxLoad += 3
     } else {
-      const strDif = Math.abs(character.attributes.str - previousStr)
+      const strDif = Math.abs(auxStr - previousStr)
 
-      if(character.attributes.str > previousStr) {
+      if(auxStr > previousStr) {
         character.maxLoad += strDif * 5
       } else {
         character.maxLoad -= strDif * 5
@@ -217,9 +232,13 @@ const handleChangeStr = (character: Character, previousStr: number) => {
 }
 
 const handleChangeCon = (character: Character, previousCon: number) => {
-  const conDif = Math.abs(character.attributes.con - previousCon)
+  let auxCon = character.attributes.con
+  if(auxCon < 0) auxCon = 0
+  if(previousCon < 0) previousCon = 0
 
-  if(character.attributes.con > previousCon) {
+  const conDif = Math.abs(auxCon - previousCon)
+
+  if(auxCon > previousCon) {
     character.maxPv += conDif
     character.currentPv += conDif
   } else {
@@ -232,7 +251,7 @@ const handleChangeCon = (character: Character, previousCon: number) => {
 
 export const changeCharAttributes = (character: Character, value: number, key: AttrKeys) => {
   const previousAttr = {...character.attributes}
-  character.attributes[key] = formatValueNumbers(value, 1)
+  character.attributes[key] = formatValueNumbers(value, 1, true, false)
 
   if(key === 'str') handleChangeStr(character, previousAttr.str)
   if(key === 'con') handleChangeCon(character, previousAttr.con)

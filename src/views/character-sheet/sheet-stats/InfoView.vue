@@ -3,7 +3,7 @@ import { computed, getCurrentInstance } from 'vue'
 import { Character, NexKeys } from '../../../types'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeCharDropdown', 'handleChangeMovementInSquares'])
 
@@ -82,6 +82,7 @@ const handleChangeMovementInSquares = (e: Event) => {
       <div class="nex-container">
         <SheetDropdown
           title="NEX"
+          :disabled="disabledSheet"
           :value="character.nex"
           :options="nexOptions"
           bold
@@ -100,6 +101,7 @@ const handleChangeMovementInSquares = (e: Event) => {
           <input 
             class="sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="character.movement"
             @blur="e => handleChangeCharNumber(e, 'movement')"
           >
@@ -107,6 +109,7 @@ const handleChangeMovementInSquares = (e: Event) => {
           <input 
             class="sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="movementInSquares"
             @blur="handleChangeMovementInSquares"
           >
@@ -120,6 +123,7 @@ const handleChangeMovementInSquares = (e: Event) => {
           <input 
             class="sheet-input-size sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="character.maxPv"
             @blur="e => handleChangeCharNumber(e, 'maxPv')"
           >
@@ -132,6 +136,7 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.currentPv"
               @blur="e => handleChangeCharNumber(e, 'currentPv')"
             >
@@ -143,6 +148,7 @@ const handleChangeMovementInSquares = (e: Event) => {
           <input 
             class="sheet-input-size sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="character.maxPe"
             @blur="e => handleChangeCharNumber(e, 'maxPe')"
           >
@@ -157,6 +163,7 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.currentPe"
               @blur="e => handleChangeCharNumber(e, 'currentPe')"
             >
@@ -181,6 +188,7 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.protectionDefense"
               @blur="e => handleChangeCharNumber(e, 'protectionDefense')"
             >
@@ -193,6 +201,7 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.bonusDefense"
               @blur="e => handleChangeCharNumber(e, 'bonusDefense')"
             >
@@ -205,6 +214,7 @@ const handleChangeMovementInSquares = (e: Event) => {
           <input 
             class="sheet-input-size sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="character.maxSan"
             @blur="e => handleChangeCharNumber(e, 'maxSan')"
           >
@@ -219,6 +229,7 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.currentSan"
               @blur="e => handleChangeCharNumber(e, 'currentSan')"
             >
@@ -231,6 +242,7 @@ const handleChangeMovementInSquares = (e: Event) => {
       <input 
         class="sheet-input" 
         type="text"
+        :disabled="disabledSheet"
         :value="character.currentProtection"
         @blur="e => $emit('handleChangeCharText', {e, key: 'currentProtection'})"
       >
@@ -240,6 +252,7 @@ const handleChangeMovementInSquares = (e: Event) => {
       <input 
         class="sheet-input" 
         type="text"
+        :disabled="disabledSheet"
         :value="character.resistances"
         @blur="e => $emit('handleChangeCharText', {e, key: 'resistances'})"
       >
@@ -249,6 +262,7 @@ const handleChangeMovementInSquares = (e: Event) => {
       <input 
         class="sheet-input" 
         type="text"
+        :disabled="disabledSheet"
         :value="character.proficiencies"
         @blur="e => $emit('handleChangeCharText', {e, key: 'proficiencies'})"
       >
