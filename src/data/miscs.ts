@@ -149,7 +149,7 @@ const miscs: Array<Misc> = [
     name: 'Mochila Militar',
     tag: 'Itens Operacionais',
     category: 'I',
-    slots: '*',
+    slots: -2,
     itemType: 'misc',
     description: '<p>Uma mochila leve e de alta qualidade. Ela não usa nenhum espaço e aumenta sua capacidade de carga em 2 espaços.</p>'
   },

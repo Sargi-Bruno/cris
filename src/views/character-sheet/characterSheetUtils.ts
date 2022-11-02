@@ -572,7 +572,7 @@ export const removeItem = (character: Character, id: string) => {
     character.currentItemsLimit[aux.category as ItemsLimitKeys] -= 1
 
     if(character.currentItemsLimit[aux.category as ItemsLimitKeys] < 0) character.currentItemsLimit[aux.category as ItemsLimitKeys] = 0
-  } 
+  }
 
   character.currentLoad -= removedLoad
 

@@ -57,7 +57,7 @@ export const cursedItemDefault: CursedItem = {
   name: '',
   description: '',
   element: 'Conhecimento',
-  category: '-',
-  slots: '*',
+  category: 'II',
+  slots: '1',
   itemType: 'cursedItem',
 }

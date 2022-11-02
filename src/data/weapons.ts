@@ -14,7 +14,7 @@ const weapons: Array<Weapon> = [
     damageType: 'Impacto',
     range: '-',
     category: '-',
-    slots: '-',
+    slots: 0,
     itemType: 'weapon',
     description: '<p>Você pode usar uma arma de fogo como uma arma corpo a corpo. O dano é 1d4 para armas de fogo leves e de uma mão (como pistolas) e 1d6 para armas de fogo de duas mãos (como fuzis).</p>'
   },

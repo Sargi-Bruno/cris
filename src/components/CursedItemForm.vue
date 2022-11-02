@@ -17,6 +17,7 @@ const props = defineProps({
 
 const emit = defineEmits(['handleCreateCursedItem', 'handleClose', 'handleEditCursedItem'])
 
+const categoryOptions = ['0', 'I', 'II', 'III', 'IV']
 const elementOptions = ['Conhecimento', 'Energia', 'Morte', 'Sangue', 'Varia']
 
 const cursedItem = ref<CursedItem>(_.clone(props.cursedItem))
@@ -62,7 +63,7 @@ const handleEdit = () => {
       </div>
       <input 
         v-model="cursedItem.name"
-        type="text" 
+        type="number"
         class="input-primary dark big-input"
       >
     </div>
@@ -78,6 +79,32 @@ const handleEdit = () => {
         form-input
         @update-value="(value: string) => cursedItem.element = value"
       />
+    </div>
+  </div>
+  <div class="input-row">
+    <div class="input-container">
+      <div class="label">
+        Categoria*
+      </div>
+      <DropdownSimple
+        :value="cursedItem.category"
+        :options="categoryOptions"
+        width="2.75rem"
+        content-width="2.75rem"
+        form-input
+        small-input
+        @update-value="(value: string) => cursedItem.category = value"
+      />
+    </div>
+    <div class="input-container">
+      <div class="label">
+        Espaços*
+      </div>
+      <input 
+        v-model="cursedItem.slots"
+        type="text" 
+        class="input-primary dark small"
+      >
     </div>
   </div>
   <div class="label">
@@ -149,5 +176,11 @@ const handleEdit = () => {
 }
 .label span {
   font-size: 12px;
+}
+.small {
+  width: 2.75rem;
+  text-align: center;
+  padding-left: .25rem;
+  padding-right: .25rem;
 }
 </style>

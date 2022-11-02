@@ -89,7 +89,7 @@ const handleEdit = () => {
       </div>
       <input 
         v-model="misc.slots"
-        type="text" 
+        type="number" 
         class="input-primary dark small"
       >
     </div>

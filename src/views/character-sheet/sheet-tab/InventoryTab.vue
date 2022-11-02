@@ -29,13 +29,18 @@ const filterText = ref('')
 
 const inventoryFiltered = computed(() => {
   const inventory = [...props.character.inventory]
-  return inventory.filter((ele) => compare(ele.name, filterText.value))
+  return inventory.filter((ele) => compare(ele.name, filterText.value)).sort((a, b) => a.name.localeCompare(b.name))
 })
 
 const currentLoadColor = computed(() => {
   if(props.character.currentLoad > props.character.maxLoad * 2) return '#d9534f'
   if(props.character.currentLoad > props.character.maxLoad) return '#ff8c00'
   return '#fff'
+})
+
+const currentLoad = computed(() => {
+  if(props.character.currentLoad < 0) return 0
+  return props.character.currentLoad
 })
 
 const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleEditItem', item)
@@ -169,7 +174,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             type="number"
             class="sheet-input sheet-input-size current-load-color"
             :disabled="disabledSheet"
-            :value="character.currentLoad"
+            :value="currentLoad"
             @blur="e => handleChangeInventoryNumber(e, 'currentLoad')"
           >
           <input 

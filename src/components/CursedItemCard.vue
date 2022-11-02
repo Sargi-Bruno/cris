@@ -70,9 +70,19 @@ const handleEdit = () => {
       >
         <img src="../assets/show-more-icon.svg" alt="ver mais">
       </button>
-      <h3 class="title" :class="{ 'sheet-title': sheet}">
-        {{ cursedItem.name }}
-      </h3>
+      <div>
+        <h3 class="title" :class="{ 'sheet-title': sheet}">
+          {{ cursedItem.name }}
+        </h3>
+        <div class="item-info-container">
+          <div class="item-info">
+            <h3>Categoria: <span>{{ cursedItem.category }}</span></h3>
+          </div>
+          <div class="item-info">
+            <h3>Espaços: <span>{{ cursedItem.slots }}</span></h3>
+          </div>
+        </div>
+      </div>
       <div v-if="!onlyShow" class="button-container">
         <button class="button-primary" @click.stop="handleAdd">
           <img src="../assets/add-icon.svg" alt="adicionar">
@@ -185,5 +195,22 @@ const handleEdit = () => {
 }
 .button-edit {
   color: var(--color-green);
+}
+.item-info-container {
+  display: flex;
+  margin-left: .75rem;
+}
+.item-info {
+  margin-right: 1rem;
+}
+.item-info h3 {
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--color-primary);
+  margin: 0;
+}
+.item-info span {
+  color: var(--color-white);
+  font-size: 14px;
 }
 </style>
