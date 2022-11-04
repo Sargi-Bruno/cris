@@ -21,7 +21,7 @@ const handleEdit = (power: Power) => emit('handleEditPower', power)
 </script>
 
 <template>
-  <div class="abilities-tab">
+  <div class="tab">
     <div class="tab-header">
       <div v-if="character.powers.length > 0">
         <FilterInput
@@ -67,6 +67,12 @@ const handleEdit = (power: Power) => emit('handleEditPower', power)
 </template>
 
 <style scoped>
+.tab {
+  height: 52.25rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: .5rem;
+}
 .no-content h3 {
   text-align: center;
   margin-top: 10rem;

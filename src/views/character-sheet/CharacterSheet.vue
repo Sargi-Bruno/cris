@@ -496,7 +496,7 @@ const handleEditItemSheet = (editItem: Weapon | Protection | Misc | CursedItem) 
 const handleCloseModal = () => showModal.value = false
 
 const handleShareSheet = async () => {
-  await navigator.clipboard.writeText(window.location.href)
+  await navigator.clipboard.writeText(import.meta.env.VITE_BASE_URL + 'agente/' + character.value.id)
   dismissToastRoll()
   dismissToastAttack()
   toastInfo.value.message = 'Link copiado'
@@ -635,7 +635,5 @@ watch(() => toastInfo.value.alive, () => {
 .sheet-tab {
   width: 31.25rem;
   max-height: 56.25rem;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 </style>

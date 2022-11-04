@@ -156,7 +156,7 @@ const dismissToastInfo = () => {
     <ToastNotification
       v-if="toastInfo.alive"
       :toast="toastInfo"
-      type="error"
+      :type="toastInfo.type"
       @dismiss="dismissToastInfo"
     />
   </transition>

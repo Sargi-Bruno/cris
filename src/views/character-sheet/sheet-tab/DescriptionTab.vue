@@ -44,7 +44,7 @@ const items: Array<DescriptionItems> = [
 </script>
 
 <template>
-  <div class="description-tab">
+  <div class="tab">
     <div v-for="item in items" :key="item.title">
       <div class="textarea-container">
         <h3>{{ item.title }}</h3>
@@ -63,6 +63,12 @@ const items: Array<DescriptionItems> = [
 </template>
 
 <style scoped>
+.tab {
+  height: 52.25rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: .5rem;
+}
 .textarea-container {
   margin-bottom: 1rem;
 }

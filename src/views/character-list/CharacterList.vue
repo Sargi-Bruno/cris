@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, collection, getDocs, getDoc, query, where, deleteDoc, doc } from 'firebase/firestore'
-import { Character, Timestamp } from '../../types'
+import { Character, Timestamp, ToastInfo } from '../../types'
 import { compare } from '../../utils/functions'
 import LoadingView from '../../components/LoadingView.vue'
 import SearchInput from '../../components/SearchInput.vue'
+import ToastNotification from '../../components/ToastNotification.vue'
 import CharacterCard from './CharacterCard.vue'
 import router from '../../router'
 
@@ -19,6 +20,12 @@ const modalRemoveInput = ref('')
 const betaTester = ref(false)
 const searchText = ref('')
 const charLimit = ref(15)
+const toastInfo = ref<ToastInfo>({
+  message: '',
+  type: 'info',
+  alive: false,
+  timeout: 0
+})
 
 onMounted(async () => {
   if(!auth.currentUser?.email) return
@@ -92,6 +99,23 @@ const handleRemoveChar = () => {
 
   handleCloseModal()
 }
+
+const handleShareCharacter = async (chardId: string) => {
+  await navigator.clipboard.writeText(import.meta.env.VITE_BASE_URL + 'agente/' + chardId)
+  toastInfo.value.message = 'Link copiado'
+  toastInfo.value.alive = true
+}
+
+watch(() => toastInfo.value.alive, () => {
+  if(toastInfo.value.alive === true) {
+    toastInfo.value.timeout = window.setTimeout(() => toastInfo.value.alive = false, 3000)
+  }
+})
+
+const dismissToastInfo = () => {
+  toastInfo.value.alive = false
+  clearTimeout(toastInfo.value.timeout)
+}
 </script>
 
 <template>
@@ -132,6 +156,7 @@ const handleRemoveChar = () => {
               :timestamp="(character.timestamp as Timestamp).seconds"
               @handle-open-sheet="handleOpenSheet"
               @handle-remove="handleOpenModal"
+              @handle-share-character="handleShareCharacter"
             />
           </div>
         </div>
@@ -184,6 +209,14 @@ const handleRemoveChar = () => {
         </div>
       </vue-final-modal>
     </div>
+    <transition name="toast">
+      <ToastNotification
+        v-if="toastInfo.alive"
+        :toast="toastInfo"
+        :type="toastInfo.type"
+        @dismiss="dismissToastInfo"
+      />
+    </transition>
   </div>
   <div v-else>
     <LoadingView />

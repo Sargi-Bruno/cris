@@ -26,7 +26,7 @@ const handleEdit = (ritual: Ritual) => emit('handleEditRitual', ritual)
 </script>
   
 <template>
-  <div class="rituals-tab">
+  <div class="tab">
     <div class="tab-header">
       <div v-if="character.rituals.length > 0">
         <FilterInput
@@ -86,6 +86,12 @@ const handleEdit = (ritual: Ritual) => emit('handleEditRitual', ritual)
 </template>
   
 <style scoped>
+.tab {
+  height: 52.25rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: .5rem;
+}
 .tab-header {
   display: flex;
   align-items: flex-end;
