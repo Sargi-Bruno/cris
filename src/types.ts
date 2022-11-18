@@ -191,6 +191,7 @@ export interface Character {
   backgroundName: string
   className: string
   nex: string
+  peTurn?: string
   movement: number
   maxPv: number
   currentPv: number

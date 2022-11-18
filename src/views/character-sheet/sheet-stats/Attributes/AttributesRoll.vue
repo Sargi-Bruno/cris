@@ -62,6 +62,7 @@ const handleRollAttribute = (attr: AttrKeys) => {
   font-size: 26px;
   color: var(--color-white);
   background-color: var(--color-smoky-black);
+  padding: 0;
   border: none;
   cursor: pointer;
 }

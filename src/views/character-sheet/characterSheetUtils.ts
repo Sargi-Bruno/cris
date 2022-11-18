@@ -99,6 +99,31 @@ export const attrDic = {
   pre: 'Presença'
 }
 
+export const nexOptions = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%']
+
+export const peOptions = {
+  '5%': '1',
+  '10%': '2',
+  '15%': '3',
+  '20%': '4',
+  '25%': '5',
+  '30%': '6',
+  '35%': '7',
+  '40%': '8',
+  '45%': '9',
+  '50%': '10',
+  '55%': '11',
+  '60%': '12',
+  '65%': '13',
+  '70%': '14',
+  '75%': '15',
+  '80%': '16',
+  '85%': '17',
+  '90%': '18',
+  '95%': '19',
+  '99%': '20',
+}
+
 const attrShortDic = {
   FOR: 'str',
   AGI: 'dex',
@@ -179,6 +204,8 @@ export const changeCharNumber = (character: Character, value: number, key: Chara
   else if(key === 'bonusDefense') character[key] = formatValueNumbers(value, 3, true, false)
   else if(key === 'movement') character[key] = formatValueNumbers(value, 3, false, true)
   else character[key] = formatValueNumbers(value, 3)
+  
+  if(parseInt(character.peTurn as string) < 1) character.peTurn = '1'
 }
 
 const handleChangePre = (character: Character, previousPre: number) => {
@@ -251,7 +278,7 @@ const handleChangeCon = (character: Character, previousCon: number) => {
 
 export const changeCharAttributes = (character: Character, value: number, key: AttrKeys) => {
   const previousAttr = {...character.attributes}
-  character.attributes[key] = formatValueNumbers(value, 1, true, false)
+  character.attributes[key] = formatValueNumbers(value, 2, true, false)
 
   if(key === 'str') handleChangeStr(character, previousAttr.str)
   if(key === 'con') handleChangeCon(character, previousAttr.con)
@@ -598,6 +625,7 @@ export const updateCharNexStats = (character: Character, previousNex: string) =>
   const pv = (charClass.levelPv + character.attributes.con) * lvDif
   const pe = (charClass.levelPe + character.attributes.pre) * lvDif
   const san = charClass.levelSan * lvDif
+  const peTurn = Math.abs(parseInt(peOptions[character.nex as NexKeys]) - parseInt(peOptions[previousNex as NexKeys]))
 
   if(currentNexAsLv > previousNexAsLv) {
     character.maxPv += pv
@@ -607,6 +635,7 @@ export const updateCharNexStats = (character: Character, previousNex: string) =>
     character.maxSan += san
     character.currentSan += san
     character.ritualsDc += lvDif
+    character.peTurn = (parseInt(character.peTurn as string) + peTurn).toString()
   } else {
     character.maxPv -= pv
     character.currentPv -= pv
@@ -615,12 +644,14 @@ export const updateCharNexStats = (character: Character, previousNex: string) =>
     character.maxSan -= san
     character.currentSan -= san
     character.ritualsDc -= lvDif
+    character.peTurn = (parseInt(character.peTurn as string) - peTurn).toString()
   }
 
   if(character.maxPv < 1) character.maxPv = 1
   if(character.maxPe < 0) character.maxPe = 0
   if(character.maxSan < 1) character.maxSan = 1
   if(character.ritualsDc < 0) character.ritualsDc = 0
+  if(parseInt(character.peTurn) < 1) character.peTurn = '1'
 }
 
 export const editItemSheet = (character: Character, item: Weapon | Protection | Misc | CursedItem) => {

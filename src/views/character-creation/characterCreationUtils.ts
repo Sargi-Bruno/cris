@@ -15,6 +15,7 @@ export const characterDefaultValue: Character = {
   backgroundName: '',
   className: '',
   nex: '5%',
+  peTurn: '1',
   movement: 9,
   maxPv: 0,
   currentPv: 0,

@@ -205,7 +205,7 @@ const cursedItems: Array<CursedItem> = [
     name: 'Jaqueta de Veríssimo',
     element: 'Medo',
     itemType: 'cursedItem',
-    category: 'II',
+    category: 'IV',
     slots: 1,
     description: '<p><em>Uma jaqueta de estilo aviador feita de couro marrom com a gola forrada de pele branca.</em> Esta vestimenta de aparência comum já foi usada por vários agentes importantes e experientes da Ordem, e presenciou inúmeras batalhas e sacrif ícios. Ao longo de sua história, a <em>jaqueta</em> foi passada de um agente para o outro como presente ou herança diversas vezes. Você recebe resistência a dano paranormal 15. Além disso, sempre que um aliado adjacente for sofrer dano de qualquer tipo, você pode gastar uma reação e II PE para se tornar o alvo do dano no lugar.</p>'
   },

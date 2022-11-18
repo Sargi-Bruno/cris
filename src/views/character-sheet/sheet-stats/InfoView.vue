@@ -1,41 +1,14 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance } from 'vue'
-import { Character, NexKeys } from '../../../types'
+import { Character } from '../../../types'
+import { nexOptions } from '../../character-sheet/characterSheetUtils'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
 
 const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeCharDropdown', 'handleChangeMovementInSquares'])
 
-const nexOptions = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%']
-const peOptions = {
-  '5%': '1',
-  '10%': '2',
-  '15%': '3',
-  '20%': '4',
-  '25%': '5',
-  '30%': '6',
-  '35%': '7',
-  '40%': '8',
-  '45%': '9',
-  '50%': '10',
-  '55%': '11',
-  '60%': '12',
-  '65%': '13',
-  '70%': '14',
-  '75%': '15',
-  '80%': '16',
-  '85%': '17',
-  '90%': '18',
-  '95%': '19',
-  '99%': '20',
-}
-
 const instance = getCurrentInstance()
-
-const pe = computed(() => {
-  return peOptions[props.character.nex as NexKeys]
-})
 
 const movementInSquares = computed(() => {
   if(props.character.movement === 0) return 0
@@ -90,7 +63,13 @@ const handleChangeMovementInSquares = (e: Event) => {
         />
         <div class="pe-container">
           <div class="pe">
-            <h3>{{ pe }}</h3>
+            <input 
+              class="sheet-input pe-input" 
+              type="number"
+              :disabled="disabledSheet"
+              :value="character.peTurn"
+              @blur="e => handleChangeCharNumber(e, 'peTurn')"
+            >
           </div>
           <h4>PE / RODADA</h4>
         </div>
@@ -325,12 +304,10 @@ const handleChangeMovementInSquares = (e: Event) => {
   background-color: transparent;
   border: 1px solid var(--color-white);
 }
-.pe h3 {
-  text-align: center;
-  margin: 0;
-  font-size: 14px;
-  font-weight: bold;
-  color: var(--color-white);
+.pe-input {
+  width: 3.25rem;
+  height: 2.25rem;
+  border: none;
 }
 .desl-container {
   display: flex;

@@ -41,7 +41,8 @@ import {
   ToastInfo,
   ToastRoll,
   ToastAttackInterface,
-CursedItem
+  CursedItem,
+  NexKeys,
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -69,7 +70,8 @@ import {
   rollAttack,
   changeRitualDc,
   updateCharNexStats,
-  editItemSheet
+  editItemSheet,
+  peOptions,
 } from './characterSheetUtils'
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
@@ -156,6 +158,8 @@ onMounted(async() => {
 
     character.value.currentItemsLimit = defaultCurrentItemsLimit
   }
+
+  if(!character.value.peTurn) character.value.peTurn = peOptions[character.value.nex as NexKeys]
 
   loading.value = false
 })

@@ -60,9 +60,8 @@ const handleChangeAttribute = (e: Event, key: string) => {
   font-size: 26px;
   color: var(--color-white);
   background-color: var(--color-smoky-black);
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  padding: 0;
+  border: none;
   border-bottom: 1px solid var(--color-white);
 }
 </style>
