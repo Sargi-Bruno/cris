@@ -453,7 +453,7 @@ const rituals: Array<Ritual> = [
   },
   {
     name: 'Forma Monstruosa',
-    circle: '2',
+    circle: '3',
     element: 'Sangue',
     execution: 'padrão',
     range: 'pessoal',

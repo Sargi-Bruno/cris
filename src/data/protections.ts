@@ -7,7 +7,7 @@ const protections: Array<Protection> = [
     category: 'I',
     slots: 2,
     itemType: 'protection',
-    description: '<p>Jaqueta de couro pesada ou um colete de kevlar. Essa proteção é tipicamente usada or seguranças e policiais.</p>'
+    description: '<p>Jaqueta de couro pesada ou um colete de kevlar. Essa proteção é tipicamente usada por seguranças e policiais.</p>'
   },
   {
     name: 'Proteção Pesada',

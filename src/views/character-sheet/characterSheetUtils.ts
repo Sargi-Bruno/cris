@@ -662,8 +662,6 @@ export const editItemSheet = (character: Character, item: Weapon | Protection | 
 
   character.inventory[index] = item
 
-  if(item.itemType === 'cursedItem') return
-
   if(oldItem.slots !== item.slots) {
     if(!isNaN(parseInt(item.slots as string))) {
       const slotsDif = Math.abs((oldItem.slots as number) - (item.slots as number))
