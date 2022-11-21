@@ -2,7 +2,7 @@
 import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, getDoc, doc, updateDoc } from 'firebase/firestore'
+import { getFirestore, getDoc, doc, updateDoc, collection, query, where, getDocs, serverTimestamp, addDoc } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import ToastNotification from '../../components/ToastNotification.vue'
 import ToastDice from '../../components/ToastDice.vue'
@@ -17,6 +17,7 @@ import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
 import EditModal from './sheet-modals/edit-modal/EditModal.vue'
 import LoadingView from '../../components/LoadingView.vue'
 import SheetTools from './sheet-tools/SheetTools.vue'
+import _ from 'lodash'
 import {
   Character,
   Skill, 
@@ -43,6 +44,7 @@ import {
   ToastAttackInterface,
   CursedItem,
   NexKeys,
+  Timestamp,
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -103,6 +105,7 @@ const editRitual = ref<Ritual>()
 const editItem = ref<Weapon | Protection | Misc | CursedItem>()
 const character = ref<Character>(characterDefaultValue)
 const disabledSheet = ref(true)
+const charAdded = ref(false)
 
 const toastInfo = ref<ToastInfo>({
   message: '',
@@ -508,6 +511,43 @@ const handleShareSheet = async () => {
   toastInfo.value.alive = true
 }
 
+const handleAddAgent = async () => {
+  if(!auth.currentUser?.email) return
+  if(charAdded.value) return
+  
+  const testersSnapshot = await getDoc(doc(firestore, 'beta', 'testers'))
+  const betaTesters = testersSnapshot.data()?.testers as string[]
+  let charLimit = 15
+
+  if(betaTesters.includes(auth.currentUser?.email)) charLimit = 100
+
+  const charsCollection = collection(firestore, 'characters')
+  const charsRef = query(charsCollection, where('uid', '==', auth.currentUser?.uid))
+
+  const querySnapshot = await getDocs(charsRef)
+
+  if(querySnapshot.size < charLimit) {
+    charAdded.value = true
+
+    const newChar = _.cloneDeep(character.value)
+    newChar.uid = auth.currentUser.uid
+    newChar.timestamp = (serverTimestamp() as unknown) as Timestamp
+    await addDoc(collection(firestore, 'characters'), newChar)
+
+    dismissToastRoll()
+    dismissToastAttack()
+    toastInfo.value.message = 'Agente adicionado!'
+    toastInfo.value.type = 'info'
+    toastInfo.value.alive = true
+  } else {
+    dismissToastRoll()
+    dismissToastAttack()
+    toastInfo.value.message = 'Limite de agentes atingido!'
+    toastInfo.value.type = 'error'
+    toastInfo.value.alive = true
+  }
+}
+
 watch(() => toastInfo.value.alive, () => {
   if(toastInfo.value.alive === true) {
     toastInfo.value.timeout = window.setTimeout(() => toastInfo.value.alive = false, 3000)
@@ -517,9 +557,12 @@ watch(() => toastInfo.value.alive, () => {
 
 <template>
   <div v-if="!loading" class="sheet-wrapper">
-    <div v-if="!disabledSheet">
-      <SheetTools @handle-share-sheet="handleShareSheet" />
-    </div>
+    <SheetTools 
+      :disabled-sheet="disabledSheet" 
+      :char-added="charAdded"
+      @handle-share-sheet="handleShareSheet" 
+      @handle-add-agent="handleAddAgent"
+    />
     <div class="character-sheet">
       <div class="sheet-stats">
         <SheetStats

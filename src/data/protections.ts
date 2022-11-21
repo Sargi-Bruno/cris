@@ -20,7 +20,7 @@ const protections: Array<Protection> = [
   {
     name: 'Escudo',
     defense: 2,
-    category: '0',
+    category: 'I',
     slots: 2,
     itemType: 'protection',
     description: '<p>Um escudo medieval ou moderno, como aqueles usados por tropas de choque. Para efeitos de proficiência, conta como proteção pesada. Precisa ser empunhado em uma mão e fornece Defesa +2.</p>'

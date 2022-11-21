@@ -427,7 +427,7 @@ const classes: Array<Class> = [
           },
           {
             name: 'NEX 40% - Remendão',
-            description: '<p>Você pode gastar uma ação completa e 1 PE para remover a condição quebrado de um equipamento adjacente até o final da cena. Além disso, qualquer equipamento de investigação tem sua categoria reduzida em I para você.</p>'
+            description: '<p>Você pode gastar uma ação completa e 1 PE para remover a condição quebrado de um equipamento adjacente até o final da cena. Além disso, qualquer equipamento geral tem sua categoria reduzida em I para você.</p>'
           },
           {
             name: 'NEX 65% - Improvisar',
