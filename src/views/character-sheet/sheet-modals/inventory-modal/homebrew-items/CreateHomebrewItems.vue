@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, collection, addDoc } from 'firebase/firestore'
 import { Weapon, Protection, Misc, CursedItem } from '../../../../../types'
+import { ammunitionDefault } from '../../../../../utils/default'
 import WeaponForm from '../../../../../components/WeaponForm.vue'
 import ProtectionForm from '../../../../../components/ProtectionForm.vue'
 import MiscForm from '../../../../../components/MiscForm.vue'
@@ -23,6 +24,7 @@ const firestore = getFirestore()
 const loading = ref(false)
 const createOptions = {
   weapon: 'weapon',
+  ammunition: 'ammunition',
   protection: 'protection',
   misc: 'misc',
   cursedItem: 'cursedItem'
@@ -46,6 +48,13 @@ const handleCreateItem = async (item: Weapon | Protection | Misc | CursedItem) =
     <div v-if="currentCreateOption === createOptions.weapon">
       <WeaponForm
         @handle-create-weapon="handleCreateItem"
+        @handle-close="$emit('handleClose')"
+      />
+    </div>
+    <div v-if="(currentCreateOption === createOptions.ammunition)">
+      <MiscForm
+        :misc="ammunitionDefault"
+        @handle-create-misc="handleCreateItem"
         @handle-close="$emit('handleClose')"
       />
     </div>

@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { getFirestore, collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
-import { Weapon, Protection, Misc, CursedItem } from '../../../../../types'
+import { Weapon, Protection, Misc, CursedItem, Ammunition } from '../../../../../types'
 import WeaponCard from '../../../../../components/WeaponCard.vue'
 import ProtectionCard from '../../../../../components/ProtectionCard.vue'
 import MiscCard from '../../../../../components/MiscCard.vue'
@@ -22,6 +22,7 @@ const props = defineProps({
 const emit = defineEmits([
   'handleAddItem',
   'handleCreateWeapon',
+  'handleCreateAmmunition',
   'handleCreateProtection',
   'handleCreateMisc',
   'handleCreateCursedItem',
@@ -32,10 +33,12 @@ const auth = getAuth()
 const firestore = getFirestore()
 const loading = ref(true)
 const weapons = ref<Weapon[]>([])
+const ammunitions = ref<Ammunition[]>([])
 const protections = ref<Protection[]>([])
 const miscs = ref<Misc[]>([])
 const cursedItems = ref<CursedItem[]>([])
 const searchTextWeapons = ref('')
+const searchTextAmmunitions = ref('')
 const searchTextProtections = ref('')
 const searchTextMisc = ref('')
 const searchTextCursedItems = ref('')
@@ -55,21 +58,24 @@ onMounted(async () => {
   const querySnapshot = await getDocs(homebrewPowers)
 
   const weaponsDocs: Weapon[] = []
+  const ammunitionsDocs: Ammunition[] = []
   const protectionsDocs: Protection[] = []
   const miscsDocs: Misc[] = []
   const cursedItemsDocs: CursedItem[] = []
 
   querySnapshot.docs.forEach((doc) => {
-    const data: Weapon | Protection | Misc | CursedItem = doc.data() as  Weapon | Protection | Misc | CursedItem
+    const data: Weapon | Ammunition | Protection | Misc | CursedItem = doc.data() as  Weapon | Ammunition | Protection | Misc | CursedItem
     data.id = doc.id
 
     if(data.itemType === 'weapon') weaponsDocs.push(data as Weapon)
+    if(data.itemType === 'ammunition') ammunitionsDocs.push(data as Ammunition)
     if(data.itemType === 'protection') protectionsDocs.push(data as Protection)
     if(data.itemType === 'misc') miscsDocs.push(data as Misc)
     if(data.itemType === 'cursedItem') cursedItemsDocs.push(data as CursedItem)
   })
 
   weapons.value = weaponsDocs
+  ammunitions.value = ammunitionsDocs
   protections.value = protectionsDocs
   miscs.value = miscsDocs
   cursedItems.value = cursedItemsDocs
@@ -83,16 +89,21 @@ const currentItems = computed(() => {
             .sort((a, b) => a.name.localeCompare(b.name))
 
   if(props.currentTab === 1) 
+    return ammunitions.value
+            .filter((ele) => compare(ele.name, searchTextAmmunitions.value))
+            .sort((a, b) => a.name.localeCompare(b.name))
+
+  if(props.currentTab === 2) 
     return protections.value
             .filter((ele) => compare(ele.name, searchTextProtections.value))
             .sort((a, b) => a.name.localeCompare(b.name))
 
-  if(props.currentTab === 2) 
+  if(props.currentTab === 3) 
     return miscs.value
             .filter((ele) => compare(ele.name, searchTextMisc.value))
             .sort((a, b) => a.name.localeCompare(b.name))
 
-  if(props.currentTab === 3) 
+  if(props.currentTab === 4) 
     return cursedItems.value
             .filter((ele) => compare(ele.name, searchTextCursedItems.value))
             .sort((a, b) => a.name.localeCompare(b.name))
@@ -106,6 +117,7 @@ const handleDelete = (payload: { id: string, itemType: string }) => {
   deleteItemType.value = payload.itemType
 
   if(payload.itemType === 'weapon') deleteIndex.value = weapons.value.findIndex((e) => e.id === payload.id)
+  if(payload.itemType === 'ammunition') deleteIndex.value = ammunitions.value.findIndex((e) => e.id === payload.id)
   if(payload.itemType === 'protection') deleteIndex.value = protections.value.findIndex((e) => e.id === payload.id)
   if(payload.itemType === 'misc') deleteIndex.value = miscs.value.findIndex((e) => e.id === payload.id)
   if(payload.itemType === 'cursedItem') deleteIndex.value = cursedItems.value.findIndex((e) => e.id === payload.id)
@@ -122,6 +134,7 @@ const handleConfirmDelete = () => {
   deleteDoc(doc(firestore, 'homebrewItems', deleteId.value))
 
   if(deleteItemType.value === 'weapon') weapons.value.splice(deleteIndex.value, 1)
+  if(deleteItemType.value === 'ammunition') ammunitions.value.splice(deleteIndex.value, 1)
   if(deleteItemType.value === 'protection') protections.value.splice(deleteIndex.value, 1)
   if(deleteItemType.value === 'misc') miscs.value.splice(deleteIndex.value, 1)
   if(deleteItemType.value === 'cursedItem') cursedItems.value.splice(deleteIndex.value, 1)
@@ -144,7 +157,15 @@ const handleConfirmDelete = () => {
           Adicionar Arma
         </button>
       </div>
-      <div v-if="currentTab === 1">
+      <div v-if="(currentTab === 1)">
+        <button
+          class="button-primary new-button"
+          @click="$emit('handleCreateAmmunition')"
+        >
+          Adicionar Munição
+        </button>
+      </div>
+      <div v-if="(currentTab === 2)">
         <button
           class="button-primary new-button"
           @click="$emit('handleCreateProtection')"
@@ -152,7 +173,7 @@ const handleConfirmDelete = () => {
           Adicionar Proteção
         </button>
       </div>
-      <div v-if="currentTab === 2">
+      <div v-if="(currentTab === 3)">
         <button
           class="button-primary new-button"
           @click="$emit('handleCreateMisc')"
@@ -160,7 +181,7 @@ const handleConfirmDelete = () => {
           Adicionar Item Geral
         </button>
       </div>
-      <div v-if="currentTab === 3">
+      <div v-if="(currentTab === 4)">
         <button
           class="button-primary new-button"
           @click="$emit('handleCreateCursedItem')"
@@ -180,9 +201,21 @@ const handleConfirmDelete = () => {
           />
         </div>
       </div>
+      <div v-if="ammunitions.length > 0">
+        <div
+          v-if="(currentTab === 1)"
+          class="search-container"
+        >
+          <SearchInput 
+            :value="searchTextAmmunitions"
+            dark
+            @update="value => searchTextAmmunitions = value"
+          />
+        </div>
+      </div>
       <div v-if="protections.length > 0">
         <div
-          v-if="currentTab === 1"
+          v-if="(currentTab === 2)"
           class="search-container"
         >
           <SearchInput 
@@ -194,7 +227,7 @@ const handleConfirmDelete = () => {
       </div>
       <div v-if="miscs.length > 0">
         <div
-          v-if="currentTab === 2"
+          v-if="(currentTab === 3)"
           class="search-container"
         >
           <SearchInput 
@@ -206,7 +239,7 @@ const handleConfirmDelete = () => {
       </div>
       <div v-if="cursedItems.length > 0">
         <div
-          v-if="currentTab === 3"
+          v-if="(currentTab === 4)"
           class="search-container"
         >
           <SearchInput 
@@ -245,9 +278,9 @@ const handleConfirmDelete = () => {
               @handle-add="handleAddItem"
             />
           </div>
-          <div v-if="item.itemType === 'misc'">
+          <div v-if="(item.itemType === 'misc' || item.itemType === 'ammunition')">
             <MiscCard
-              :misc="(item as Misc)"
+              :misc="(item as Misc | Ammunition)"
               sheet
               homebrew
               @handle-remove="handleDelete"
@@ -282,7 +315,21 @@ const handleConfirmDelete = () => {
             Você ainda não criou novas armas
           </div>
         </div>
-        <div v-if="currentTab === 1">
+        <div v-if="(currentTab === 1)">
+          <div
+            v-if="ammunitions.length > 0"
+            class="no-content"
+          >
+            Nenhuma munição encontrada
+          </div>
+          <div
+            v-else
+            class="no-content"
+          >
+            Você ainda não criou novas munições
+          </div>
+        </div>
+        <div v-if="(currentTab === 2)">
           <div
             v-if="protections.length > 0"
             class="no-content"
@@ -296,7 +343,7 @@ const handleConfirmDelete = () => {
             Você ainda não criou novas proteções
           </div>
         </div>
-        <div v-if="currentTab === 2">
+        <div v-if="(currentTab === 3)">
           <div
             v-if="miscs.length > 0"
             class="no-content"
@@ -310,7 +357,7 @@ const handleConfirmDelete = () => {
             Você ainda não criou novos equipamentos
           </div>
         </div>
-        <div v-if="currentTab === 3">
+        <div v-if="(currentTab === 4)">
           <div
             v-if="cursedItems.length > 0"
             class="no-content"
@@ -330,6 +377,13 @@ const handleConfirmDelete = () => {
       <div v-if="deleteItemType === 'weapon'">
         <ConfirmDelete
           :name="weapons[deleteIndex].name"
+          @handle-cancel="handleCancelDelete"
+          @handle-confirm="handleConfirmDelete"
+        />
+      </div>
+      <div v-if="deleteItemType === 'ammunition'">
+        <ConfirmDelete
+          :name="ammunitions[deleteIndex].name"
           @handle-cancel="handleCancelDelete"
           @handle-confirm="handleConfirmDelete"
         />

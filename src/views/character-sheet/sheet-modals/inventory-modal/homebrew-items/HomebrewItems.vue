@@ -19,6 +19,7 @@ const options = {
 const currentCreateOption = ref('weapon')
 const createOptions = {
   weapon: 'weapon',
+  ammunition: 'ammunition',
   protection: 'protection',
   misc: 'misc',
   cursedItem: 'cursedItem'
@@ -29,16 +30,20 @@ const tabOptions = [
     value: 0,
   },
   {
-    label: 'Proteções',
+    label: 'Munições',
     value: 1,
   },
   {
-    label: 'Geral',
+    label: 'Proteções',
     value: 2,
   },
   {
+    label: 'Geral',
+    value: 3,
+  },
+  {
     label: 'Itens Amaldiçoados',
-    value: 3
+    value: 4
   }
 ]
 
@@ -73,6 +78,7 @@ const handleCreateOption = (createOption: string) => {
         @handle-add-item="handleAddItem"
         @handle-edit-item="handleEditItem"
         @handle-create-weapon="handleCreateOption(createOptions.weapon)"
+        @handle-create-ammunition="handleCreateOption(createOptions.ammunition)"
         @handle-create-protection="handleCreateOption(createOptions.protection)"
         @handle-create-misc="handleCreateOption(createOptions.misc)"
         @handle-create-cursed-item="handleCreateOption(createOptions.cursedItem)"

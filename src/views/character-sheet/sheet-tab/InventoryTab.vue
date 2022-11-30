@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance } from 'vue'
-import { Character, Weapon, Protection, Misc, CursedItem } from '../../../types'
+import { Character, Weapon, Protection, Misc, CursedItem, Ammunition } from '../../../types'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
 import WeaponCard from '../../../components/WeaponCard.vue'
 import ProtectionCard from '../../../components/ProtectionCard.vue'
@@ -43,7 +43,7 @@ const currentLoad = computed(() => {
   return props.character.currentLoad
 })
 
-const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleEditItem', item)
+const handleEditItem = (item: Weapon | Protection | Misc | Ammunition | CursedItem) => emit('handleEditItem', item)
 
 const handleChangeItemsLimit = (e: Event, key: string) => {
   const value = (e.target as HTMLInputElement).valueAsNumber
@@ -218,10 +218,10 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
               @handle-edit="handleEditItem"
             />
           </div>
-          <div v-if="item.itemType === 'misc'">
+          <div v-if="item.itemType === 'misc' || item.itemType === 'ammunition'">
             <MiscCard
               :id="item.id"
-              :misc="(item as Misc)"
+              :misc="(item as Misc | Ammunition)"
               :disabled="disabledSheet"
               only-show
               sheet

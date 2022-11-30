@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed,  PropType, ref } from 'vue'
+import { computed, PropType, ref } from 'vue'
 import { miscDefault } from '../utils/default'
-import { Misc } from '../types'
+import { Ammunition, Misc } from '../types'
 import { validateMiscForm } from '../utils/forms'
 import _ from 'lodash'
 import DropdownSimple from './DropdownSimple.vue'
 
 const props = defineProps({
   misc: {
-    type: Object as PropType<Misc>,
+    type: Object as PropType<Misc> | PropType<Ammunition>, 
     default: miscDefault
   },
   edit: Boolean,
@@ -93,7 +93,10 @@ const handleEdit = () => {
         class="input-primary dark small"
       >
     </div>
-    <div class="input-container">
+    <div 
+      v-if="misc.itemType !== 'ammunition'" 
+      class="input-container"
+    >
       <div class="label">
         Tag
       </div>

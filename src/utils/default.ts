@@ -1,3 +1,4 @@
+import { Ammunition } from './../types';
 import { Power, Ritual, Misc, Protection, Weapon, CursedItem } from '../types'
 
 export const powerDefault: Power = {
@@ -26,6 +27,15 @@ export const miscDefault: Misc = {
   slots: 1,
   tag: 'Acessórios',
   itemType: 'misc',
+}
+
+export const ammunitionDefault: Ammunition = {
+  name: '',
+  description: '',
+  category: '0',
+  slots: 1,
+  tag: 'Munições',
+  itemType: 'ammunition',
 }
 
 export const protectionDefault: Protection = {

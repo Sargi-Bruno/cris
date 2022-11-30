@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { PropType, ref } from 'vue'
-import { Misc } from '../types'
+import { Ammunition, Misc } from '../types'
 import DividerView from './DividerView.vue'
 
 const props = defineProps({
   misc: {
-    type: Object as PropType<Misc>,
+    type: Object as PropType<Misc> | PropType<Ammunition>,
     required: true
   },
   id: {

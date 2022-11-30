@@ -50,6 +50,8 @@ export interface Ammunition {
   description: string
   category: string
   slots: number | string
+  tag: string
+  itemType: string
   id?: string
 }
 

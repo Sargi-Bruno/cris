@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Character, Attack, Power, Ritual, Weapon, Protection, Misc, CursedItem } from '../../../types'
+import { Character, Attack, Power, Ritual, Weapon, Protection, Misc, CursedItem, Ammunition } from '../../../types'
 import TabNav from '../../../components/TabNav.vue'
 import AttacksTab from './AttacksTab.vue'
 import AbilitiesTab from './AbilitiesTab.vue'
@@ -77,7 +77,7 @@ const handleRollAttack = (attack: Attack) => emit('handleRollAttack', attack)
 const handleChangeRitualDc = (e: Event) => emit('handleChangeRitualDc', e)
 const handleEditPower = (power: Power) => emit('handleEditPower', power)
 const handleEditRitual = (ritual: Ritual) => emit('handleEditRitual', ritual)
-const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleEditItem', item)
+const handleEditItem = (item: Weapon | Protection | Misc | Ammunition | CursedItem) => emit('handleEditItem', item)
 </script>
 
 <template>

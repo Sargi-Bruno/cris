@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
-import { Power, Ritual, Weapon, Protection, Misc, CursedItem } from '../../../../types'
+import { Power, Ritual, Weapon, Protection, Misc, CursedItem, Ammunition } from '../../../../types'
 import AbilitiesForm from '../../../../components/AbilitiesForm.vue'
 import RitualsForm from '../../../../components/RitualsForm.vue'
 import WeaponForm from '../../../../components/WeaponForm.vue'
@@ -91,9 +91,9 @@ const handleEditItemSheet = (payload: { item: Weapon | Protection | Misc | Curse
             @handle-close="$emit('handleCloseModal')"
           />
         </div>
-        <div v-if="editItem.itemType === 'misc'">
+        <div v-if="editItem.itemType === 'misc' || editItem.itemType === 'ammunition'">
           <MiscForm
-            :misc="(editItem as Misc)"
+            :misc="(editItem as Misc | Ammunition)"
             edit
             sheet
             @handle-edit-misc="handleEditItemSheet"

@@ -45,6 +45,7 @@ import {
   CursedItem,
   NexKeys,
   Timestamp,
+Ammunition,
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -102,7 +103,7 @@ const characterId = route.params.id as string
 const loading = ref(true)
 const editPower = ref<Power>()
 const editRitual = ref<Ritual>()
-const editItem = ref<Weapon | Protection | Misc | CursedItem>()
+const editItem = ref<Weapon | Protection | Misc | Ammunition | CursedItem>()
 const character = ref<Character>(characterDefaultValue)
 const disabledSheet = ref(true)
 const charAdded = ref(false)
@@ -473,7 +474,7 @@ const handleEditRitual = (ritual: Ritual) => {
   editRitual.value = ritual
 }
 
-const handleEditItem = (item: Weapon | Protection | Misc | CursedItem) => {
+const handleEditItem = (item: Weapon | Protection | Misc | Ammunition | CursedItem) => {
   currentModal.value = modals.edit
   currentEditModal.value = editModalOptions.item
   showModal.value = true
