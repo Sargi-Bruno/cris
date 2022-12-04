@@ -100,6 +100,7 @@ export interface Weapon {
   range: string
   category: string
   slots: number | string
+  ammunitionName?: string
   ammunition?: Ammunition
   mods?: Array<Modification>
   curses?: Array<Curse>

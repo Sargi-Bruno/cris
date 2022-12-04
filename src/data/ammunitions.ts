@@ -15,7 +15,7 @@ const ammunitions: Array<Ammunition> = [
     slots: 1,
     tag: 'Munições',
     itemType: 'ammunition',
-    description: '<p>Maior e mais potente, esta municação é usada em fuzis e metralhadoras. Um pacote de balas longas dura uma cena.</p>'
+    description: '<p>Maior e mais potente, esta munição é usada em fuzis e metralhadoras. Um pacote de balas longas dura uma cena.</p>'
   },
   {
     name: 'Cartuchos',

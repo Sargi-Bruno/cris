@@ -94,6 +94,9 @@ const handleEdit = () => {
             <div class="item-info">
               <h3>Espaços: <span>{{ weapon.slots }}</span></h3>
             </div>
+            <div v-if="weapon.ammunitionName" class="item-info">
+              <h3>Munição: <span>{{ weapon.ammunitionName }}</span></h3>
+            </div>
           </div>
         </div>
       </div>
@@ -137,6 +140,9 @@ const handleEdit = () => {
             </div>
             <div class="item-info">
               <h3>Espaços: <span>{{ weapon.slots }}</span></h3>
+            </div>
+            <div v-if="weapon.ammunitionName" class="item-info">
+              <h3>Munição: <span>{{ weapon.ammunitionName }}</span></h3>
             </div>
           </div>
           <div

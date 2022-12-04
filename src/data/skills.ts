@@ -133,7 +133,7 @@ const Skills: Array<Skill> = [
   },
   {
     name: 'Intuição',
-    attribute: 'INT',
+    attribute: 'PRE',
     bonus: 0,
     otherBonus: 0,
     trainingDegree: '0',

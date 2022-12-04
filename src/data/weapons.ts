@@ -137,7 +137,7 @@ const weapons: Array<Weapon> = [
     range: 'Médio',
     category: '0',
     slots: 2,
-    ammunition: ammunitions[4],
+    ammunitionName: ammunitions[4].name,
     itemType: 'weapon',
     description: '<p>Um arco e flecha comum, próprio para tiro ao alvo.</p>'
   },
@@ -153,7 +153,7 @@ const weapons: Array<Weapon> = [
     range: 'Médio',
     category: '0',
     slots: 2,
-    ammunition: ammunitions[4],
+    ammunitionName: ammunitions[4].name,
     itemType: 'weapon',
     description: '<p>Esta arma da antiguidade exige uma ação de movimento para ser recarregada a cada disparo.</p>'
   },
@@ -169,7 +169,7 @@ const weapons: Array<Weapon> = [
     range: 'Curto',
     category: 'I',
     slots: 1,
-    ammunition: ammunitions[0],
+    ammunitionName: ammunitions[0].name,
     itemType: 'weapon',
     description: '<p>Uma arma de mão comum entre policiais e militares por ser facilmente recarregável.</p>'
   },
@@ -185,7 +185,7 @@ const weapons: Array<Weapon> = [
     range: 'Curto',
     category: 'I',
     slots: 1,
-    ammunition: ammunitions[0],
+    ammunitionName: ammunitions[0].name,
     itemType: 'weapon',
     description: '<p>A arma de fogo mais comum, e uma das mais confiáveis.</p>'
   },
@@ -201,7 +201,7 @@ const weapons: Array<Weapon> = [
     range: 'Médio',
     category: 'I',
     slots: 2,
-    ammunition: ammunitions[1],
+    ammunitionName: ammunitions[1].name,
     itemType: 'weapon',
     description: '<p>Esta arma de fogo é bastante popular entre fazendeiros, caçadores e atiradores esportistas.</p>'
   },
@@ -413,7 +413,7 @@ const weapons: Array<Weapon> = [
     range: 'Médio',
     category: 'I',
     slots: 2,
-    ammunition: ammunitions[4],
+    ammunitionName: ammunitions[4].name,
     itemType: 'weapon',
     description: '<p>Este arco moderno usa materiais de alta tensão e um sistema de roldanas para gerar mais pressão. Ao contrário de outras armas de disparo, permite que você aplique seu valor de Força às rolagens de dano.</p>'
   },
@@ -429,7 +429,7 @@ const weapons: Array<Weapon> = [
     range: 'Médio',
     category: 'I',
     slots: 2,
-    ammunition: ammunitions[4],
+    ammunitionName: ammunitions[4].name,
     itemType: 'weapon',
     description: '<p>Uma besta pesada, capaz de disparos poderosos. Exige uma ação de movimento para ser recarregada a cada disparo.</p>'
   },
@@ -445,7 +445,7 @@ const weapons: Array<Weapon> = [
     range: 'Curto',
     category: 'I',
     slots: 1,
-    ammunition: ammunitions[0],
+    ammunitionName: ammunitions[0].name,
     itemType: 'weapon',
     description: '<p>Esta arma de fogo automática pode ser empunhada com apenas uma mão.</p>'
   },
@@ -461,7 +461,7 @@ const weapons: Array<Weapon> = [
     range: 'Curto',
     category: 'I',
     slots: 2,
-    ammunition: ammunitions[2],
+    ammunitionName: ammunitions[2].name,
     itemType: 'weapon',
     description: '<p>Arma de fogo longa e com cano liso. A espingarda causa apenas metade do dano em alcance médio ou maior.</p>'
   },
@@ -477,7 +477,7 @@ const weapons: Array<Weapon> = [
     range: 'Médio',
     category: 'II',
     slots: 2,
-    ammunition: ammunitions[1],
+    ammunitionName: ammunitions[1].name,
     itemType: 'weapon',
     description: '<p>A arma de fogo padrão da maioria dos exércitos modernos. É uma arma automática.</p>'
   },
@@ -493,7 +493,7 @@ const weapons: Array<Weapon> = [
     range: 'Longo',
     category: 'III',
     slots: 2,
-    ammunition: ammunitions[1],
+    ammunitionName: ammunitions[1].name,
     itemType: 'weapon',
     description: '<p>Esta arma de fogo de uso militar é projetada para disparos longos e precisos. Se for veterano em Pontaria e mirar com um fuzil de precisão, você recebe +5 na margem de ameaça de seu ataque.</p>'
   },
@@ -509,7 +509,7 @@ const weapons: Array<Weapon> = [
     range: 'Médio',
     category: 'III',
     slots: 2,
-    ammunition: ammunitions[5],
+    ammunitionName: ammunitions[5].name,
     itemType: 'weapon',
     description: '<p>Este lança-foguetes foi concebido como uma arma anti-tanques, mas também se mostrou eficaz contra criaturas. A bazuca causa seu dano no alvo atingido e em todos os seres num raio de 3m; esses seres (mas não o alvo atingido diretamente) têm direito a um teste de Reflexos (DT Agi) para reduzir o dano à metade. Você pode disparar o foguete num ponto qualquer em alcance médio, em vez de num ser específico; nesse caso, não precisa rolar ataque e não tem chance de errar (mas também não acerta nenhum ser diretamente). A bazuca exige uma ação de movimento para ser recarregada a cada disparo.</p>'
   },
@@ -525,7 +525,7 @@ const weapons: Array<Weapon> = [
     range: 'Curto',
     category: 'III',
     slots: 2,
-    ammunition: ammunitions[3],
+    ammunitionName: ammunitions[3].name,
     itemType: 'weapon',
     description: '<p>Equipamento militar que esguicha líquido inflamável incandescente. Um lança-chamas atinge todos os seres em uma linha de 1,5m de largura com alcance curto, mas não alcança além disso. Faça um único teste de ataque e compare o resultado com a Defesa de todos os seres na área. Além de sofrer dano, seres atingidos ficam em chamas.</p>'
   },
@@ -541,7 +541,7 @@ const weapons: Array<Weapon> = [
     range: 'Médio',
     category: 'II',
     slots: 2,
-    ammunition: ammunitions[1],
+    ammunitionName: ammunitions[1].name,
     itemType: 'weapon',
     description: '<p>Uma arma de fogo pesada, de uso militar. Para atacar com uma metralhadora, você precisa ter Força 4 ou maior ou gastar uma ação de movimento para apoiá-la em seu tripé ou suporte apropriado; caso contrário, sofre –5 em seus ataques. Uma metralhadora é uma arma automática.</p>'
   }
