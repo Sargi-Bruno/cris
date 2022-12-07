@@ -40,7 +40,14 @@ const handleChangeMovementInSquares = (e: Event) => {
         ORIGEM
       </h3>
       <div>
-        <h3>{{ character.backgroundName }}</h3>
+        <input 
+          type="text" 
+          class="sheet-input-text"
+          autocomplete="nope"
+          :disabled="disabledSheet"
+          :value="character.backgroundName"
+          @blur="e => $emit('handleChangeCharText', {e, key: 'backgroundName'})"
+        >
       </div>
     </div>
     <div class="info-container">
@@ -48,7 +55,14 @@ const handleChangeMovementInSquares = (e: Event) => {
         CLASSE
       </h3>
       <div>
-        <h3>{{ character.className }}</h3>
+        <input 
+          type="text" 
+          class="sheet-input-text"
+          autocomplete="nope"
+          :disabled="disabledSheet"
+          :value="character.className"
+          @blur="e => $emit('handleChangeCharText', {e, key: 'className'})"
+        >
       </div>
     </div>
     <div class="info-row">
@@ -250,6 +264,14 @@ const handleChangeMovementInSquares = (e: Event) => {
 </template>
 
 <style scoped>
+.sheet-input-text {
+  background-color: transparent;
+  font-size: 14px;
+  color: var(--color-white);
+  font-weight: bold;
+  border: none;
+  width: 15rem;
+}
 .info-view {
   margin: 0 auto;
 }

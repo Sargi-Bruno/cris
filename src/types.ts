@@ -269,7 +269,7 @@ export interface ToastAttackInterface {
   alive: boolean
 }
 
-const characterStringKeysList = ['name', 'player'] as const
+const characterStringKeysList = ['name', 'player', 'backgroundName', 'className'] as const
 export type CharacterStringKeys = typeof characterStringKeysList[number]
 
 const characterNumberKeysList = ['movement', 'maxPv', 'currentPv', 'maxPe', 'currentPe', 'maxSan', 'currentSan', 'protectionDefense', 'bonusDefense'] as const
