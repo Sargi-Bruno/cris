@@ -239,6 +239,10 @@ export interface Character {
   uid?: string
   id?: string
   timestamp?: Timestamp
+  deathMarks: boolean[]
+  madnessMarks: boolean[]
+  deathMode: boolean
+  madnessMode: boolean
 }
 
 export interface ToastInfo {

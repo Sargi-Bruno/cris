@@ -200,7 +200,7 @@ const formatValueNumbers = (value: number, limit: 1 | 2 | 3 | 4, floor = true, n
 
 export const changeCharNumber = (character: Character, value: number, key: CharacterNumberKeys) => {
   if(key === 'maxPv' || key === 'maxPe' || key === 'maxSan') character[key] = formatValueNumbers(value, 4)
-  else if(key === 'currentPv' || key === 'currentPe' || key === 'currentSan') character[key] = formatValueNumbers(value, 4, true, false)
+  else if(key === 'currentPv' || key === 'currentPe' || key === 'currentSan') character[key] = formatValueNumbers(value, 4)
   else if(key === 'bonusDefense') character[key] = formatValueNumbers(value, 3, true, false)
   else if(key === 'movement') character[key] = formatValueNumbers(value, 3, false, true)
   else character[key] = formatValueNumbers(value, 3)

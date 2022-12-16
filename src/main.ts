@@ -5,6 +5,7 @@ import router from './router'
 import vfmPlugin from 'vue-final-modal'
 import PrimeVue from 'primevue/config'
 import Editor from 'primevue/editor'
+// import 'primeicons/primeicons.css'
 import { initializeApp } from 'firebase/app'
 // import { getAnalytics } from "firebase/analytics"
 

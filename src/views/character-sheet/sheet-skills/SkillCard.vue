@@ -27,9 +27,9 @@ const emit = defineEmits(['handleOpenSkillModal', 'handleChangeSkillOtherBonus',
 const attrOptions = ['AGI', 'FOR', 'INT', 'PRE', 'VIG']
 const trainingOptions = ['0', '5', '10', '15']
 const skillColors = {
-  trained: '#3d8b40',
-  veteran: '#0a69b7',
-  expert: '#b36b00',
+  trained: '#3d8b40', // #3d8b40 // #29A51B // #0065CB
+  veteran: '#0a69b7', // #0a69b7 // #8A2BE2 // #A347FF
+  expert: '#b36b00', // #b36b00 // #F81
 }
 
 const instance = getCurrentInstance()

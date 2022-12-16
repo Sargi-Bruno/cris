@@ -17,6 +17,7 @@ import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
 import EditModal from './sheet-modals/edit-modal/EditModal.vue'
 import LoadingView from '../../components/LoadingView.vue'
 import SheetTools from './sheet-tools/SheetTools.vue'
+import SheetHeader from './sheet-header/SheetHeader.vue'
 import _ from 'lodash'
 import {
   Character,
@@ -165,6 +166,14 @@ onMounted(async() => {
 
   if(!character.value.peTurn) character.value.peTurn = peOptions[character.value.nex as NexKeys]
 
+  if(character.value.deathMarks === undefined) {
+    character.value.deathMarks = [false, false, false]
+    character.value.madnessMarks = [false, false, false]
+    character.value.deathMode = false
+    character.value.madnessMode = false
+  }
+  // end remove
+
   loading.value = false
 })
 
@@ -246,6 +255,11 @@ const handleChangeCharNumber = (payload: { e: Event, key: CharacterNumberKeys })
   updateCharacter()
 }
 
+const handleChangeCharNumberButton = (value: number, key: CharacterNumberKeys) => {
+  changeCharNumber(character.value, value, key)
+  updateCharacter()
+}
+
 const handleChangeAttributes = (payload: { e: Event, key: AttrKeys }) => {
   const value = (payload.e.target as HTMLInputElement).valueAsNumber
   changeCharAttributes(character.value, value, payload.key)
@@ -277,6 +291,37 @@ const handleRollAttribute = (attr: AttrKeys) => {
   } catch(error) {
     handleShowErrorToast(toastInfo.value)
   }
+}
+
+const handleChangeCharMark = (type: 'pv' | 'pe' | 'san', i: number) => {
+  if(type === 'pv') character.value.deathMarks[i] = !character.value.deathMarks[i]
+  if(type === 'san') character.value.madnessMarks[i] = !character.value.madnessMarks[i]
+  updateCharacter()
+}
+
+const handleChangeMarkModeToTrue = (type: 'pv' | 'pe' | 'san') => {
+  console.log('a')
+  if(type === 'pv') character.value.deathMode = true
+  if(type === 'san') character.value.madnessMode = true
+  updateCharacter()
+}
+
+const handleMarkHeal = (type: 'pv' | 'pe' | 'san') => {
+  if(type === 'pv') {
+    character.value.deathMarks = [false, false, false]
+    character.value.deathMode = false
+    
+    if(character.value.currentPv === 0) character.value.currentPv = 1
+  }
+
+  if(type === 'san') {
+    character.value.madnessMarks = [false, false, false]
+    character.value.madnessMode = false
+
+    if(character.value.currentSan === 0) character.value.currentSan = 1
+  }
+  
+  updateCharacter()
 }
 
 const handleOpenSkillModal = (skill: Skill) => {
@@ -558,12 +603,19 @@ watch(() => toastInfo.value.alive, () => {
 
 <template>
   <div v-if="!loading" class="sheet-wrapper">
-    <SheetTools 
-      :disabled-sheet="disabledSheet" 
-      :char-added="charAdded"
-      @handle-share-sheet="handleShareSheet" 
-      @handle-add-agent="handleAddAgent"
-    />
+    <div class="sheet-header">
+      <SheetHeader
+        :character="character"
+        :disabled-sheet="disabledSheet"
+        @handle-change-char-text="handleChangeCharText"
+      />
+      <SheetTools 
+        :disabled-sheet="disabledSheet" 
+        :char-added="charAdded"
+        @handle-share-sheet="handleShareSheet" 
+        @handle-add-agent="handleAddAgent"
+      />
+    </div>
     <div class="character-sheet">
       <div class="sheet-stats">
         <SheetStats
@@ -571,10 +623,14 @@ watch(() => toastInfo.value.alive, () => {
           :disabled-sheet="disabledSheet"
           @handle-change-char-text="handleChangeCharText"
           @handle-change-char-number="handleChangeCharNumber"
+          @handle-change-char-number-button="handleChangeCharNumberButton"
           @handle-change-attribute="handleChangeAttributes"
           @handle-change-char-dropdown="handleChangeCharDropdown"
           @handle-change-movement-in-squares="handleChangeMovementInSquares"
           @handle-roll-attribute="handleRollAttribute"
+          @handle-change-char-mark="handleChangeCharMark"
+          @handle-change-mark-mode-to-true="handleChangeMarkModeToTrue"
+          @handle-mark-heal="handleMarkHeal"
         />
       </div>
       <div class="sheet-skills">
@@ -668,8 +724,15 @@ watch(() => toastInfo.value.alive, () => {
 
 <style scoped>
 .sheet-wrapper {
-  margin-top: 3rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: .25rem;
+}
+.sheet-header {
+  height: 4rem;
+  margin-right: .5rem;
+  margin-left: 1rem;
+  display: flex;
+  justify-content: space-between;
 }
 .character-sheet {
   display: flex;
@@ -679,6 +742,9 @@ watch(() => toastInfo.value.alive, () => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.sheet-stats {
+  margin-top: 1rem;
 }
 .sheet-tab {
   width: 31.25rem;
