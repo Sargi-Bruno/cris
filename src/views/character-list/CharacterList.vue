@@ -154,6 +154,7 @@ const dismissToastInfo = () => {
               :name="character.name"
               :char-class="character.className"
               :timestamp="(character.timestamp as Timestamp).seconds"
+              :sheet-picture="character.sheetPictureURL"
               @handle-open-sheet="handleOpenSheet"
               @handle-remove="handleOpenModal"
               @handle-share-character="handleShareCharacter"

@@ -18,6 +18,10 @@ const props = defineProps({
     type: Number,
     required: true
   },
+  sheetPicture: {
+    type: String,
+    required: true
+  }
 })
 
 const emit = defineEmits(['handleRemove', 'handleOpenSheet', 'handleShareCharacter'])
@@ -32,6 +36,11 @@ const creationDate = computed(() => {
   return `${day}/${monthString}/${year}`
 })
 
+const contentMargin = computed(() => {
+  if(props.sheetPicture) return '1rem'
+  return '1.5rem'
+})
+
 const handleShareCharacter = () => {
   emit('handleShareCharacter', props.charId)
 }
@@ -40,6 +49,16 @@ const handleShareCharacter = () => {
 <template>
   <div class="card">
     <div class="header">
+      <div
+        v-if="sheetPicture"
+        class="card-img-container"
+      >
+        <img
+          class="card-img"
+          :src="sheetPicture"
+          alt="foto agente"
+        >
+      </div>
       <div class="content">
         <h3 v-if="name !== ''">
           {{ name }}
@@ -88,6 +107,16 @@ const handleShareCharacter = () => {
 .header {
   display: flex;
   justify-content: space-between;
+  height: 7.25rem;
+}
+.card-img-container {
+  margin-top: 1.5rem;
+  margin-left: 1.5rem;
+}
+.card-img {
+  width: 5rem;
+  height: 5rem;
+  border: 1px solid var(--color-off-white);
 }
 .share-button {
   margin-top: .25rem;
@@ -99,10 +128,11 @@ const handleShareCharacter = () => {
 .content {
   display: flex;
   flex-direction: column;
-  margin-left: 1.5rem;
+  margin-left: v-bind(contentMargin);
+  width: 200px;
 }
 .content h3 {
-  width: 280px;
+  width: 200px;
   margin: 0;
   margin-top: 1rem;
   font-size: 26px;
@@ -112,7 +142,11 @@ const handleShareCharacter = () => {
 }
 .content h4 {
   margin: 0;
+  width: 220px;
   font-weight: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .content h5 {
   margin: 0;
@@ -124,7 +158,6 @@ const handleShareCharacter = () => {
   display: flex;
   width: 90%;
   justify-content: space-between;
-  margin-top: 1rem;
   margin-left: 1.5rem;
 }
 .sheet-button {
