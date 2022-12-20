@@ -2,7 +2,8 @@
 import { Character } from '../../../types'
 
 defineEmits([
-  'handleChangeCharText'
+  'handleChangeCharText',
+  'handleOpenChangePictureModal'
 ])
 
 defineProps<{character: Character, disabledSheet: boolean}>()
@@ -11,6 +12,28 @@ defineProps<{character: Character, disabledSheet: boolean}>()
 <template>
   <div class="sheet-header-container">
     <div class="profile-picture-container">
+      <button 
+        class="button-naked" 
+        :disabled="disabledSheet"
+        @click="$emit('handleOpenChangePictureModal')"
+      >
+        <div v-if="character.sheetPictureURL">
+          <img
+            class="profile-picture"
+            :class="{ 'disabled-picture' : disabledSheet }"
+            :src="character.sheetPictureURL"
+            alt="blank profile picture"
+          >
+        </div>
+        <div v-else>
+          <img
+            class="profile-picture"
+            :class="{ 'disabled-picture' : disabledSheet }"
+            src="../../../assets/blank-profile-picture.png"
+            alt="blank profile picture"
+          >
+        </div>
+      </button>
     </div>
     <div class="header-info-container">
       <div class="header-info-row">
@@ -73,9 +96,27 @@ defineProps<{character: Character, disabledSheet: boolean}>()
 .profile-picture-container {
   width: 3.75rem;
   height: 3.75rem;
-  border: 1px solid var(--color-off-white);
   margin-top: auto;
   margin-right: 1.5rem;
+}
+.profile-picture-container button {
+  width: 3.75rem;
+  height: 3.75rem;
+  padding: 0;
+  margin: 0;
+}
+.profile-picture {
+  width: 3.75rem;
+  height: 3.75rem;
+  border: 1px solid var(--color-off-white);
+}
+.profile-picture:hover {
+  border: 1px solid var(--color-primary);
+  cursor: pointer;
+}
+.disabled-picture:hover {
+  border: 1px solid var(--color-off-white);
+  cursor: default;
 }
 .header-info-container {
   margin-top: auto;

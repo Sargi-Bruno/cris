@@ -18,6 +18,7 @@ import EditModal from './sheet-modals/edit-modal/EditModal.vue'
 import LoadingView from '../../components/LoadingView.vue'
 import SheetTools from './sheet-tools/SheetTools.vue'
 import SheetHeader from './sheet-header/SheetHeader.vue'
+import PictureModal from './sheet-modals/picture-modal/PictureModal.vue'
 import _ from 'lodash'
 import {
   Character,
@@ -46,7 +47,7 @@ import {
   CursedItem,
   NexKeys,
   Timestamp,
-Ammunition,
+  Ammunition,
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -83,13 +84,14 @@ import router from '../../router'
 
 const { play } = useSound(diceSound)
 
-const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal, EditModal]
+const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal, EditModal, PictureModal]
 const modals = {
   abilities: 0,
   inventory: 1,
   rituals: 2,
   skill: 3,
-  edit: 4
+  edit: 4,
+  picture: 5,
 }
 const editModalOptions = {
   power: 0,
@@ -171,6 +173,11 @@ onMounted(async() => {
     character.value.madnessMarks = [false, false, false]
     character.value.deathMode = false
     character.value.madnessMode = false
+  }
+
+  if(!character.value.sheetPictureURL) {
+    character.value.sheetPictureURL = ''
+    character.value.sheetPictureFullPath = ''
   }
   // end remove
 
@@ -300,7 +307,6 @@ const handleChangeCharMark = (type: 'pv' | 'pe' | 'san', i: number) => {
 }
 
 const handleChangeMarkModeToTrue = (type: 'pv' | 'pe' | 'san') => {
-  console.log('a')
   if(type === 'pv') character.value.deathMode = true
   if(type === 'san') character.value.madnessMode = true
   updateCharacter()
@@ -369,6 +375,11 @@ const handleOpenRitualsModal = () => {
 
 const handleOpenItemsModal = () => {
   currentModal.value = modals.inventory
+  showModal.value = true
+}
+
+const handleOpenChangePictureModal = () => {
+  currentModal.value = modals.picture
   showModal.value = true
 }
 
@@ -505,6 +516,13 @@ const handleAddItem = (item: Weapon | Protection | Misc) => {
   updateCharacter()
 }
 
+const handleUpdatePicture = (downloadURL: string, fullPath: string) => {
+  character.value.sheetPictureURL = downloadURL
+  character.value.sheetPictureFullPath = fullPath
+  updateCharacter()
+  handleCloseModal()
+}
+
 const handleEditPower = (power: Power) => {
   currentModal.value = modals.edit
   currentEditModal.value = editModalOptions.power
@@ -608,6 +626,7 @@ watch(() => toastInfo.value.alive, () => {
         :character="character"
         :disabled-sheet="disabledSheet"
         @handle-change-char-text="handleChangeCharText"
+        @handle-open-change-picture-modal="handleOpenChangePictureModal"
       />
       <SheetTools 
         :disabled-sheet="disabledSheet" 
@@ -691,6 +710,7 @@ watch(() => toastInfo.value.alive, () => {
             @handle-add-ritual="handleAddRitual"
             @handle-add-item="handleAddItem"
             @handle-close-modal="handleCloseModal"
+            @handle-update-picture="handleUpdatePicture"
           />
         </vue-final-modal>
       </div>

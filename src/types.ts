@@ -243,6 +243,8 @@ export interface Character {
   madnessMarks: boolean[]
   deathMode: boolean
   madnessMode: boolean
+  sheetPictureURL: string
+  sheetPictureFullPath: string
 }
 
 export interface ToastInfo {

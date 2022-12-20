@@ -75,7 +75,13 @@ export const characterDefaultValue: Character = {
     personal: '',
     history: '',
     goal: '',
-  }
+  },
+  deathMarks: [],
+  madnessMarks: [],
+  deathMode: false,
+  madnessMode: false,
+  sheetPictureURL: '',
+  sheetPictureFullPath: ''
 }
 
 export const attackDefaultValue: Attack = {

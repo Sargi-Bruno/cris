@@ -60,7 +60,9 @@ export const characterDefaultValue: Character = {
   deathMarks: [false, false, false],
   madnessMarks: [false, false, false],
   deathMode: false,
-  madnessMode: false
+  madnessMode: false,
+  sheetPictureURL: "",
+  sheetPictureFullPath: ""
 }
 
 export const changeAttribute = (character: Character, payload: { value: number, attribute: AttrKeys }) => {

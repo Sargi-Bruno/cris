@@ -250,6 +250,10 @@ watch(() => props.currentValue, () => {
 .info-bar-button img {
   height: 1.5rem;
 }
+.info-bar-button:disabled {
+  background-color: transparent;
+  cursor: default;
+}
 .inputs-container {
   display: flex;
   align-items: center;

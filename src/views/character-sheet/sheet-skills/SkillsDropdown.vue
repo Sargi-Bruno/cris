@@ -45,6 +45,7 @@ const handleUpdateValue = (option: string) => {
       <button
         class="dropdown-button"
         :class="{ 'dropdown-underline': underline, 'disabled': disabled }"
+        :disabled="disabled"
         @click="handleOpen"
       >
         {{ value }}
@@ -95,6 +96,9 @@ const handleUpdateValue = (option: string) => {
 }
 .dropdown-button:hover {
   color: var(--color-primary);
+}
+.dropdown-button:disabled:hover {
+  color: v-bind(color);
 }
 .dropdown-content {
   z-index: 1;

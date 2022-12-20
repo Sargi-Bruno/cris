@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed,  onMounted,  PropType, ref } from 'vue'
+import { computed, PropType, ref } from 'vue'
 import { cursedItemDefault } from '../utils/default'
 import { CursedItem } from '../types'
 import _ from 'lodash'
@@ -53,8 +53,6 @@ const handleEdit = () => {
   emit('handleEditCursedItem', payload)
   cursedItem.value = _.clone(cursedItemDefault)
 }
-
-onMounted(() => console.log(props.cursedItem))
 </script>
 
 <template>
