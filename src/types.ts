@@ -239,6 +239,12 @@ export interface Character {
   uid?: string
   id?: string
   timestamp?: Timestamp
+  deathMarks: boolean[]
+  madnessMarks: boolean[]
+  deathMode: boolean
+  madnessMode: boolean
+  sheetPictureURL: string
+  sheetPictureFullPath: string
 }
 
 export interface ToastInfo {

@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { getAuth } from 'firebase/auth'
+
 defineProps({
   disabledSheet: Boolean,
   charAdded: Boolean
 })
 
 const emit = defineEmits(['handleShareSheet', 'handleAddAgent'])
+
+const auth = getAuth()
 
 const handleShareSheet = () => {
   emit('handleShareSheet')
@@ -18,17 +22,19 @@ const handleAddAgent = () => {
 <template>
   <div class="sheet-tools-container">
     <div v-if="disabledSheet">
-      <div v-if="charAdded" class="added-info">
-        Agente adicionado a sua coleção!
-      </div>
-      <div v-else>
-        <button 
-          class="button-naked share-button"
-          @click="handleAddAgent"
-        >
-          <img src="../../../assets/add-person-icon.png" alt="adicionar">
-          Adicionar agente à minha coleção
-        </button>
+      <div v-if="auth.currentUser">
+        <div v-if="charAdded" class="added-info">
+          Agente adicionado a sua coleção!
+        </div>
+        <div v-else>
+          <button 
+            class="button-naked share-button"
+            @click="handleAddAgent"
+          >
+            <img src="../../../assets/add-person-icon.png" alt="adicionar">
+            Adicionar agente à minha coleção
+          </button>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -46,6 +52,7 @@ const handleAddAgent = () => {
 <style scoped>
 .sheet-tools-container {
   display: flex;
+  margin-top: auto;
 }
 .share-button {
   display: flex;

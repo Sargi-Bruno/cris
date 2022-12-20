@@ -3,7 +3,7 @@ import { Character, AttrKeys } from '../../../../types'
 
 const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
-const emit = defineEmits(['handleRollAttribute'])
+const emit = defineEmits(['handleRollAttribute', 'handleEdit'])
 
 const handleRollAttribute = (attr: AttrKeys) => {
   if(props.disabledSheet) return
@@ -51,11 +51,22 @@ const handleRollAttribute = (attr: AttrKeys) => {
         {{ character.attributes.pre }}
       </button>
     </div>
+    <div v-if="!disabledSheet">
+      <button class="change-button" @click="$emit('handleEdit')">
+        <img 
+          src="../../../../assets/edit-icon.svg" 
+          alt="editar"
+        >
+      </button>
+    </div>
   </div>
 </template>
 
 <style scoped>
 @import './attributes.css';
+.attr-container {
+  position: relative;
+}
 .attr {
   text-align: center;
   width: 2rem;
@@ -74,5 +85,16 @@ const handleRollAttribute = (attr: AttrKeys) => {
 }
 .disabled:hover {
   color: var(--color-white);
+}
+.change-button {
+  display: block;
+  background: transparent;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  padding: 0;
+  position: absolute;
+  right: 8px;
+  top: 8px;
 }
 </style>

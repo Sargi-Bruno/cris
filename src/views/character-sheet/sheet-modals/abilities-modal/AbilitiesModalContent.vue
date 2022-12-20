@@ -39,8 +39,6 @@ const currentTab = ref(0)
 const handleNavigation = (value: number) => currentTab.value = value
 
 const handleAddPower = (power: Power) => emit('handleAddPower', power)
-
-console.log(classes[0])
 </script>
 
 <template>

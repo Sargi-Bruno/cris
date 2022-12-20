@@ -3,6 +3,7 @@ import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, getDoc, doc, updateDoc, collection, query, where, getDocs, serverTimestamp, addDoc } from 'firebase/firestore'
+import { getStorage, ref as refFirebase, getBlob, uploadBytes, getDownloadURL } from "firebase/storage"
 import { v4 as uuidv4 } from 'uuid'
 import ToastNotification from '../../components/ToastNotification.vue'
 import ToastDice from '../../components/ToastDice.vue'
@@ -17,6 +18,8 @@ import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
 import EditModal from './sheet-modals/edit-modal/EditModal.vue'
 import LoadingView from '../../components/LoadingView.vue'
 import SheetTools from './sheet-tools/SheetTools.vue'
+import SheetHeader from './sheet-header/SheetHeader.vue'
+import PictureModal from './sheet-modals/picture-modal/PictureModal.vue'
 import _ from 'lodash'
 import {
   Character,
@@ -45,7 +48,7 @@ import {
   CursedItem,
   NexKeys,
   Timestamp,
-Ammunition,
+  Ammunition,
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -82,13 +85,14 @@ import router from '../../router'
 
 const { play } = useSound(diceSound)
 
-const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal, EditModal]
+const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal, EditModal, PictureModal]
 const modals = {
   abilities: 0,
   inventory: 1,
   rituals: 2,
   skill: 3,
-  edit: 4
+  edit: 4,
+  picture: 5,
 }
 const editModalOptions = {
   power: 0,
@@ -98,6 +102,7 @@ const editModalOptions = {
 
 const auth = getAuth()
 const firestore = getFirestore()
+const storage = getStorage()
 const route = useRoute()
 const characterId = route.params.id as string
 const loading = ref(true)
@@ -164,6 +169,19 @@ onMounted(async() => {
   }
 
   if(!character.value.peTurn) character.value.peTurn = peOptions[character.value.nex as NexKeys]
+
+  if(character.value.deathMarks === undefined) {
+    character.value.deathMarks = [false, false, false]
+    character.value.madnessMarks = [false, false, false]
+    character.value.deathMode = false
+    character.value.madnessMode = false
+  }
+
+  if(!character.value.sheetPictureURL) {
+    character.value.sheetPictureURL = ''
+    character.value.sheetPictureFullPath = ''
+  }
+  // end remove
 
   loading.value = false
 })
@@ -246,6 +264,11 @@ const handleChangeCharNumber = (payload: { e: Event, key: CharacterNumberKeys })
   updateCharacter()
 }
 
+const handleChangeCharNumberButton = (value: number, key: CharacterNumberKeys) => {
+  changeCharNumber(character.value, value, key)
+  updateCharacter()
+}
+
 const handleChangeAttributes = (payload: { e: Event, key: AttrKeys }) => {
   const value = (payload.e.target as HTMLInputElement).valueAsNumber
   changeCharAttributes(character.value, value, payload.key)
@@ -277,6 +300,36 @@ const handleRollAttribute = (attr: AttrKeys) => {
   } catch(error) {
     handleShowErrorToast(toastInfo.value)
   }
+}
+
+const handleChangeCharMark = (type: 'pv' | 'pe' | 'san', i: number) => {
+  if(type === 'pv') character.value.deathMarks[i] = !character.value.deathMarks[i]
+  if(type === 'san') character.value.madnessMarks[i] = !character.value.madnessMarks[i]
+  updateCharacter()
+}
+
+const handleChangeMarkModeToTrue = (type: 'pv' | 'pe' | 'san') => {
+  if(type === 'pv') character.value.deathMode = true
+  if(type === 'san') character.value.madnessMode = true
+  updateCharacter()
+}
+
+const handleMarkHeal = (type: 'pv' | 'pe' | 'san') => {
+  if(type === 'pv') {
+    character.value.deathMarks = [false, false, false]
+    character.value.deathMode = false
+    
+    if(character.value.currentPv === 0) character.value.currentPv = 1
+  }
+
+  if(type === 'san') {
+    character.value.madnessMarks = [false, false, false]
+    character.value.madnessMode = false
+
+    if(character.value.currentSan === 0) character.value.currentSan = 1
+  }
+  
+  updateCharacter()
 }
 
 const handleOpenSkillModal = (skill: Skill) => {
@@ -324,6 +377,11 @@ const handleOpenRitualsModal = () => {
 
 const handleOpenItemsModal = () => {
   currentModal.value = modals.inventory
+  showModal.value = true
+}
+
+const handleOpenChangePictureModal = () => {
+  currentModal.value = modals.picture
   showModal.value = true
 }
 
@@ -460,6 +518,13 @@ const handleAddItem = (item: Weapon | Protection | Misc) => {
   updateCharacter()
 }
 
+const handleUpdatePicture = (downloadURL: string, fullPath: string) => {
+  character.value.sheetPictureURL = downloadURL
+  character.value.sheetPictureFullPath = fullPath
+  updateCharacter()
+  handleCloseModal()
+}
+
 const handleEditPower = (power: Power) => {
   currentModal.value = modals.edit
   currentEditModal.value = editModalOptions.power
@@ -533,6 +598,17 @@ const handleAddAgent = async () => {
     const newChar = _.cloneDeep(character.value)
     newChar.uid = auth.currentUser.uid
     newChar.timestamp = (serverTimestamp() as unknown) as Timestamp
+    
+    const storageRef = refFirebase(storage, `images/${uuidv4()}`)
+    const copyImgRef = refFirebase(storage, character.value.sheetPictureFullPath)
+    const blobValue = await getBlob(copyImgRef)
+
+    uploadBytes(storageRef, blobValue).then(async (snapshot) => {
+      const downloadURL = await getDownloadURL(snapshot.ref)
+      newChar.sheetPictureURL = downloadURL
+      newChar.sheetPictureFullPath = snapshot.metadata.fullPath
+    })
+
     await addDoc(collection(firestore, 'characters'), newChar)
 
     dismissToastRoll()
@@ -558,12 +634,20 @@ watch(() => toastInfo.value.alive, () => {
 
 <template>
   <div v-if="!loading" class="sheet-wrapper">
-    <SheetTools 
-      :disabled-sheet="disabledSheet" 
-      :char-added="charAdded"
-      @handle-share-sheet="handleShareSheet" 
-      @handle-add-agent="handleAddAgent"
-    />
+    <div class="sheet-header">
+      <SheetHeader
+        :character="character"
+        :disabled-sheet="disabledSheet"
+        @handle-change-char-text="handleChangeCharText"
+        @handle-open-change-picture-modal="handleOpenChangePictureModal"
+      />
+      <SheetTools 
+        :disabled-sheet="disabledSheet" 
+        :char-added="charAdded"
+        @handle-share-sheet="handleShareSheet" 
+        @handle-add-agent="handleAddAgent"
+      />
+    </div>
     <div class="character-sheet">
       <div class="sheet-stats">
         <SheetStats
@@ -571,10 +655,14 @@ watch(() => toastInfo.value.alive, () => {
           :disabled-sheet="disabledSheet"
           @handle-change-char-text="handleChangeCharText"
           @handle-change-char-number="handleChangeCharNumber"
+          @handle-change-char-number-button="handleChangeCharNumberButton"
           @handle-change-attribute="handleChangeAttributes"
           @handle-change-char-dropdown="handleChangeCharDropdown"
           @handle-change-movement-in-squares="handleChangeMovementInSquares"
           @handle-roll-attribute="handleRollAttribute"
+          @handle-change-char-mark="handleChangeCharMark"
+          @handle-change-mark-mode-to-true="handleChangeMarkModeToTrue"
+          @handle-mark-heal="handleMarkHeal"
         />
       </div>
       <div class="sheet-skills">
@@ -635,6 +723,7 @@ watch(() => toastInfo.value.alive, () => {
             @handle-add-ritual="handleAddRitual"
             @handle-add-item="handleAddItem"
             @handle-close-modal="handleCloseModal"
+            @handle-update-picture="handleUpdatePicture"
           />
         </vue-final-modal>
       </div>
@@ -668,8 +757,15 @@ watch(() => toastInfo.value.alive, () => {
 
 <style scoped>
 .sheet-wrapper {
-  margin-top: 3rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: .25rem;
+}
+.sheet-header {
+  height: 4rem;
+  margin-right: .5rem;
+  margin-left: 1rem;
+  display: flex;
+  justify-content: space-between;
 }
 .character-sheet {
   display: flex;
@@ -679,6 +775,9 @@ watch(() => toastInfo.value.alive, () => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.sheet-stats {
+  margin-top: 1rem;
 }
 .sheet-tab {
   width: 31.25rem;

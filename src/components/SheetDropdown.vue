@@ -106,7 +106,7 @@ const handleUpdateValue = (option: string) => {
   cursor: auto;
 }
 .dropdown-content {
-  z-index: 1;
+  z-index: 2;
   width: inherit;
   max-height: 13rem;
   overflow-y: scroll;

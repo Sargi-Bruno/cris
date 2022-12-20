@@ -4,7 +4,7 @@ import { Character } from '../../../../types'
 
 defineProps<{character: Character}>()
 
-const emit = defineEmits(['handleChangeAttribute'])
+const emit = defineEmits(['handleChangeAttribute', 'handleEdit'])
 
 const instance = getCurrentInstance()
 
@@ -49,11 +49,20 @@ const handleChangeAttribute = (e: Event, key: string) => {
         @blur="e => handleChangeAttribute(e, 'pre')"
       >
     </div>
+    <button class="change-button" @click="$emit('handleEdit')">
+      <img 
+        src="../../../../assets/done-icon.svg" 
+        alt="concluir"
+      >
+    </button>
   </div>
 </template>
 
 <style scoped>
 @import './attributes.css';
+.attr-container {
+  position: relative;
+}
 .input {
   text-align: center;
   width: 2rem;
@@ -63,5 +72,16 @@ const handleChangeAttribute = (e: Event, key: string) => {
   padding: 0;
   border: none;
   border-bottom: 1px solid var(--color-white);
+}
+.change-button {
+  display: block;
+  background: transparent;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  padding: 0;
+  position: absolute;
+  right: 8px;
+  top: 8px;
 }
 </style>
