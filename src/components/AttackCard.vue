@@ -2,7 +2,7 @@
 import { PropType, ref, getCurrentInstance } from 'vue'
 import { Attack } from '../types'
 import DividerView from './DividerView.vue'
-import AttackDropdown from '../components/AttackDropdown.vue'
+import DropdownSimple from './DropdownSimple.vue'
 
 const props = defineProps({
   attack: {
@@ -12,13 +12,14 @@ const props = defineProps({
   id: {
     type: String,
     default: ''
-  }
+  },
+  disabled: Boolean
 })
 
 const emit = defineEmits(['handleRemoveAttack', 'handleChangeAttackText', 'handleChangeAttackNumber', 'handleChangeAttackDropdown', 'handleRollAttack'])
 
-const damageTypeOptions = ['-', 'Balístico', 'Conhecimento', 'Corte', 'Energia', 'Fogo', 'Impacto',  'Morte', 'Perfuração', 'Sangue']
-const rangeOptions = ['-', 'Curto', 'Médio', 'Longo']
+const damageTypeOptions = ['-', 'Balístico', 'Conhecimento', 'Corte', 'Eletricidade', 'Energia', 'Fogo', 'Frio', 'Impacto', 'Mental', 'Morte', 'Perfuração', 'Sangue', 'Químico']
+const rangeOptions = ['-', 'Curto', 'Médio', 'Longo', 'Extremo', 'Ilimitado']
 const skillUsedOptions = ['Luta', 'Ocultismo', 'Pontaria']
 const damageAttrOptions = ['Nenhum', 'Agilidade', 'Força', 'Intelecto', 'Presença', 'Vigor']
 
@@ -38,6 +39,7 @@ const handleChangeAttackNumber = (e: Event, key: string) => {
 }
 
 const handleRollAttack = () => {
+  if(props.disabled) return
   emit('handleRollAttack', props. attack)
 }
 </script>
@@ -49,6 +51,8 @@ const handleRollAttack = () => {
     >
       <button 
         class="roll-button"
+        :class="{ 'disabled': disabled}"
+        :disabled="disabled"
         @click="handleRollAttack"
       >
         <img src="../assets/d20-icon.png" alt="rolar">
@@ -57,6 +61,7 @@ const handleRollAttack = () => {
         type="text" 
         class="attack-input name" 
         autocomplete="nope"
+        :disabled="disabled"
         :value="attack.name"
         @blur="e => handleChangeAttackText(e, 'name')"
       >
@@ -64,6 +69,7 @@ const handleRollAttack = () => {
         type="number" 
         class="attack-input number" 
         autocomplete="nope"
+        :disabled="disabled"
         :value="attack.attackBonus"
         @blur="e => handleChangeAttackNumber(e, 'attackBonus')"
       >
@@ -72,6 +78,7 @@ const handleRollAttack = () => {
         class="attack-input text" 
         autocomplete="nope"
         placeholder="-"
+        :disabled="disabled"
         :value="attack.damage"
         @blur="e => handleChangeAttackText(e, 'damage')"
       >
@@ -80,6 +87,7 @@ const handleRollAttack = () => {
         class="attack-input text" 
         autocomplete="nope"
         placeholder="-"
+        :disabled="disabled"
         :value="attack.extraDamage"
         @blur="e => handleChangeAttackText(e, 'extraDamage')"
       > 
@@ -87,6 +95,7 @@ const handleRollAttack = () => {
         type="number" 
         class="attack-input crit" 
         autocomplete="nope"
+        :disabled="disabled"
         :value="attack.criticalRange"
         @blur="e => handleChangeAttackNumber(e, 'criticalRange')"
       > 
@@ -95,6 +104,7 @@ const handleRollAttack = () => {
         type="number" 
         class="attack-input crit-mult" 
         autocomplete="nope"
+        :disabled="disabled"
         :value="attack.criticalMult"
         @blur="e => handleChangeAttackNumber(e, 'criticalMult')"
       > 
@@ -112,17 +122,19 @@ const handleRollAttack = () => {
           <div class="content-row">
             <div class="dropdown-container">
               <h3>TIPO DE DANO</h3>
-              <AttackDropdown
+              <DropdownSimple
                 :value="attack.damageType"
                 :options="damageTypeOptions"
+                :disabled="disabled"
                 @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'damageType'})"
               />
             </div>
             <div class="dropdown-container">
               <h3>ALCANCE</h3>
-              <AttackDropdown
+              <DropdownSimple
                 :value="attack.range"
                 :options="rangeOptions"
+                :disabled="disabled"
                 @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'range'})"
               />
             </div>
@@ -130,23 +142,26 @@ const handleRollAttack = () => {
           <div class="content-row">
             <div class="dropdown-container">
               <h3>PERÍCIA</h3>
-              <AttackDropdown
+              <DropdownSimple
                 :value="attack.skillUsed"
                 :options="skillUsedOptions"
+                :disabled="disabled"
                 @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'skillUsed'})"
               />
             </div>
             <div class="dropdown-container">
               <h3>ATRIBUTO DANO</h3>
-              <AttackDropdown
+              <DropdownSimple
                 :value="attack.damageAttribute"
                 :options="damageAttrOptions"
+                :disabled="disabled"
                 @update-value="(value: string) => $emit('handleChangeAttackDropdown', {value, id, key: 'damageAttribute'})"
               />
             </div>
           </div>
           <div class="footer">
-            <button 
+            <button
+              v-if="!disabled"
               class="button-remove"
               @click.stop="$emit('handleRemoveAttack', id)"
             >

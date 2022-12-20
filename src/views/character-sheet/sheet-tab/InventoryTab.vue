@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance } from 'vue'
-import { Character, Weapon, Protection, Misc, CursedItem } from '../../../types'
+import { Character, Weapon, Protection, Misc, CursedItem, Ammunition } from '../../../types'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
 import WeaponCard from '../../../components/WeaponCard.vue'
 import ProtectionCard from '../../../components/ProtectionCard.vue'
@@ -9,7 +9,7 @@ import CursedItemCard from '../../../components/CursedItemCard.vue'
 import FilterInput from '../../../components/FilterInput.vue'
 import { compare } from '../../../utils/functions'
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits([
   'handleOpenItemsModal', 
@@ -17,7 +17,8 @@ const emit = defineEmits([
   'handleEquipItem', 
   'handleChangeInventoryNumber', 
   'handleChangeItemsLimit', 
-  'handleChangeInventoryDropdown'
+  'handleChangeInventoryDropdown',
+  'handleEditItem',
 ])
 
 const patentOptions = ['Recruta', 'Operador', 'Agente especial', 'Oficial de operações', 'Agente de elite']
@@ -28,7 +29,7 @@ const filterText = ref('')
 
 const inventoryFiltered = computed(() => {
   const inventory = [...props.character.inventory]
-  return inventory.filter((ele) => compare(ele.name, filterText.value))
+  return inventory.filter((ele) => compare(ele.name, filterText.value)).sort((a, b) => a.name.localeCompare(b.name))
 })
 
 const currentLoadColor = computed(() => {
@@ -36,6 +37,13 @@ const currentLoadColor = computed(() => {
   if(props.character.currentLoad > props.character.maxLoad) return '#ff8c00'
   return '#fff'
 })
+
+const currentLoad = computed(() => {
+  if(props.character.currentLoad < 0) return 0
+  return props.character.currentLoad
+})
+
+const handleEditItem = (item: Weapon | Protection | Misc | Ammunition | CursedItem) => emit('handleEditItem', item)
 
 const handleChangeItemsLimit = (e: Event, key: string) => {
   const value = (e.target as HTMLInputElement).valueAsNumber
@@ -51,7 +59,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
 </script>
   
 <template>
-  <div class="inventory-tab">
+  <div class="tab">
     <div class="tab-header">
       <div v-if="character.inventory.length > 0">
         <FilterInput
@@ -61,6 +69,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
         />
       </div>
       <button 
+        v-if="!disabledSheet"
         class="button-primary add-button"
         @click="$emit('handleOpenItemsModal')"
       >
@@ -76,12 +85,14 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
           <input 
             type="number"
             class="sheet-input sheet-input-size"
+            :disabled="disabledSheet"
             :value="character.prestigePoints"
             @blur="e => handleChangeInventoryNumber(e, 'prestigePoints')"
           >
         </div>
         <SheetDropdown
           title="PATENTE"
+          :disabled="disabledSheet"
           :value="character.patent"
           button-width="10rem"
           :options="patentOptions"
@@ -97,6 +108,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="I"
+            :disabled="disabledSheet"
             :value="character.itemsLimit.I"
             @blur="e => handleChangeItemsLimit(e, 'I')"
           >
@@ -104,6 +116,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="II"
+            :disabled="disabledSheet"
             :value="character.itemsLimit.II"
             @blur="e => handleChangeItemsLimit(e, 'II')"
           >
@@ -111,6 +124,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="III"
+            :disabled="disabledSheet"
             :value="character.itemsLimit.III"
             @blur="e => handleChangeItemsLimit(e, 'III')"
           >
@@ -118,6 +132,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             type="number"
             class="sheet-input sheet-input-size"
             placeholder="IV"
+            :disabled="disabledSheet"
             :value="character.itemsLimit.IV"
             @blur="e => handleChangeItemsLimit(e, 'IV')"
           >
@@ -145,6 +160,7 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
       <div class="inventory-row">
         <SheetDropdown
           title="LIMITE DE CRÉDITO"
+          :disabled="disabledSheet"
           :value="character.creditsLimit"
           button-width="6rem"
           :options="creditOptions"
@@ -157,12 +173,14 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
           <input 
             type="number"
             class="sheet-input sheet-input-size current-load-color"
-            :value="character.currentLoad"
+            :disabled="disabledSheet"
+            :value="currentLoad"
             @blur="e => handleChangeInventoryNumber(e, 'currentLoad')"
           >
           <input 
             type="number"
             class="sheet-input sheet-input-size"
+            :disabled="disabledSheet"
             :value="character.maxLoad"
             @blur="e => handleChangeInventoryNumber(e, 'maxLoad')"
           >
@@ -180,38 +198,46 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
             <WeaponCard
               :id="item.id"
               :weapon="(item as Weapon)"
+              :disabled="disabledSheet"
               only-show
               sheet
-              @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+              @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
               @handle-equip="(id: string) => $emit('handleEquipItem', id)"
+              @handle-edit="handleEditItem"
             />
           </div>
           <div v-if="item.itemType === 'protection'">
             <ProtectionCard
               :id="item.id"
               :protection="(item as Protection)"
+              :disabled="disabledSheet"
               only-show
               sheet
-              @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+              @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
               @handle-equip="(id: string) => $emit('handleEquipItem', id)"
+              @handle-edit="handleEditItem"
             />
           </div>
-          <div v-if="item.itemType === 'misc'">
+          <div v-if="item.itemType === 'misc' || item.itemType === 'ammunition'">
             <MiscCard
               :id="item.id"
-              :misc="(item as Misc)"
+              :misc="(item as Misc | Ammunition)"
+              :disabled="disabledSheet"
               only-show
               sheet
-              @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+              @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
+              @handle-edit="handleEditItem"
             />
           </div>
           <div v-if="item.itemType === 'cursedItem'">
             <CursedItemCard
               :id="item.id"
               :cursed-item="(item as CursedItem)"
+              :disabled="disabledSheet"
               only-show
               sheet
-              @handle-remove="(id: string) => $emit('handleRemoveItem', id)"
+              @handle-remove="payload => $emit('handleRemoveItem', payload.id)"
+              @handle-edit="handleEditItem"
             />
           </div>
         </div>
@@ -227,6 +253,12 @@ const handleChangeInventoryNumber = (e: Event, key: string) => {
 </template>
   
 <style scoped>
+.tab {
+  height: 52.25rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: .5rem;
+}
 .tab-header {
   display: flex;
   align-items: flex-end;

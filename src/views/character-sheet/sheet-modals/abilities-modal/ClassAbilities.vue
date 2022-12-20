@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { Character, Power } from '../../../../types'
-import classes from '../../../../data/classes'
+import { Class, Power } from '../../../../types'
 import TabNav from '../../../../components/TabNav.vue'
 import PowerCard from '../../../../components/PowerCard.vue'
 import SearchInput from '../../../../components/SearchInput.vue'
@@ -18,7 +17,7 @@ interface Path {
   abilities: Power[]
 }
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{classValue: Class}>()
 
 const emit = defineEmits(['handleAddPower'])
 
@@ -31,16 +30,12 @@ const searchText = ref('')
 const handleAddPower = (power: Power) => emit('handleAddPower', power)
 
 onMounted(() => {
-  const charClass = classes.find((element) => props.character.className === element.name)
-
-  if(!charClass) return
-
   tabOptions.value.push({
-    label: `Poderes de ${charClass.name}`,
+    label: `Poderes de ${props.classValue.name}`,
     value: 0
   })
 
-  charClass.paths.forEach((path, i) => {
+  props.classValue.paths.forEach((path, i) => {
     tabOptions.value.push({
       label: path.name,
       value: i+1
@@ -48,11 +43,11 @@ onMounted(() => {
     paths.value.push(path)
   })
 
-  for(const abilitie of charClass.abilities) {
+  for(const abilitie of props.classValue.abilities) {
     powers.value.push(abilitie)
   }
 
-  for(const power of charClass.powers) {
+  for(const power of props.classValue.powers) {
     powers.value.push(power)
   }
 })
@@ -61,7 +56,8 @@ const currentPowers = computed<Power[]>(() => {
   if(!powers.value) return []
 
   if(currentTab.value === 0) return powers.value.filter((ele) => compare(ele.name, searchText.value)).sort((a, b) => a.name.localeCompare(b.name))
-  else return paths.value[currentTab.value - 1].abilities
+
+  return paths.value[currentTab.value - 1].abilities
 })
 </script>
 

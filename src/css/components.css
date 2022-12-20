@@ -22,6 +22,34 @@
   filter: brightness(90%);
 }
 
+.button-secondary {
+  height: 2.25rem;
+  background-color: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-white);
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.button-secondary:hover {
+  color: var(--color-primary);
+}
+
+.button-naked {
+  height: 2.25rem;
+  background-color: transparent;
+  color: var(--color-white);
+  border: none;
+  font-size: 14px;
+}
+
+.button-naked:hover {
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
 .input-primary {
   height: 2rem;
   background-color: var(--color-dark-gray);
@@ -139,15 +167,68 @@
   border: solid 3px transparent;
 }
 
+.button-cancel {
+  height: 2.25rem;
+  background-color: transparent;
+  border: none;
+  color: var(--color-white);
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.button-cancel:hover {
+  color: var(--color-red);
+}
+
 .button-remove {
   background-color: transparent;
   border: none;
   color: var(--color-red);
   cursor: pointer;
   padding: 0;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .button-remove:hover {
   filter: brightness(90%);
+}
+
+.p-editor-container {
+  border: none !important;
+}
+
+.p-editor-toolbar {
+  border-radius: 4px 4px 0 0;
+  background: var(--color-dark-gray);
+  border: 1px solid var(--color-gray) !important;
+}
+
+.p-editor-content {
+  background: var(--color-smoky-black);
+  font-family: 'Roboto', sans-serif !important;
+  font-size: 16px !important;
+  border: 1px solid var(--color-gray) !important;
+  border-radius: 0 0 4px 4px;
+}
+
+.ql-toolbar .ql-stroke {
+  stroke: #fff !important;
+}
+
+.ql-toolbar .ql-fill {
+  fill: #fff !important;
+}
+
+.ql-active .ql-stroke { 
+  stroke: var(--color-primary) !important;
+}
+
+.ql-active .ql-fill { 
+  fill: var(--color-primary) !important;
+}
+
+.ql-font-roboto {
+  font-family: 'Roboto', sans-serif !important;
 }

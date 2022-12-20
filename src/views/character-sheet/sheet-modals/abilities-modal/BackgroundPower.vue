@@ -1,35 +1,46 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { Character, Power, Background } from '../../../../types'
+import { computed, onMounted, ref } from 'vue'
+import { Power } from '../../../../types'
+import SearchInput from '../../../../components/SearchInput.vue'
 import Backgrounds from '../../../../data/backgrounds'
 import PowerCard from '../../../../components/PowerCard.vue'
-
-const props = defineProps<{character: Character}>()
+import { compare } from '../../../../utils/functions'
 
 const emit = defineEmits(['handleAddPower'])
 
-const background = ref<Background>()
-
 const handleAddPower = (power: Power) => emit('handleAddPower', power)
 
+const powers = ref<Power[]>([])
+const searchText = ref('')
+
 onMounted(() => {
-  const backgroundChar = Backgrounds.find((ele) => props.character.backgroundName === ele.name)
+  for(const background of Backgrounds) {
+    powers.value.push(background.power)
+  }
+})
 
-  if(!backgroundChar) return
-
-  background.value = backgroundChar
+const currentPowers = computed<Power[]>(() => {
+  return powers.value.filter((ele) => compare(ele.name, searchText.value)).sort((a, b) => a.name.localeCompare(b.name))
 })
 </script>
 
 <template>
   <div class="class-abilities-container">
-    <div
-      v-if="background"
-      class="class-abilities-content"
-    >
-      <div class="class-abilitie-card">
+    <div class="search-container">
+      <SearchInput 
+        :value="searchText"
+        dark
+        @update="value => searchText = value"
+      />
+    </div>
+    <div class="class-abilities-content">
+      <div 
+        v-for="power in currentPowers"
+        :key="power.name"
+        class="class-abilitie-card"
+      >
         <PowerCard
-          :power="background.power"
+          :power="power"
           @handle-add="handleAddPower"
         />
       </div>
@@ -41,10 +52,16 @@ onMounted(() => {
 .class-abilities-container {
   margin-top: 1rem;
 }
+.search-container {
+  margin-top: 1rem;
+}
 .class-abilities-content {
   margin-top: 1rem;
   border-radius: 4px;
   padding: .5rem;
   background-color: var(--color-smoky-black);
+}
+.class-abilitie-card:not(:last-of-type) {
+  margin-bottom: .5rem;
 }
 </style>

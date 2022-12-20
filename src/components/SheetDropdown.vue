@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
@@ -19,7 +19,8 @@ defineProps({
     type: Array<string>,
     required: true
   },
-  bold: Boolean
+  bold: Boolean,
+  disabled: Boolean
 })
 
 const emit = defineEmits(['updateValue'])
@@ -28,6 +29,11 @@ const dropdown = ref(null)
 const open = ref(false)
 
 onClickOutside(dropdown, () => open.value = false)
+
+const handleOpen = () => {
+  if(props.disabled) return
+  open.value = !open.value
+}
 
 const handleUpdateValue = (option: string) => {
   open.value = false
@@ -43,8 +49,8 @@ const handleUpdateValue = (option: string) => {
     <div class="dropdown-button-container">
       <button
         class="dropdown-button"
-        :class="{ 'bold': bold }"
-        @click="open = !open"
+        :class="{ 'bold': bold, 'disabled': disabled }"
+        @click="handleOpen"
       >
         {{ value }}
       </button>
@@ -95,15 +101,20 @@ const handleUpdateValue = (option: string) => {
 .dropdown-button:hover {
   color: var(--color-primary);
 }
+.disabled:hover {
+  color: var(--color-white);
+  cursor: auto;
+}
 .dropdown-content {
-  z-index: 1;
+  z-index: 2;
   width: inherit;
-  max-height: 12.5rem;
+  max-height: 13rem;
   overflow-y: scroll;
   position: absolute;
   left: 0;
   top: calc(100% + .25rem);
   padding: .5rem;
+  border: 1px solid var(--color-gray);
   border-radius: 4px;
   background-color: var(--color-light-black);
   pointer-events: none;

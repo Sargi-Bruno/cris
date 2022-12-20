@@ -13,10 +13,12 @@ const props = defineProps({
     default: ''
   },
   onlyShow: Boolean,
-  sheet: Boolean
+  sheet: Boolean,
+  homebrew: Boolean,
+  disabled: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEquip'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEquip', 'handleEdit'])
 
 const showMore = ref(false)
 
@@ -25,11 +27,19 @@ const handleAdd = () => {
 }
 
 const handleRemove = () => {
-  emit('handleRemove', props.id)
+  const payload = {
+    id: props.protection.id || props.id,
+    itemType: props.protection.itemType
+  }
+  emit('handleRemove', payload)
 }
 
 const handleEquip = () => {
   emit('handleEquip', props.id)
+}
+
+const handleEdit = () => {
+  emit('handleEdit', props.protection)
 }
 </script>
 
@@ -48,7 +58,7 @@ const handleEquip = () => {
       </button>
       <div>
         <div class="first-row">
-          <h3 class="title" :class="{ 'sheet-title': sheet}">
+          <h3 class="title" :class="{ 'sheet-title': sheet && !homebrew}">
             {{ protection.name }}
           </h3>
         </div>
@@ -56,7 +66,7 @@ const handleEquip = () => {
           <div class="item-info">
             <h3>Defesa: <span>+{{ protection.defense }}</span></h3>
           </div>
-          <div v-if="!sheet" class="flex-row">
+          <div v-if="!sheet || homebrew" class="flex-row">
             <div class="item-info">
               <h3>Categoria: <span>{{ protection.category }}</span></h3>
             </div>
@@ -71,9 +81,11 @@ const handleEquip = () => {
           <img src="../assets/add-icon.svg" alt="adicionar">
         </button>
       </div>
-      <div v-if="sheet" class="button-container">
+      <div v-if="sheet && !homebrew" class="button-container">
         <button 
           class="checkbox-button"
+          :class="{ 'disabled': disabled }"
+          :disabled="disabled"
           @click.stop="handleEquip"
         >
           <img
@@ -98,13 +110,23 @@ const handleEquip = () => {
             </div>
           </div>
           <div :class="{ 'sheet-content': sheet}" v-html="protection.description" />
-          <button
-            v-if="sheet"
-            class="button-remove card-remove-button"
-            @click.stop="handleRemove"
+          <div
+            v-if="sheet && !disabled"
+            class="card-footer"
           >
-            Remover
-          </button>
+            <button
+              class="button-remove"
+              @click.stop="handleRemove"
+            >
+              {{ homebrew ? 'Deletar' : 'Remover' }}
+            </button>
+            <button
+              class="button-remove button-edit"
+              @click.stop="handleEdit"
+            >
+              Editar
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -186,9 +208,6 @@ const handleEquip = () => {
 .sheet-content h3 {
   font-size: 14px;
 }
-.card-remove-button {
-  margin-bottom: .5rem;
-}
 .only-sheet-content-container {
   margin-top: 1rem;
 }
@@ -199,12 +218,12 @@ const handleEquip = () => {
   background-color: transparent;
   border: 1px solid var(--color-white);
   border-radius: 4px;
-  cursor: pointer;
   margin-right: .5rem;
   padding: 0;
   width: 2rem;
 }
 .checkbox-button:hover {
+  cursor: pointer;
   border: 1px solid var(--color-primary);
 }
 .checkbox-img {
@@ -214,5 +233,17 @@ const handleEquip = () => {
 }
 .checkbox-img-fade {
   opacity: 0;
+}
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+.button-edit {
+  color: var(--color-green);
+}
+.disabled:hover {
+  border: 1px solid var(--color-white);
 }
 </style>

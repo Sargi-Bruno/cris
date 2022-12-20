@@ -2,6 +2,7 @@ export interface Power {
   name: string
   description: string
   id?: string
+  uid?: string
 }
 
 export interface Path {
@@ -41,6 +42,7 @@ export interface CursedItem {
   category: string
   equipped?: boolean
   id?: string
+  uid?: string
 }
 
 export interface Ammunition {
@@ -48,6 +50,8 @@ export interface Ammunition {
   description: string
   category: string
   slots: number | string
+  tag: string
+  itemType: string
   id?: string
 }
 
@@ -96,12 +100,14 @@ export interface Weapon {
   range: string
   category: string
   slots: number | string
+  ammunitionName?: string
   ammunition?: Ammunition
   mods?: Array<Modification>
   curses?: Array<Curse>
   id?: string
   itemType: string
   equipped?: boolean
+  uid?: string
 }
 
 export interface Protection {
@@ -115,6 +121,7 @@ export interface Protection {
   id?: string
   itemType: string
   equipped?: boolean
+  uid?: string
 }
 
 export interface Misc {
@@ -128,6 +135,7 @@ export interface Misc {
   id?: string
   itemType: string
   equipped?: boolean
+  uid?: string
 }
 
 export interface Ritual {
@@ -143,6 +151,7 @@ export interface Ritual {
   duration?: string
   save?: string
   id?: string
+  uid?: string
 }
 
 export interface Skill {
@@ -185,6 +194,7 @@ export interface Character {
   backgroundName: string
   className: string
   nex: string
+  peTurn?: string
   movement: number
   maxPv: number
   currentPv: number
@@ -229,6 +239,12 @@ export interface Character {
   uid?: string
   id?: string
   timestamp?: Timestamp
+  deathMarks: boolean[]
+  madnessMarks: boolean[]
+  deathMode: boolean
+  madnessMode: boolean
+  sheetPictureURL: string
+  sheetPictureFullPath: string
 }
 
 export interface ToastInfo {
@@ -259,7 +275,7 @@ export interface ToastAttackInterface {
   alive: boolean
 }
 
-const characterStringKeysList = ['name', 'player'] as const
+const characterStringKeysList = ['name', 'player', 'backgroundName', 'className'] as const
 export type CharacterStringKeys = typeof characterStringKeysList[number]
 
 const characterNumberKeysList = ['movement', 'maxPv', 'currentPv', 'maxPe', 'currentPe', 'maxSan', 'currentSan', 'protectionDefense', 'bonusDefense'] as const

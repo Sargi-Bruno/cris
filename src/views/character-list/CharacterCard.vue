@@ -20,7 +20,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['handleRemove', 'handleOpenSheet'])
+const emit = defineEmits(['handleRemove', 'handleOpenSheet', 'handleShareCharacter'])
 
 const creationDate = computed(() => {
   const date = new Date(props.timestamp * 1000);
@@ -31,19 +31,33 @@ const creationDate = computed(() => {
 
   return `${day}/${monthString}/${year}`
 })
+
+const handleShareCharacter = () => {
+  emit('handleShareCharacter', props.charId)
+}
 </script>
 
 <template>
   <div class="card">
-    <div class="content">
-      <h3 v-if="name !== ''">
-        {{ name }}
-      </h3>
-      <h3 v-else>
-        [Sem nome]
-      </h3>
-      <h4>{{ charClass }}</h4>
-      <h5>Registrado em {{ creationDate }}</h5>
+    <div class="header">
+      <div class="content">
+        <h3 v-if="name !== ''">
+          {{ name }}
+        </h3>
+        <h3 v-else>
+          [Sem nome]
+        </h3>
+        <h4>{{ charClass }}</h4>
+        <h5>Registrado em {{ creationDate }}</h5>
+      </div>
+      <div>
+        <button 
+          class="button-naked share-button"
+          @click="handleShareCharacter"
+        >
+          <img src="../../assets/share-icon.png" alt="compartilhar">
+        </button>
+      </div>
     </div>
     <div class="footer">
       <button 
@@ -71,13 +85,24 @@ const creationDate = computed(() => {
   border-left: 3px solid var(--color-primary);
   background-color: var(--color-dark-gray);
 }
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+.share-button {
+  margin-top: .25rem;
+  margin-right: .25rem;
+}
+.share-button img {
+  height: 1.5rem;
+}
 .content {
   display: flex;
   flex-direction: column;
   margin-left: 1.5rem;
 }
 .content h3 {
-  width: 320px;
+  width: 280px;
   margin: 0;
   margin-top: 1rem;
   font-size: 26px;

@@ -15,6 +15,7 @@ export const characterDefaultValue: Character = {
   backgroundName: '',
   className: '',
   nex: '5%',
+  peTurn: '1',
   movement: 9,
   maxPv: 0,
   currentPv: 0,
@@ -55,7 +56,13 @@ export const characterDefaultValue: Character = {
     personal: '',
     history: '',
     goal: '',
-  }
+  },
+  deathMarks: [false, false, false],
+  madnessMarks: [false, false, false],
+  deathMode: false,
+  madnessMode: false,
+  sheetPictureURL: "",
+  sheetPictureFullPath: ""
 }
 
 export const changeAttribute = (character: Character, payload: { value: number, attribute: AttrKeys }) => {

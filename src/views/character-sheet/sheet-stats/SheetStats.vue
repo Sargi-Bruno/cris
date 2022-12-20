@@ -3,7 +3,7 @@ import { Character, AttrKeys } from '../../../types'
 import InfoView from './InfoView.vue'
 import AttributesView from './Attributes/AttributesView.vue'
 
-defineProps<{character: Character}>()
+defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits([
   'handleChangeCharText', 
@@ -11,7 +11,11 @@ const emit = defineEmits([
   'handleChangeAttribute', 
   'handleChangeCharDropdown', 
   'handleChangeMovementInSquares', 
-  'handleRollAttribute'
+  'handleRollAttribute',
+  'handleChangeCharNumberButton',
+  'handleChangeCharMark',
+  'handleChangeMarkModeToTrue',
+  'handleMarkHeal'
 ])
 
 const handleRollAttribute = (attr: AttrKeys) => {
@@ -21,42 +25,26 @@ const handleRollAttribute = (attr: AttrKeys) => {
 
 <template>
   <div class="sheet-stats-container">
-    <div class="char-name">
-      <div class="input-container">
-        <input 
-          type="text" 
-          class="sheet-input-title"
-          autocomplete="nope"
-          :value="character.name"
-          @blur="e => $emit('handleChangeCharText', {e, key: 'name'})"
-        >
-        <h3>PERSONAGEM</h3>
-      </div>
-      <div class="input-container">
-        <input 
-          type="text" 
-          class="sheet-input-title"
-          autocomplete="nope"
-          :value="character.player"
-          @blur="e => $emit('handleChangeCharText', {e, key: 'player'})"
-        >
-        <h3>JOGADOR</h3>
-      </div>
-    </div>
     <div class="char-attr">
       <AttributesView 
         :character="character"
-        @handle-change-attribute="(payload) => $emit('handleChangeAttribute', payload)"
+        :disabled-sheet="disabledSheet"
+        @handle-change-attribute="payload => $emit('handleChangeAttribute', payload)"
         @handle-roll-attribute="handleRollAttribute"
       />
     </div>
     <div class="char-info">
       <InfoView
         :character="character"
+        :disabled-sheet="disabledSheet"
         @handle-change-char-text="payload => $emit('handleChangeCharText', payload)"
         @handle-change-char-number="payload => $emit('handleChangeCharNumber', payload)"
         @handle-change-char-dropdown="payload => $emit('handleChangeCharDropdown', payload)"
         @handle-change-movement-in-squares="e => $emit('handleChangeMovementInSquares', e)"
+        @handle-change-char-number-button="(value: number, key: string) => $emit('handleChangeCharNumberButton', value, key)"
+        @handle-change-char-mark="(type: 'pv' | 'pe' | 'san', i: number) => $emit('handleChangeCharMark', type, i)"
+        @handle-change-mark-mode-to-true="(type: 'pv' | 'pe' | 'san') => $emit('handleChangeMarkModeToTrue', type)"
+        @handle-mark-heal="(type: 'pv' | 'pe' | 'san') => $emit('handleMarkHeal', type)"
       />
     </div>
   </div>

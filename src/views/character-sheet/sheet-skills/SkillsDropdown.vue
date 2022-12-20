@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
-defineProps({
+const props = defineProps({
   value: {
     type: String,
     required: true
@@ -16,7 +16,8 @@ defineProps({
     required: true
   },
   up: Boolean,
-  underline: Boolean
+  underline: Boolean,
+  disabled: Boolean
 })
 
 const emit = defineEmits(['updateValue'])
@@ -25,6 +26,11 @@ const dropdown = ref(null)
 const open = ref(false)
 
 onClickOutside(dropdown, () => open.value = false)
+
+const handleOpen = () => {
+  if(props.disabled) return
+  open.value = !open.value
+}
 
 const handleUpdateValue = (option: string) => {
   open.value = false
@@ -38,8 +44,9 @@ const handleUpdateValue = (option: string) => {
       <span v-if="!underline" class="span">(</span>
       <button
         class="dropdown-button"
-        :class="{ 'dropdown-underline': underline }"
-        @click="open = !open"
+        :class="{ 'dropdown-underline': underline, 'disabled': disabled }"
+        :disabled="disabled"
+        @click="handleOpen"
       >
         {{ value }}
       </button>
@@ -79,14 +86,19 @@ const handleUpdateValue = (option: string) => {
   color: v-bind(color);
   padding: 0;
   font-size: 14px;
-  cursor: pointer;
   text-align: center;
+}
+.dropdown-button:hover {
+  cursor: pointer;
 }
 .dropdown-underline {
   border-bottom: 1px solid v-bind(color);
 }
 .dropdown-button:hover {
   color: var(--color-primary);
+}
+.dropdown-button:disabled:hover {
+  color: v-bind(color);
 }
 .dropdown-content {
   z-index: 1;
@@ -124,5 +136,9 @@ const handleUpdateValue = (option: string) => {
 }
 .dropdown-content-button:hover {
   color: var(--color-primary);
+}
+.disabled:hover {
+  color: var(--color-white);
+  cursor: default;
 }
 </style>

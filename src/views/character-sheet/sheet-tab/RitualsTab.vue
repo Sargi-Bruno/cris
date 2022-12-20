@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, getCurrentInstance } from 'vue'
-import { Character } from '../../../types'
+import { Character, Ritual } from '../../../types'
 import RitualCard from '../../../components/RitualCard.vue'
 import FilterInput from '../../../components/FilterInput.vue'
 import { compare } from '../../../utils/functions'
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
-const emit = defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual', 'handleChangeRitualDc'])
+const emit = defineEmits(['handleOpenRitualsModal', 'handleRemoveRitual', 'handleChangeRitualDc', 'handleEditRitual'])
 
 const instance = getCurrentInstance()
 const filterText = ref('')
@@ -21,10 +21,12 @@ const handleChangeRitualDc = (e: Event) => {
  emit('handleChangeRitualDc', e)
  instance?.proxy?.$forceUpdate()
 }
+
+const handleEdit = (ritual: Ritual) => emit('handleEditRitual', ritual)
 </script>
   
 <template>
-  <div class="rituals-tab">
+  <div class="tab">
     <div class="tab-header">
       <div v-if="character.rituals.length > 0">
         <FilterInput
@@ -33,7 +35,8 @@ const handleChangeRitualDc = (e: Event) => {
           @update="(value: string) => filterText = value"
         />
       </div>
-      <button 
+      <button
+        v-if="!disabledSheet"
         class="button-primary add-button"
         @click="$emit('handleOpenRitualsModal')"
       >
@@ -48,6 +51,7 @@ const handleChangeRitualDc = (e: Event) => {
         <input 
           type="number"
           class="sheet-input sheet-input-size"
+          :disabled="disabledSheet"
           :value="character.ritualsDc"
           @blur="handleChangeRitualDc"
         >
@@ -63,9 +67,11 @@ const handleChangeRitualDc = (e: Event) => {
           <RitualCard 
             :id="ritual.id"
             :ritual="ritual"
+            :disabled="disabledSheet"
             only-show
             sheet
             @handle-remove="(id: string) => $emit('handleRemoveRitual', id)"
+            @handle-edit="handleEdit"
           />
         </div>
       </div>
@@ -80,6 +86,12 @@ const handleChangeRitualDc = (e: Event) => {
 </template>
   
 <style scoped>
+.tab {
+  height: 52.25rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: .5rem;
+}
 .tab-header {
   display: flex;
   align-items: flex-end;

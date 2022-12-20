@@ -24,13 +24,10 @@ const router = createRouter({
       component: () => import('../views/character-creation/CharacterCreation.vue')
     },
     {
-      path: '/ficha/:id',
+      path: '/agente/:id',
       name: 'character-sheet',
       component: () => import('../views/character-sheet/CharacterSheet.vue'),
-      props: true,
-      meta: {
-        requiresAuth: true
-      }
+      props: true
     },
     {
       path: '/creditos-e-contato',

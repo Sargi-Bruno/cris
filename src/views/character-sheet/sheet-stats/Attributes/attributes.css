@@ -2,7 +2,7 @@
   display: flex;
 }
 .image-container {
-  margin: 0 auto;
+  margin-left: 3.5rem;
   position: relative;
 }
 .attr-image {

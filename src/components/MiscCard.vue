@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { PropType, ref } from 'vue'
-import { Misc } from '../types'
+import { Ammunition, Misc } from '../types'
 import DividerView from './DividerView.vue'
 
 const props = defineProps({
   misc: {
-    type: Object as PropType<Misc>,
+    type: Object as PropType<Misc> | PropType<Ammunition>,
     required: true
   },
   id: {
@@ -13,10 +13,12 @@ const props = defineProps({
     default: ''
   },
   onlyShow: Boolean,
-  sheet: Boolean
+  sheet: Boolean,
+  homebrew: Boolean,
+  disabled: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEdit'])
 
 const showMore = ref(false)
 
@@ -25,7 +27,15 @@ const handleAdd = () => {
 }
 
 const handleRemove = () => {
-  emit('handleRemove', props.id)
+  const payload = {
+    id: props.misc.id || props.id,
+    itemType: props.misc.itemType
+  }
+  emit('handleRemove', payload)
+}
+
+const handleEdit = () => {
+  emit('handleEdit', props.misc)
 }
 </script>
 
@@ -44,10 +54,10 @@ const handleRemove = () => {
       </button>
       <div>
         <div class="first-row">
-          <h3 class="title" :class="{ 'sheet-title': sheet}">
+          <h3 class="title" :class="{ 'sheet-title': sheet && !homebrew}">
             {{ misc.name }}
           </h3>
-          <div v-if="!sheet" class="item-info-category">
+          <div v-if="!sheet || homebrew" class="item-info-category">
             <h3><i>{{ misc.tag }}</i></h3>
           </div>
         </div>
@@ -74,13 +84,23 @@ const handleRemove = () => {
             <h3><i>{{ misc.tag }}</i></h3>
           </div>
           <div :class="{ 'sheet-content': sheet}" v-html="misc.description" />
-          <button
-            v-if="sheet"
-            class="button-remove card-remove-button"
-            @click.stop="handleRemove"
+          <div
+            v-if="sheet && !disabled"
+            class="card-footer"
           >
-            Remover
-          </button>
+            <button
+              class="button-remove"
+              @click.stop="handleRemove"
+            >
+              {{ homebrew ? 'Deletar' : 'Remover' }}
+            </button>
+            <button
+              class="button-remove button-edit"
+              @click.stop="handleEdit"
+            >
+              Editar
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -171,9 +191,6 @@ const handleRemove = () => {
 .sheet-content h3 {
   font-size: 14px;
 }
-.card-remove-button {
-  margin-bottom: .5rem;
-}
 .item-info-category-sheet {
   margin-top: 1rem;
 }
@@ -181,5 +198,14 @@ const handleRemove = () => {
   margin: 0;
   font-weight: normal;
   font-size: 11px;
+}
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+.button-edit {
+  color: var(--color-green);
 }
 </style>

@@ -1,72 +1,38 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { Weapon, Protection, Misc, CursedItem } from '../../../../types'
-import weapons from '../../../../data/weapons'
-import protections from '../../../../data/protections'
-import miscs from '../../../../data/miscs'
-import cursedItems from '../../../../data/cursedItems'
-import TabNav from '../../../../components/TabNav.vue'
-import WeaponCard from '../../../../components/WeaponCard.vue'
-import ProtectionCard from '../../../../components/ProtectionCard.vue'
-import MiscCard from '../../../../components/MiscCard.vue'
-import CursedItemCard from '../../../../components/CursedItemCard.vue'
-import SearchInput from '../../../../components/SearchInput.vue'
-import { compare } from '../../../../utils/functions'
+import { ref } from 'vue'
+import { Character, Weapon, Protection, Misc, CursedItem } from '../../../../types'
+import SwitchButton from '../../../../components/SwitchButton.vue'
+import InventoryModalContent from './InventoryModalContent.vue'
+import HomebrewItems from './homebrew-items/HomebrewItems.vue'
+
+defineProps<{character: Character}>()
 
 const emit = defineEmits(['handleAddItem', 'handleCloseModal'])
 
-const tabOptions = [
+const componentOptions = [InventoryModalContent, HomebrewItems]
+
+const options = [
   {
-    label: 'Armas',
-    value: 0,
+    label: 'Itens',
+    value: 0
   },
   {
-    label: 'Proteções',
-    value: 1,
-  },
-  {
-    label: 'Geral',
-    value: 2,
-  },
-  {
-    label: 'Itens Amaldiçoados',
-    value: 3
+    label: 'Meus Itens',
+    value: 1
   }
 ]
 
-const currentTab = ref(0)
-const searchTextWeapons = ref('')
-const searchTextMisc = ref('')
-const searchTextCursedItems = ref('')
+const currentButtonValue = ref(0)
 
-const handleAddItem = (item: Weapon | Protection | Misc) => emit('handleAddItem', item)
+const handleNavigation = (value: number) => currentButtonValue.value = value
 
-const currentItems = computed<Weapon[] | Protection[] | Misc[] | CursedItem[]>(() => {
-  if(currentTab.value === 0) 
-    return weapons
-            .filter((ele) => compare(ele.name, searchTextWeapons.value))
-            .sort((a, b) => a.name.localeCompare(b.name))
-
-  if(currentTab.value === 1) 
-    return protections
-            .sort((a, b) => a.name.localeCompare(b.name))
-
-  if(currentTab.value === 2) 
-    return miscs
-            .filter((ele) => compare(ele.name, searchTextMisc.value))
-            .sort((a, b) => a.name.localeCompare(b.name))
-  if(currentTab.value === 3) 
-    return cursedItems
-            .filter((ele) => compare(ele.name, searchTextCursedItems.value))
-            .sort((a, b) => a.name.localeCompare(b.name))
-  return []
-})
+const handleAddItem = (item: Weapon | Protection | Misc | CursedItem) => emit('handleAddItem', item)
 </script>
 
 <template>
   <div class="modal-content modal-width">
     <div class="modal-header">
-      <h2>Itens</h2>
+      <h2>Adicionar Itens</h2>
       <button @click="$emit('handleCloseModal')">
         <img
           class="close-icon"
@@ -76,78 +42,18 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[] | CursedItem[]>((
       </button>
     </div>
     <div class="modal-body modal-height">
-      <div class="class-abilities-container">
-        <TabNav
-          :current-tab="currentTab"
-          :tab-options="tabOptions"
-          @handle-navigation="(value: number) => currentTab = value"
+      <SwitchButton
+        :value="currentButtonValue"
+        :options="options"
+        @handle-navigation="handleNavigation"
+      />
+      <KeepAlive>
+        <component
+          :is="componentOptions[currentButtonValue]"
+          :character="character"
+          @handle-add-item="handleAddItem"
         />
-        <div
-          v-if="currentTab === 0"
-          class="search-container"
-        >
-          <SearchInput 
-            :value="searchTextWeapons"
-            dark
-            @update="value => searchTextWeapons = value"
-          />
-        </div>
-        <div
-          v-if="currentTab === 2"
-          class="search-container"
-        >
-          <SearchInput 
-            :value="searchTextMisc"
-            dark
-            @update="value => searchTextMisc = value"
-          />
-        </div>
-        <div
-          v-if="currentTab === 3"
-          class="search-container"
-        >
-          <SearchInput 
-            :value="searchTextCursedItems"
-            dark
-            @update="value => searchTextCursedItems = value"
-          />
-        </div>
-        <div
-          v-if="currentItems.length > 0"
-          class="class-abilities-content"
-        >
-          <div
-            v-for="item in currentItems"
-            :key="item.name"
-            class="class-abilitie-card"
-          >
-            <div v-if="item.itemType === 'weapon'">
-              <WeaponCard
-                :weapon="(item as Weapon)"
-                @handle-add="handleAddItem"
-              />
-            </div>
-            <div v-if="item.itemType === 'protection'">
-              <ProtectionCard
-                :protection="(item as Protection)"
-                @handle-add="handleAddItem"
-              />
-            </div>
-            <div v-if="item.itemType === 'misc'">
-              <MiscCard
-                :misc="(item as Misc)"
-                @handle-add="handleAddItem"
-              />
-            </div>
-            <div v-if="item.itemType === 'cursedItem'">
-              <CursedItemCard
-                :cursed-item="(item as CursedItem)"
-                @handle-add="handleAddItem"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      </KeepAlive>
     </div>
   </div>
 </template>
@@ -158,20 +64,5 @@ const currentItems = computed<Weapon[] | Protection[] | Misc[] | CursedItem[]>((
 }
 .modal-height {
   height: 32rem;
-}
-.secondary-tab-container {
-  margin-top: 1rem;
-}
-.search-container {
-  margin-top: 1rem;
-}
-.class-abilities-content {
-  margin-top: 1rem;
-  border-radius: 4px;
-  padding: .5rem;
-  background-color: var(--color-smoky-black);
-}
-.class-abilitie-card:not(:last-of-type) {
-  margin-bottom: .5rem;
 }
 </style>

@@ -13,10 +13,12 @@ const props = defineProps({
     default: ''
   },
   onlyShow: Boolean,
-  sheet: Boolean
+  sheet: Boolean,
+  homebrew: Boolean,
+  disabled: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEdit'])
 
 const elementColors = {
   conhecimento: '#ff8c00',
@@ -43,7 +45,15 @@ const handleAdd = () => {
 }
 
 const handleRemove = () => {
-  emit('handleRemove', props.id)
+  const payload = {
+    id: props.cursedItem.id || props.id,
+    itemType: props.cursedItem.itemType
+  }
+  emit('handleRemove', payload)
+}
+
+const handleEdit = () => {
+  emit('handleEdit', props.cursedItem)
 }
 </script>
 
@@ -60,9 +70,19 @@ const handleRemove = () => {
       >
         <img src="../assets/show-more-icon.svg" alt="ver mais">
       </button>
-      <h3 class="title" :class="{ 'sheet-title': sheet}">
-        {{ cursedItem.name }}
-      </h3>
+      <div>
+        <h3 class="title" :class="{ 'sheet-title': sheet}">
+          {{ cursedItem.name }}
+        </h3>
+        <div class="item-info-container">
+          <div class="item-info">
+            <h3>Categoria: <span>{{ cursedItem.category }}</span></h3>
+          </div>
+          <div class="item-info">
+            <h3>Espaços: <span>{{ cursedItem.slots }}</span></h3>
+          </div>
+        </div>
+      </div>
       <div v-if="!onlyShow" class="button-container">
         <button class="button-primary" @click.stop="handleAdd">
           <img src="../assets/add-icon.svg" alt="adicionar">
@@ -77,13 +97,23 @@ const handleRemove = () => {
         </div>
         <div class="content">
           <div :class="{ 'sheet-content': sheet}" v-html="cursedItem.description" />
-          <button
-            v-if="sheet"
-            class="button-remove card-remove-button"
-            @click.stop="handleRemove"
+          <div
+            v-if="sheet && !disabled"
+            class="card-footer"
           >
-            Remover
-          </button>
+            <button
+              class="button-remove"
+              @click.stop="handleRemove"
+            >
+              {{ homebrew ? 'Deletar' : 'Remover' }}
+            </button>
+            <button
+              class="button-remove button-edit"
+              @click.stop="handleEdit"
+            >
+              Editar
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -157,7 +187,30 @@ const handleRemove = () => {
 .sheet-content :deep(p) {
   font-size: 14px;
 }
-.card-remove-button {
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .5rem;
   margin-bottom: .5rem;
+}
+.button-edit {
+  color: var(--color-green);
+}
+.item-info-container {
+  display: flex;
+  margin-left: .75rem;
+}
+.item-info {
+  margin-right: 1rem;
+}
+.item-info h3 {
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--color-primary);
+  margin: 0;
+}
+.item-info span {
+  color: var(--color-white);
+  font-size: 14px;
 }
 </style>

@@ -7,7 +7,7 @@ interface DescriptionItems {
   placeholder: string
 }
 
-defineProps<{character: Character}>()
+defineProps<{character: Character, disabledSheet: boolean}>()
 
 const emit = defineEmits(['handleChangeDescription'])
 
@@ -44,13 +44,14 @@ const items: Array<DescriptionItems> = [
 </script>
 
 <template>
-  <div class="description-tab">
+  <div class="tab">
     <div v-for="item in items" :key="item.title">
       <div class="textarea-container">
         <h3>{{ item.title }}</h3>
         <textarea
           class="textarea" 
           rows="6"
+          :disabled="disabledSheet"
           :placeholder="item.placeholder"
           :value="character.description[item.key]"
           @input="(e) => handleChangeDescription(e, item.key)"
@@ -62,6 +63,12 @@ const items: Array<DescriptionItems> = [
 </template>
 
 <style scoped>
+.tab {
+  height: 52.25rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: .5rem;
+}
 .textarea-container {
   margin-bottom: 1rem;
 }

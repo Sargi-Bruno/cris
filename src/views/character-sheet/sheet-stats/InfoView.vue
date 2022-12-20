@@ -1,41 +1,24 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance } from 'vue'
-import { Character, NexKeys } from '../../../types'
+import { Character } from '../../../types'
+import { nexOptions } from '../../character-sheet/characterSheetUtils'
 import SheetDropdown from '../../../components/SheetDropdown.vue'
+import InfoBar from './InfoBar.vue'
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
-const emit = defineEmits(['handleChangeCharText', 'handleChangeCharNumber', 'handleChangeCharDropdown', 'handleChangeMovementInSquares'])
-
-const nexOptions = ['5%', '10%', '15%', '20%', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%', '85%', '90%', '95%', '99%']
-const peOptions = {
-  '5%': '1',
-  '10%': '2',
-  '15%': '3',
-  '20%': '4',
-  '25%': '5',
-  '30%': '6',
-  '35%': '7',
-  '40%': '8',
-  '45%': '9',
-  '50%': '10',
-  '55%': '11',
-  '60%': '12',
-  '65%': '13',
-  '70%': '14',
-  '75%': '15',
-  '80%': '16',
-  '85%': '17',
-  '90%': '18',
-  '95%': '19',
-  '99%': '20',
-}
+const emit = defineEmits([
+  'handleChangeCharText', 
+  'handleChangeCharNumber', 
+  'handleChangeCharDropdown', 
+  'handleChangeMovementInSquares', 
+  'handleChangeCharNumberButton',
+  'handleChangeCharMark',
+  'handleChangeMarkModeToTrue',
+  'handleMarkHeal'
+])
 
 const instance = getCurrentInstance()
-
-const pe = computed(() => {
-  return peOptions[props.character.nex as NexKeys]
-})
 
 const movementInSquares = computed(() => {
   if(props.character.movement === 0) return 0
@@ -47,6 +30,14 @@ const defense = computed(() => {
 
   if(result > 0) return result
   else return 0
+})
+
+const block = computed(() => {
+  return props.character.skills[9].bonus
+})
+
+const evade = computed(() => {
+  return props.character.skills[22].bonus + defense.value
 })
 
 const handleChangeCharNumber = (e: Event, key: string) => {
@@ -62,26 +53,11 @@ const handleChangeMovementInSquares = (e: Event) => {
 
 <template>
   <div class="info-view">
-    <div class="info-container">
-      <h3 class="info-container-title">
-        ORIGEM
-      </h3>
-      <div>
-        <h3>{{ character.backgroundName }}</h3>
-      </div>
-    </div>
-    <div class="info-container">
-      <h3 class="info-container-title">
-        CLASSE
-      </h3>
-      <div>
-        <h3>{{ character.className }}</h3>
-      </div>
-    </div>
     <div class="info-row">
       <div class="nex-container">
         <SheetDropdown
           title="NEX"
+          :disabled="disabledSheet"
           :value="character.nex"
           :options="nexOptions"
           bold
@@ -89,7 +65,13 @@ const handleChangeMovementInSquares = (e: Event) => {
         />
         <div class="pe-container">
           <div class="pe">
-            <h3>{{ pe }}</h3>
+            <input 
+              class="sheet-input pe-input" 
+              type="number"
+              :disabled="disabledSheet"
+              :value="character.peTurn"
+              @blur="e => handleChangeCharNumber(e, 'peTurn')"
+            >
           </div>
           <h4>PE / RODADA</h4>
         </div>
@@ -100,6 +82,7 @@ const handleChangeMovementInSquares = (e: Event) => {
           <input 
             class="sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="character.movement"
             @blur="e => handleChangeCharNumber(e, 'movement')"
           >
@@ -107,6 +90,7 @@ const handleChangeMovementInSquares = (e: Event) => {
           <input 
             class="sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="movementInSquares"
             @blur="handleChangeMovementInSquares"
           >
@@ -114,12 +98,51 @@ const handleChangeMovementInSquares = (e: Event) => {
         </div>
       </div>
     </div>
-    <div class="info-row">
+    <div class="info-bar-wrapper">
+      <InfoBar
+        type="pv"
+        :max-value="character.maxPv"
+        :current-value="character.currentPv"
+        :marks="character.deathMarks"
+        :mark-mode="character.deathMode"
+        :disabled-sheet="disabledSheet"
+        @handle-change-char-number="(e: Event, key: string) => handleChangeCharNumber(e, key)"
+        @handle-change-char-number-button="(value: number, key: string) => $emit('handleChangeCharNumberButton', value, key)"
+        @handle-change-char-mark="(type: 'pv' | 'pe' | 'san', i: number) => $emit('handleChangeCharMark', type, i)"
+        @handle-change-mark-mode-to-true="(type: 'pv' | 'pe' | 'san') => $emit('handleChangeMarkModeToTrue', type)"
+        @handle-mark-heal="(type: 'pv' | 'pe' | 'san') => $emit('handleMarkHeal', type)"
+      />
+      <InfoBar
+        type="san"
+        :character="character"
+        :max-value="character.maxSan"
+        :current-value="character.currentSan"
+        :marks="character.madnessMarks"
+        :mark-mode="character.madnessMode"
+        :disabled-sheet="disabledSheet"
+        @handle-change-char-number="(e: Event, key: string) => handleChangeCharNumber(e, key)"
+        @handle-change-char-number-button="(value: number, key: string) => $emit('handleChangeCharNumberButton', value, key)"
+        @handle-change-char-mark="(type: 'pv' | 'pe' | 'san', i: number) => $emit('handleChangeCharMark', type, i)"
+        @handle-change-mark-mode-to-true="(type: 'pv' | 'pe' | 'san') => $emit('handleChangeMarkModeToTrue', type)"
+        @handle-mark-heal="(type: 'pv' | 'pe' | 'san') => $emit('handleMarkHeal', type)"
+      />
+      <InfoBar
+        type="pe"
+        :character="character"
+        :max-value="character.maxPe"
+        :current-value="character.currentPe"
+        :disabled-sheet="disabledSheet"
+        @handle-change-char-number="(e: Event, key: string) => handleChangeCharNumber(e, key)"
+        @handle-change-char-number-button="(value: number, key: string) => $emit('handleChangeCharNumberButton', value, key)"
+      />
+    </div>
+    <!-- <div class="info-row">
       <div class="info-block-container">
         <div class="info-block-header">
           <input 
             class="sheet-input-size sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="character.maxPv"
             @blur="e => handleChangeCharNumber(e, 'maxPv')"
           >
@@ -132,6 +155,7 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.currentPv"
               @blur="e => handleChangeCharNumber(e, 'currentPv')"
             >
@@ -143,6 +167,7 @@ const handleChangeMovementInSquares = (e: Event) => {
           <input 
             class="sheet-input-size sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="character.maxPe"
             @blur="e => handleChangeCharNumber(e, 'maxPe')"
           >
@@ -157,13 +182,14 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.currentPe"
               @blur="e => handleChangeCharNumber(e, 'currentPe')"
             >
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="info-row">
       <div class="defense-container">
         <div class="defense-img-container">
@@ -181,6 +207,7 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.protectionDefense"
               @blur="e => handleChangeCharNumber(e, 'protectionDefense')"
             >
@@ -193,6 +220,7 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.bonusDefense"
               @blur="e => handleChangeCharNumber(e, 'bonusDefense')"
             >
@@ -200,11 +228,30 @@ const handleChangeMovementInSquares = (e: Event) => {
           </div>
         </div>
       </div>
-      <div class="info-block-container second">
+      <div class="other-defenses-container">
+        <div class="other-defense-div">
+          <div class="other-defense-label">
+            BLOQUEIO
+          </div>
+          <div class="other-defense-value">
+            {{ block }}
+          </div>
+        </div>
+        <div class="other-defense-div">
+          <div class="other-defense-label">
+            ESQUIVA
+          </div>
+          <div class="other-defense-value">
+            {{ evade }}
+          </div>
+        </div>
+      </div>
+      <!-- <div class="info-block-container second">
         <div class="info-block-header">
           <input 
             class="sheet-input-size sheet-input" 
             type="number"
+            :disabled="disabledSheet"
             :value="character.maxSan"
             @blur="e => handleChangeCharNumber(e, 'maxSan')"
           >
@@ -219,18 +266,20 @@ const handleChangeMovementInSquares = (e: Event) => {
             <input 
               class="sheet-input" 
               type="number"
+              :disabled="disabledSheet"
               :value="character.currentSan"
               @blur="e => handleChangeCharNumber(e, 'currentSan')"
             >
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="info-line">
       <h3>PROTEÇÃO</h3>
       <input 
         class="sheet-input" 
         type="text"
+        :disabled="disabledSheet"
         :value="character.currentProtection"
         @blur="e => $emit('handleChangeCharText', {e, key: 'currentProtection'})"
       >
@@ -240,6 +289,7 @@ const handleChangeMovementInSquares = (e: Event) => {
       <input 
         class="sheet-input" 
         type="text"
+        :disabled="disabledSheet"
         :value="character.resistances"
         @blur="e => $emit('handleChangeCharText', {e, key: 'resistances'})"
       >
@@ -249,6 +299,7 @@ const handleChangeMovementInSquares = (e: Event) => {
       <input 
         class="sheet-input" 
         type="text"
+        :disabled="disabledSheet"
         :value="character.proficiencies"
         @blur="e => $emit('handleChangeCharText', {e, key: 'proficiencies'})"
       >
@@ -257,10 +308,24 @@ const handleChangeMovementInSquares = (e: Event) => {
 </template>
 
 <style scoped>
+/* .sheet-input-text {
+  background-color: transparent;
+  font-size: 14px;
+  color: var(--color-white);
+  font-weight: bold;
+  border: none;
+  width: 15rem;
+} */
 .info-view {
   margin: 0 auto;
 }
-.info-container {
+.info-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: .5rem;
+}
+/* .info-container {
   display: flex;
   align-items: center;
   margin-left: 2rem;
@@ -281,7 +346,7 @@ const handleChangeMovementInSquares = (e: Event) => {
   width: 3rem;
   font-size: 14px;
   color: var(--color-off-white);
-}
+} */
 .info-row {
   display: flex;
   align-items: center;
@@ -311,12 +376,10 @@ const handleChangeMovementInSquares = (e: Event) => {
   background-color: transparent;
   border: 1px solid var(--color-white);
 }
-.pe h3 {
-  text-align: center;
-  margin: 0;
-  font-size: 14px;
-  font-weight: bold;
-  color: var(--color-white);
+.pe-input {
+  width: 3.25rem;
+  height: 2.25rem;
+  border: none;
 }
 .desl-container {
   display: flex;
@@ -344,7 +407,7 @@ const handleChangeMovementInSquares = (e: Event) => {
   border: none;
   text-align: center;
 }
-.info-block-container {
+/* .info-block-container {
   margin-top: .25rem;
 }
 .info-block-header {
@@ -385,7 +448,7 @@ const handleChangeMovementInSquares = (e: Event) => {
 }
 .second-subtitle h4 {
   width: 4rem;
-}
+} */
 .defense-container {
   display: flex;
   margin-top: 1rem;
@@ -461,5 +524,33 @@ const handleChangeMovementInSquares = (e: Event) => {
   text-align: left;
   width: 100%;
   font-weight: normal;
+}
+.other-defenses-container {
+  display: flex;
+  gap: 1rem;
+  margin-right: 1.25rem;
+}
+.other-defense-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.other-defense-label {
+  color: var(--color-off-white);
+  font-weight: bold;
+  font-size: 14px;
+}
+.other-defense-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1px solid var(--color-off-white);
+  color: var(--color-white);
+  height: 2.25rem;
+  width: 3.25rem;
+  margin: 0 auto;
 }
 </style>

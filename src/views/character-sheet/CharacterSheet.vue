@@ -2,7 +2,8 @@
 import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, getDoc, doc, updateDoc } from 'firebase/firestore'
+import { getFirestore, getDoc, doc, updateDoc, collection, query, where, getDocs, serverTimestamp, addDoc } from 'firebase/firestore'
+import { getStorage, ref as refFirebase, getBlob, uploadBytes, getDownloadURL } from "firebase/storage"
 import { v4 as uuidv4 } from 'uuid'
 import ToastNotification from '../../components/ToastNotification.vue'
 import ToastDice from '../../components/ToastDice.vue'
@@ -14,7 +15,12 @@ import AbilitiesModal from './sheet-modals/abilities-modal/AbilitiesModal.vue'
 import InventoryModal from './sheet-modals/inventory-modal/InventoryModal.vue'
 import RitualsModal from './sheet-modals/rituals-modal/RitualsModal.vue'
 import SkillModal from './sheet-modals/skill-modal/SkillModal.vue'
+import EditModal from './sheet-modals/edit-modal/EditModal.vue'
 import LoadingView from '../../components/LoadingView.vue'
+import SheetTools from './sheet-tools/SheetTools.vue'
+import SheetHeader from './sheet-header/SheetHeader.vue'
+import PictureModal from './sheet-modals/picture-modal/PictureModal.vue'
+import _ from 'lodash'
 import {
   Character,
   Skill, 
@@ -38,7 +44,11 @@ import {
   Attack,
   ToastInfo,
   ToastRoll,
-  ToastAttackInterface
+  ToastAttackInterface,
+  CursedItem,
+  NexKeys,
+  Timestamp,
+  Ammunition,
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -65,7 +75,9 @@ import {
   rollDices,
   rollAttack,
   changeRitualDc,
-  updateCharNexStats
+  updateCharNexStats,
+  editItemSheet,
+  peOptions,
 } from './characterSheetUtils'
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
@@ -73,20 +85,33 @@ import router from '../../router'
 
 const { play } = useSound(diceSound)
 
-const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal]
+const modalOptions = [AbilitiesModal, InventoryModal, RitualsModal, SkillModal, EditModal, PictureModal]
 const modals = {
   abilities: 0,
   inventory: 1,
   rituals: 2,
-  skill: 3
+  skill: 3,
+  edit: 4,
+  picture: 5,
+}
+const editModalOptions = {
+  power: 0,
+  ritual: 1,
+  item: 2,
 }
 
 const auth = getAuth()
 const firestore = getFirestore()
+const storage = getStorage()
 const route = useRoute()
 const characterId = route.params.id as string
 const loading = ref(true)
+const editPower = ref<Power>()
+const editRitual = ref<Ritual>()
+const editItem = ref<Weapon | Protection | Misc | Ammunition | CursedItem>()
 const character = ref<Character>(characterDefaultValue)
+const disabledSheet = ref(true)
+const charAdded = ref(false)
 
 const toastInfo = ref<ToastInfo>({
   message: '',
@@ -118,6 +143,7 @@ const toastAttack = ref<ToastAttackInterface>({
 
 const showModal = ref(false)
 const currentModal = ref(0)
+const currentEditModal = ref(0)
 const currentSkill = ref<Skill>()
 
 onMounted(async() => {
@@ -125,7 +151,7 @@ onMounted(async() => {
 
   if(!querySnapshot.data()) router.push({ name: 'home' })
 
-  if((querySnapshot?.data()?.uid as string) !== auth?.currentUser?.uid) router.push({ name: 'home' })
+  if((querySnapshot?.data()?.uid as string) === auth?.currentUser?.uid) disabledSheet.value = false
 
   character.value = querySnapshot.data() as Character
   character.value.id = querySnapshot?.id
@@ -142,10 +168,26 @@ onMounted(async() => {
     character.value.currentItemsLimit = defaultCurrentItemsLimit
   }
 
+  if(!character.value.peTurn) character.value.peTurn = peOptions[character.value.nex as NexKeys]
+
+  if(character.value.deathMarks === undefined) {
+    character.value.deathMarks = [false, false, false]
+    character.value.madnessMarks = [false, false, false]
+    character.value.deathMode = false
+    character.value.madnessMode = false
+  }
+
+  if(!character.value.sheetPictureURL) {
+    character.value.sheetPictureURL = ''
+    character.value.sheetPictureFullPath = ''
+  }
+  // end remove
+
   loading.value = false
 })
 
 const updateCharacter = () => {
+  if(disabledSheet.value) return
   updateDoc(doc(firestore, 'characters', character.value.id as string), character.value)
 }
 
@@ -222,6 +264,11 @@ const handleChangeCharNumber = (payload: { e: Event, key: CharacterNumberKeys })
   updateCharacter()
 }
 
+const handleChangeCharNumberButton = (value: number, key: CharacterNumberKeys) => {
+  changeCharNumber(character.value, value, key)
+  updateCharacter()
+}
+
 const handleChangeAttributes = (payload: { e: Event, key: AttrKeys }) => {
   const value = (payload.e.target as HTMLInputElement).valueAsNumber
   changeCharAttributes(character.value, value, payload.key)
@@ -253,6 +300,36 @@ const handleRollAttribute = (attr: AttrKeys) => {
   } catch(error) {
     handleShowErrorToast(toastInfo.value)
   }
+}
+
+const handleChangeCharMark = (type: 'pv' | 'pe' | 'san', i: number) => {
+  if(type === 'pv') character.value.deathMarks[i] = !character.value.deathMarks[i]
+  if(type === 'san') character.value.madnessMarks[i] = !character.value.madnessMarks[i]
+  updateCharacter()
+}
+
+const handleChangeMarkModeToTrue = (type: 'pv' | 'pe' | 'san') => {
+  if(type === 'pv') character.value.deathMode = true
+  if(type === 'san') character.value.madnessMode = true
+  updateCharacter()
+}
+
+const handleMarkHeal = (type: 'pv' | 'pe' | 'san') => {
+  if(type === 'pv') {
+    character.value.deathMarks = [false, false, false]
+    character.value.deathMode = false
+    
+    if(character.value.currentPv === 0) character.value.currentPv = 1
+  }
+
+  if(type === 'san') {
+    character.value.madnessMarks = [false, false, false]
+    character.value.madnessMode = false
+
+    if(character.value.currentSan === 0) character.value.currentSan = 1
+  }
+  
+  updateCharacter()
 }
 
 const handleOpenSkillModal = (skill: Skill) => {
@@ -300,6 +377,11 @@ const handleOpenRitualsModal = () => {
 
 const handleOpenItemsModal = () => {
   currentModal.value = modals.inventory
+  showModal.value = true
+}
+
+const handleOpenChangePictureModal = () => {
+  currentModal.value = modals.picture
   showModal.value = true
 }
 
@@ -436,6 +518,113 @@ const handleAddItem = (item: Weapon | Protection | Misc) => {
   updateCharacter()
 }
 
+const handleUpdatePicture = (downloadURL: string, fullPath: string) => {
+  character.value.sheetPictureURL = downloadURL
+  character.value.sheetPictureFullPath = fullPath
+  updateCharacter()
+  handleCloseModal()
+}
+
+const handleEditPower = (power: Power) => {
+  currentModal.value = modals.edit
+  currentEditModal.value = editModalOptions.power
+  showModal.value = true
+  editPower.value = power
+}
+
+const handleEditRitual = (ritual: Ritual) => {
+  currentModal.value = modals.edit
+  currentEditModal.value = editModalOptions.ritual
+  showModal.value = true
+  editRitual.value = ritual
+}
+
+const handleEditItem = (item: Weapon | Protection | Misc | Ammunition | CursedItem) => {
+  currentModal.value = modals.edit
+  currentEditModal.value = editModalOptions.item
+  showModal.value = true
+  editItem.value = item
+}
+
+const handleEditPowerSheet = (editPower: Power) => {
+  const index = character.value.powers.findIndex((e) => e.id === editPower.id)
+  character.value.powers[index] = editPower
+  updateCharacter()
+  handleCloseModal()
+}
+
+const handleEditRitualSheet = (editRitual: Ritual) => {
+  const index = character.value.rituals.findIndex((e) => e.id === editRitual.id)
+  character.value.rituals[index] = editRitual
+  updateCharacter()
+  handleCloseModal()
+}
+
+const handleEditItemSheet = (editItem: Weapon | Protection | Misc | CursedItem) => {
+  editItemSheet(character.value, editItem)
+  updateCharacter()
+  handleCloseModal()
+}
+
+const handleCloseModal = () => showModal.value = false
+
+const handleShareSheet = async () => {
+  await navigator.clipboard.writeText(import.meta.env.VITE_BASE_URL + 'agente/' + character.value.id)
+  dismissToastRoll()
+  dismissToastAttack()
+  toastInfo.value.message = 'Link copiado'
+  toastInfo.value.type = 'info'
+  toastInfo.value.alive = true
+}
+
+const handleAddAgent = async () => {
+  if(!auth.currentUser?.email) return
+  if(charAdded.value) return
+  
+  const testersSnapshot = await getDoc(doc(firestore, 'beta', 'testers'))
+  const betaTesters = testersSnapshot.data()?.testers as string[]
+  let charLimit = 15
+
+  if(betaTesters.includes(auth.currentUser?.email)) charLimit = 100
+
+  const charsCollection = collection(firestore, 'characters')
+  const charsRef = query(charsCollection, where('uid', '==', auth.currentUser?.uid))
+
+  const querySnapshot = await getDocs(charsRef)
+
+  if(querySnapshot.size < charLimit) {
+    charAdded.value = true
+
+    const newChar = _.cloneDeep(character.value)
+    newChar.uid = auth.currentUser.uid
+    newChar.timestamp = (serverTimestamp() as unknown) as Timestamp
+    
+    const storageRef = refFirebase(storage, `images/${uuidv4()}`)
+    const copyImgRef = refFirebase(storage, character.value.sheetPictureFullPath)
+    const blobValue = await getBlob(copyImgRef)
+
+    uploadBytes(storageRef, blobValue).then(async (snapshot) => {
+      const downloadURL = await getDownloadURL(snapshot.ref)
+      newChar.sheetPictureURL = downloadURL
+      newChar.sheetPictureFullPath = snapshot.metadata.fullPath
+    })
+
+    await addDoc(collection(firestore, 'characters'), newChar)
+
+    dismissToastRoll()
+    dismissToastAttack()
+    toastInfo.value.message = 'Agente adicionado!'
+    toastInfo.value.type = 'info'
+    toastInfo.value.alive = true
+  } else {
+    dismissToastRoll()
+    dismissToastAttack()
+    toastInfo.value.message = 'Limite de agentes atingido!'
+    toastInfo.value.type = 'error'
+    toastInfo.value.alive = true
+  }
+}
+
 watch(() => toastInfo.value.alive, () => {
   if(toastInfo.value.alive === true) {
     toastInfo.value.timeout = window.setTimeout(() => toastInfo.value.alive = false, 3000)
@@ -444,92 +633,122 @@ watch(() => toastInfo.value.alive, () => {
 </script>
 
 <template>
-  <div
-    v-if="!loading"
-    class="character-sheet"
-  >
-    <div class="sheet-stats">
-      <SheetStats
+  <div v-if="!loading" class="sheet-wrapper">
+    <div class="sheet-header">
+      <SheetHeader
         :character="character"
+        :disabled-sheet="disabledSheet"
         @handle-change-char-text="handleChangeCharText"
-        @handle-change-char-number="handleChangeCharNumber"
-        @handle-change-attribute="handleChangeAttributes"
-        @handle-change-char-dropdown="handleChangeCharDropdown"
-        @handle-change-movement-in-squares="handleChangeMovementInSquares"
-        @handle-roll-attribute="handleRollAttribute"
+        @handle-open-change-picture-modal="handleOpenChangePictureModal"
+      />
+      <SheetTools 
+        :disabled-sheet="disabledSheet" 
+        :char-added="charAdded"
+        @handle-share-sheet="handleShareSheet" 
+        @handle-add-agent="handleAddAgent"
       />
     </div>
-    <div class="sheet-skills">
-      <SkillsView
-        :character="character"
-        @handle-open-skill-modal="handleOpenSkillModal"
-        @handle-change-skill-dropdown="handleChangeSkillDropdown"
-        @handle-change-skill-other-bonus="handleChangeSkillOtherBonus"
-        @handle-roll-skill="handleRollSkill"
-      />
-    </div>
-    <div class="sheet-tab">
-      <SheetTabView
-        :character="character"
-        @handle-open-abilities-modal="handleOpenAbilitiesModal"
-        @handle-open-rituals-modal="handleOpenRitualsModal"
-        @handle-open-items-modal="handleOpenItemsModal"
-        @handle-add-attack="handleAddAttack"
-        @handle-remove-attack="handleRemoveAttack"
-        @handle-remove-power="handleRemovePower"
-        @handle-remove-ritual="handleRemoveRitual"
-        @handle-remove-item="handleRemoveItem"
-        @handle-equip-item="handleEquipItem"
-        @handle-change-attack-text="handleChangeAttackText"
-        @handle-change-attack-number="handleChangeAttackNumber"
-        @handle-change-attack-dropdown="handleChangeAttackDropdown"
-        @handle-change-description="handleChangeDescription"
-        @handle-change-inventory-dropdown="handleChangeInventoryDropdown"
-        @handle-change-inventory-number="handleChangeInventoryNumber"
-        @handle-change-items-limit="handleChangeItemsLimit"
-        @handle-roll-dices="handleRollDices"
-        @handle-roll-attack="handleRollAttack"
-        @handle-change-ritual-dc="handleChangeRitualDc"
-      />
-    </div>
-    <div v-if="showModal">
-      <vue-final-modal 
-        v-model="showModal"
-        :lock-scroll="false" 
-        classes="modal-container"
-      >
-        <component 
-          :is="modalOptions[currentModal]"
+    <div class="character-sheet">
+      <div class="sheet-stats">
+        <SheetStats
           :character="character"
-          :skill="currentSkill"
-          @handle-close-modal="showModal = false"
-          @handle-add-power="handleAddPower"
-          @handle-add-ritual="handleAddRitual"
-          @handle-add-item="handleAddItem"
+          :disabled-sheet="disabledSheet"
+          @handle-change-char-text="handleChangeCharText"
+          @handle-change-char-number="handleChangeCharNumber"
+          @handle-change-char-number-button="handleChangeCharNumberButton"
+          @handle-change-attribute="handleChangeAttributes"
+          @handle-change-char-dropdown="handleChangeCharDropdown"
+          @handle-change-movement-in-squares="handleChangeMovementInSquares"
+          @handle-roll-attribute="handleRollAttribute"
+          @handle-change-char-mark="handleChangeCharMark"
+          @handle-change-mark-mode-to-true="handleChangeMarkModeToTrue"
+          @handle-mark-heal="handleMarkHeal"
         />
-      </vue-final-modal>
+      </div>
+      <div class="sheet-skills">
+        <SkillsView
+          :character="character"
+          :disabled-sheet="disabledSheet"
+          @handle-open-skill-modal="handleOpenSkillModal"
+          @handle-change-skill-dropdown="handleChangeSkillDropdown"
+          @handle-change-skill-other-bonus="handleChangeSkillOtherBonus"
+          @handle-roll-skill="handleRollSkill"
+        />
+      </div>
+      <div class="sheet-tab">
+        <SheetTabView
+          :character="character"
+          :disabled-sheet="disabledSheet"
+          @handle-open-abilities-modal="handleOpenAbilitiesModal"
+          @handle-open-rituals-modal="handleOpenRitualsModal"
+          @handle-open-items-modal="handleOpenItemsModal"
+          @handle-add-attack="handleAddAttack"
+          @handle-remove-attack="handleRemoveAttack"
+          @handle-remove-power="handleRemovePower"
+          @handle-edit-power="handleEditPower"
+          @handle-edit-ritual="handleEditRitual"
+          @handle-edit-item="handleEditItem"
+          @handle-remove-ritual="handleRemoveRitual"
+          @handle-remove-item="handleRemoveItem"
+          @handle-equip-item="handleEquipItem"
+          @handle-change-attack-text="handleChangeAttackText"
+          @handle-change-attack-number="handleChangeAttackNumber"
+          @handle-change-attack-dropdown="handleChangeAttackDropdown"
+          @handle-change-description="handleChangeDescription"
+          @handle-change-inventory-dropdown="handleChangeInventoryDropdown"
+          @handle-change-inventory-number="handleChangeInventoryNumber"
+          @handle-change-items-limit="handleChangeItemsLimit"
+          @handle-roll-dices="handleRollDices"
+          @handle-roll-attack="handleRollAttack"
+          @handle-change-ritual-dc="handleChangeRitualDc"
+        />
+      </div>
+      <div v-if="showModal">
+        <vue-final-modal 
+          v-model="showModal"
+          classes="modal-container"
+        >
+          <component 
+            :is="modalOptions[currentModal]"
+            :current-edit-option="currentEditModal"
+            :character="character"
+            :skill="currentSkill"
+            :edit-power="editPower"
+            :edit-ritual="editRitual"
+            :edit-item="editItem"
+            @handle-edit-power-sheet="handleEditPowerSheet"
+            @handle-edit-ritual-sheet="handleEditRitualSheet"
+            @handle-edit-item-sheet="handleEditItemSheet"
+            @handle-add-power="handleAddPower"
+            @handle-add-ritual="handleAddRitual"
+            @handle-add-item="handleAddItem"
+            @handle-close-modal="handleCloseModal"
+            @handle-update-picture="handleUpdatePicture"
+          />
+        </vue-final-modal>
+      </div>
+      <transition name="toast">
+        <ToastNotification
+          v-if="toastInfo.alive"
+          :toast="toastInfo"
+          @dismiss="dismissToastInfo"
+        />
+      </transition>
+      <transition name="toast">
+        <ToastDice
+          v-if="toastRoll.alive"
+          :toast="toastRoll"
+          @dismiss="dismissToastRoll"
+        />
+      </transition>
+      <transition name="toast">
+        <ToastAttack
+          v-if="toastAttack.alive"
+          :toast="toastAttack"
+          @dismiss="dismissToastAttack"
+        />
+      </transition>
     </div>
-    <transition name="toast">
-      <ToastNotification
-        v-if="toastInfo.alive"
-        :toast="toastInfo"
-        @dismiss="dismissToastInfo"
-      />
-    </transition>
-    <transition name="toast">
-      <ToastDice
-        v-if="toastRoll.alive"
-        :toast="toastRoll"
-        @dismiss="dismissToastRoll"
-      />
-    </transition>
-    <transition name="toast">
-      <ToastAttack
-        v-if="toastAttack.alive"
-        :toast="toastAttack"
-        @dismiss="dismissToastAttack"
-      />
-    </transition>
   </div>
   <div v-else>
     <LoadingView />
@@ -537,21 +756,31 @@ watch(() => toastInfo.value.alive, () => {
 </template>
 
 <style scoped>
+.sheet-wrapper {
+  margin-top: 1rem;
+  margin-bottom: .25rem;
+}
+.sheet-header {
+  height: 4rem;
+  margin-right: .5rem;
+  margin-left: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
 .character-sheet {
   display: flex;
   justify-content: space-between;
-  margin-top: 2.25rem;
-  margin-bottom: 2.25rem;
 }
 :deep(.modal-container) {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.sheet-stats {
+  margin-top: 1rem;
+}
 .sheet-tab {
   width: 31.25rem;
   max-height: 56.25rem;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 </style>

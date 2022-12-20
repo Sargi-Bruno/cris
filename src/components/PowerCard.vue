@@ -13,10 +13,12 @@ const props = defineProps({
     default: ''
   },
   onlyShow: Boolean,
-  sheet: Boolean
+  sheet: Boolean,
+  homebrew: Boolean,
+  disabled: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEdit'])
 
 const showMore = ref(false)
 
@@ -26,6 +28,10 @@ const handleAdd = () => {
 
 const handleRemove = () => {
   emit('handleRemove', props.id)
+}
+
+const handleEdit = () => {
+  emit('handleEdit', props.power)
 }
 </script>
 
@@ -63,14 +69,23 @@ const handleRemove = () => {
           <div v-else>
             <div :class="{ 'sheet-content': sheet}" v-html="power.description" />
           </div>
-          
-          <button 
-            v-if="sheet"
-            class="button-remove card-remove-button"
-            @click.stop="handleRemove"
+          <div
+            v-if="sheet && !disabled"
+            class="card-footer"
           >
-            Remover
-          </button>
+            <button
+              class="button-remove"
+              @click.stop="handleRemove"
+            >
+              {{ homebrew ? 'Deletar' : 'Remover' }}
+            </button>
+            <button
+              class="button-remove button-edit"
+              @click.stop="handleEdit"
+            >
+              Editar
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -131,7 +146,13 @@ const handleRemove = () => {
   margin-right: 1rem;
   padding-bottom: .1rem;
 }
-.card-remove-button {
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .5rem;
   margin-bottom: .5rem;
+}
+.button-edit {
+  color: var(--color-green);
 }
 </style>

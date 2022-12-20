@@ -3,6 +3,9 @@ import './style.css'
 import App from './App.vue'
 import router from './router'
 import vfmPlugin from 'vue-final-modal'
+import PrimeVue from 'primevue/config'
+import Editor from 'primevue/editor'
+// import 'primeicons/primeicons.css'
 import { initializeApp } from 'firebase/app'
 // import { getAnalytics } from "firebase/analytics"
 
@@ -22,6 +25,9 @@ initializeApp(firebaseConfig)
 const app = createApp(App)
 
 app.use(router)
+app.use(PrimeVue)
 app.use(vfmPlugin)
+
+app.component('PEditor', Editor)
 
 app.mount('#app')

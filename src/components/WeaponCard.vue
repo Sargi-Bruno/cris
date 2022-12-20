@@ -2,6 +2,7 @@
 import { PropType, ref } from 'vue'
 import { Weapon } from '../types'
 import DividerView from './DividerView.vue'
+import AmmunitionCard from './AmmunitionCard.vue'
 
 const props = defineProps({
   weapon: {
@@ -13,10 +14,12 @@ const props = defineProps({
     default: ''
   },
   onlyShow: Boolean,
-  sheet: Boolean
+  sheet: Boolean,
+  homebrew: Boolean,
+  disabled: Boolean
 })
 
-const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEquip'])
+const emit = defineEmits(['handleAdd', 'handleRemove', 'handleEquip', 'handleEdit'])
 
 const showMore = ref(false)
 
@@ -25,11 +28,19 @@ const handleAdd = () => {
 }
 
 const handleRemove = () => {
-  emit('handleRemove', props.id)
+  const payload = {
+    id: props.weapon.id || props.id,
+    itemType: props.weapon.itemType
+  }
+  emit('handleRemove', payload)
 }
 
 const handleEquip = () => {
   emit('handleEquip', props.id)
+}
+
+const handleEdit = () => {
+  emit('handleEdit', props.weapon)
 }
 </script>
 
@@ -48,15 +59,15 @@ const handleEquip = () => {
       </button>
       <div>
         <div class="first-row">
-          <h3 class="title" :class="{ 'sheet-title': sheet}">
+          <h3 class="title" :class="{ 'sheet-title': sheet && !homebrew}">
             {{ weapon.name }}
           </h3>
-          <div v-if="!sheet" class="item-info-category">
+          <div v-if="!sheet || homebrew" class="item-info-category">
             <h3><b>{{ weapon.proficiencie }}</b> - <i>{{ weapon.type }} - {{ weapon.handling }}</i></h3>
           </div>
         </div>
         <div class="item-info-container">
-          <div v-if="!sheet" class="item-info">
+          <div v-if="!sheet || homebrew" class="item-info">
             <h3>Categoria: <span>{{ weapon.category }}</span></h3>
           </div>
           <div class="item-info">
@@ -73,7 +84,7 @@ const handleEquip = () => {
               <span v-else>x{{ weapon.criticalMult }}</span>
             </h3>
           </div>
-          <div v-if="!sheet" class="flex-row">
+          <div v-if="!sheet || homebrew" class="flex-row">
             <div v-if="weapon.range !== '-'" class="item-info">
               <h3>Alcance: <span>{{ weapon.range }}</span></h3>
             </div>
@@ -83,6 +94,9 @@ const handleEquip = () => {
             <div class="item-info">
               <h3>Espaços: <span>{{ weapon.slots }}</span></h3>
             </div>
+            <div v-if="weapon.ammunitionName" class="item-info">
+              <h3>Munição: <span>{{ weapon.ammunitionName }}</span></h3>
+            </div>
           </div>
         </div>
       </div>
@@ -91,9 +105,11 @@ const handleEquip = () => {
           <img src="../assets/add-icon.svg" alt="adicionar">
         </button>
       </div>
-      <div v-if="sheet" class="button-container">
+      <div v-if="sheet && !homebrew" class="button-container">
         <button 
           class="checkbox-button"
+          :class="{ 'disabled': disabled }"
+          :disabled="disabled"
           @click.stop="handleEquip"
         >
           <img
@@ -109,7 +125,7 @@ const handleEquip = () => {
       <div v-if="showMore">
         <DividerView />
         <div class="content">
-          <div v-if="sheet" class="only-sheet-content-container">
+          <div v-if="sheet && !homebrew" class="only-sheet-content-container">
             <div class="item-info-category-sheet">
               <h3><b>{{ weapon.proficiencie }}</b> - <i>{{ weapon.type }} - {{ weapon.handling }}</i></h3>
             </div>
@@ -125,28 +141,34 @@ const handleEquip = () => {
             <div class="item-info">
               <h3>Espaços: <span>{{ weapon.slots }}</span></h3>
             </div>
+            <div v-if="weapon.ammunitionName" class="item-info">
+              <h3>Munição: <span>{{ weapon.ammunitionName }}</span></h3>
+            </div>
           </div>
           <div
             v-if="weapon.ammunition"
-            class="item-ammunition"
-            :class="{ 'sheet-content': sheet}"
+            :class="{ 'sheet-content': sheet && !homebrew}"
           >
-            <h3>{{ weapon.ammunition.name }}</h3>
-            <div class="item-info">
-              <h3>Categoria: <span>{{ weapon.ammunition.category }}</span></h3>
-            </div>
-            <div class="item-info">
-              <h3>Espaços: <span>{{ weapon.ammunition.slots }}</span></h3>
-            </div>
+            <AmmunitionCard :ammunition="weapon.ammunition" />
           </div>
-          <div :class="{ 'sheet-content': sheet}" v-html="weapon.description" />
-          <button
-            v-if="sheet"
-            class="button-remove card-remove-button"
-            @click.stop="handleRemove"
+          <div :class="{ 'sheet-content': sheet && !homebrew}" v-html="weapon.description" />
+          <div
+            v-if="sheet && !disabled"
+            class="card-footer"
           >
-            Remover
-          </button>
+            <button
+              class="button-remove"
+              @click.stop="handleRemove"
+            >
+              {{ homebrew ? 'Deletar' : 'Remover' }}
+            </button>
+            <button
+              class="button-remove button-edit"
+              @click.stop="handleEdit"
+            >
+              Editar
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -233,15 +255,6 @@ const handleEquip = () => {
   margin-right: 1rem;
   padding-bottom: .1rem;
 }
-.item-ammunition {
-  display: flex;
-  margin-top: 1rem;
-}
-.item-ammunition h3 {
-  margin: 0;
-  margin-right: 1rem;
-  font-size: 16px;
-}
 .sheet-title {
   font-size: 14px;
 }
@@ -253,9 +266,6 @@ const handleEquip = () => {
 }
 .sheet-content h3 span {
   font-size: 14px;
-}
-.card-remove-button {
-  margin-bottom: .5rem;
 }
 .only-sheet-content-container {
   margin-top: 1rem;
@@ -282,5 +292,17 @@ const handleEquip = () => {
 }
 .checkbox-img-fade {
   opacity: 0;
+}
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+.button-edit {
+  color: var(--color-green);
+}
+.disabled:hover {
+  border: 1px solid var(--color-white);
 }
 </style>

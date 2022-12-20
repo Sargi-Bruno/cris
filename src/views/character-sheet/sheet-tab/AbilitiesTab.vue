@@ -4,10 +4,11 @@ import { Character } from '../../../types'
 import PowerCard from '../../../components/PowerCard.vue'
 import FilterInput from '../../../components/FilterInput.vue'
 import { compare } from '../../../utils/functions'
+import { Power } from '../../../types'
 
-const props = defineProps<{character: Character}>()
+const props = defineProps<{character: Character, disabledSheet: boolean}>()
 
-defineEmits(['handleOpenAbilitiesModal', 'handleRemovePower'])
+const emit = defineEmits(['handleOpenAbilitiesModal', 'handleRemovePower', 'handleEditPower'])
 
 const filterText = ref('')
 
@@ -15,10 +16,12 @@ const powersOrdered = computed(() => {
   const powers = [...props.character.powers]
   return powers.filter((ele) => compare(ele.name, filterText.value)).sort((a, b) => a.name.localeCompare(b.name))
 })
+
+const handleEdit = (power: Power) => emit('handleEditPower', power)
 </script>
 
 <template>
-  <div class="abilities-tab">
+  <div class="tab">
     <div class="tab-header">
       <div v-if="character.powers.length > 0">
         <FilterInput
@@ -28,6 +31,7 @@ const powersOrdered = computed(() => {
         />
       </div>
       <button 
+        v-if="!disabledSheet"
         class="button-primary add-button"
         @click="$emit('handleOpenAbilitiesModal')"
       >
@@ -44,9 +48,11 @@ const powersOrdered = computed(() => {
           <PowerCard 
             :id="power.id"
             :power="power"
+            :disabled="disabledSheet"
             only-show
             sheet
             @handle-remove="(id: string) => $emit('handleRemovePower', id)"
+            @handle-edit="handleEdit"
           />
         </div>
       </div>
@@ -61,6 +67,12 @@ const powersOrdered = computed(() => {
 </template>
 
 <style scoped>
+.tab {
+  height: 52.25rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: .5rem;
+}
 .no-content h3 {
   text-align: center;
   margin-top: 10rem;
