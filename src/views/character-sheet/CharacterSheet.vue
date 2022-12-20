@@ -3,6 +3,7 @@ import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, getDoc, doc, updateDoc, collection, query, where, getDocs, serverTimestamp, addDoc } from 'firebase/firestore'
+import { getStorage, ref as refFirebase, getBlob, uploadBytes, getDownloadURL } from "firebase/storage"
 import { v4 as uuidv4 } from 'uuid'
 import ToastNotification from '../../components/ToastNotification.vue'
 import ToastDice from '../../components/ToastDice.vue'
@@ -101,6 +102,7 @@ const editModalOptions = {
 
 const auth = getAuth()
 const firestore = getFirestore()
+const storage = getStorage()
 const route = useRoute()
 const characterId = route.params.id as string
 const loading = ref(true)
@@ -596,6 +598,17 @@ const handleAddAgent = async () => {
     const newChar = _.cloneDeep(character.value)
     newChar.uid = auth.currentUser.uid
     newChar.timestamp = (serverTimestamp() as unknown) as Timestamp
+    
+    const storageRef = refFirebase(storage, `images/${uuidv4()}`)
+    const copyImgRef = refFirebase(storage, character.value.sheetPictureFullPath)
+    const blobValue = await getBlob(copyImgRef)
+
+    uploadBytes(storageRef, blobValue).then(async (snapshot) => {
+      const downloadURL = await getDownloadURL(snapshot.ref)
+      newChar.sheetPictureURL = downloadURL
+      newChar.sheetPictureFullPath = snapshot.metadata.fullPath
+    })
+
     await addDoc(collection(firestore, 'characters'), newChar)
 
     dismissToastRoll()
