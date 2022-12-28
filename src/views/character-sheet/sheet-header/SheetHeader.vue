@@ -22,7 +22,7 @@ defineProps<{character: Character, disabledSheet: boolean}>()
             class="profile-picture"
             :class="{ 'disabled-picture' : disabledSheet }"
             :src="character.sheetPictureURL"
-            alt="blank profile picture"
+            alt="foto agente"
           >
         </div>
         <div v-else>
@@ -30,7 +30,7 @@ defineProps<{character: Character, disabledSheet: boolean}>()
             class="profile-picture"
             :class="{ 'disabled-picture' : disabledSheet }"
             src="../../../assets/blank-profile-picture.png"
-            alt="blank profile picture"
+            alt="foto agente em branco"
           >
         </div>
       </button>
