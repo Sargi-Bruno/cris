@@ -4,8 +4,6 @@ import { ToastRoll } from '../types'
 
 const props =  defineProps<{toast: ToastRoll}>()
 
-defineEmits(['dismiss'])
-
 const greenColor = '#5cb85c'
 const redColor = '#d9534f'
 const whiteColor = '#fff'
@@ -26,7 +24,7 @@ const totalColor = computed(() => {
     })
   } else {
     const outputSubstring = props.toast.output.substring(props.toast.output.indexOf('[') + 1, props.toast.output.indexOf(']'))
-    
+
     if(parseInt(outputSubstring) === 20) color = greenColor
     if(parseInt(outputSubstring) === 1) color = redColor
   }
@@ -36,72 +34,52 @@ const totalColor = computed(() => {
 </script>
 
 <template>
-  <div 
-    class="toast-wrapper"
-    @click="$emit('dismiss')"
-  >
-    <div class="toast">
-      <div class="toast-content">
-        <img
-          class="toast-icon"
-          src="../assets/d20-icon.png" 
-          alt="d20"
-        >
-        <div class="text">
-          <h3 class="title">
-            {{ toast.title }}
-          </h3>
-          <div class="result">
-            <div class="result-container">
-              <h4>{{ toast.output }}</h4>
-              <h4 v-if="toast.title === 'Resultado'">
-                {{ toast.notation }}
-              </h4>
-            </div>
-            <span>=</span>
-            <div class="total-container">
-              <h3>{{ toast.total }}</h3>
-            </div>
+  <div class="toast">
+    <div class="toast-content">
+      <img
+        class="toast-icon"
+        src="../assets/d20-icon.png" 
+        alt="d20"
+      >
+      <div class="text">
+        <h3 class="title">
+          {{ toast.title }}
+        </h3>
+        <div class="result">
+          <div class="result-container">
+            <h4>{{ toast.output }}</h4>
+            <h4 v-if="toast.title === 'Resultado'">
+              {{ toast.notation }}
+            </h4>
+          </div>
+          <span>=</span>
+          <div class="total-container">
+            <h3>{{ toast.total }}</h3>
           </div>
         </div>
-        <button 
-          class="close-icon"
-          @click="$emit('dismiss')"
-        >
-          <img
-            src="../assets/close-icon.svg" 
-            alt="fechar"
-          >
-        </button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.toast-wrapper {
-  position: fixed;
-  width: 18rem;
-  bottom: 3rem;
-  right: 3rem;
-}
 .toast {
   padding: .5rem;
   background-color: var(--color-dark-gray);
   box-shadow: 0 5px 10px rgb(0 0 0 / 12%);
   border: 1px solid var(--color-primary);
   border-radius: 4px;
-  cursor: pointer;
 }
 .toast-content {
   display: flex;
   align-items: center;
+  height: 4.5rem;
 }
 .text {
   margin-left: .5rem;
 }
 .title {
-  font-size: 20px;
+  font-size: 16px;
   color: var(--color-white);
   margin: 0;
 }
@@ -111,14 +89,14 @@ const totalColor = computed(() => {
 }
 .result span {
   color: var(--color-white);
-  font-size: 14px;
+  font-size: 16px;
 }
 .result-container {
   margin-right: .5rem;
 }
 .result-container h4 {
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--color-off-white);
   width: 120px;
   white-space: nowrap;
@@ -127,24 +105,17 @@ const totalColor = computed(() => {
 }
 .total-container {
   margin-left: 1rem;
+
 }
 .total-container h3 {
   width: 2.25rem;
-  text-align: right;
+  text-align: center;
   margin: 0;
-  font-size: 32px;
+  font-size: 24px;
   color: v-bind(totalColor);
 }
 .toast-icon {
-  height: 2rem;
+  height: 1.5rem;
   margin-right: .5rem;
-}
-.close-icon {
-  height: 1.25rem;
-  background-color: transparent;
-  border: none;
-  margin-left: auto;
-  margin-bottom: auto;
-  cursor: pointer;
 }
 </style>

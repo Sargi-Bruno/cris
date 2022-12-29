@@ -1,8 +1,10 @@
+import { Campaign } from './../types';
 import { Power, Ritual, Misc, Protection, CursedItem, Weapon } from "../types"
 
 const maxTextLength = 100
 const maxSmallInputLength = 3
 const maxDescriptionLength = 5000
+const campaignMaxDescriptionLength = 10000
 
 const trimAndSubstring = (text: string, maxLength = maxTextLength) => {
   text = text.trim()
@@ -53,4 +55,9 @@ export const validateWeaponForm = (weapon: Weapon) => {
   if(weapon.criticalRange < 1) weapon.criticalRange = 1
   weapon.criticalMult = parseInt(trimAndSubstring(weapon.criticalMult.toString(), maxSmallInputLength))
   weapon.slots = trimAndSubstring((weapon.slots.toString()), maxSmallInputLength)
+}
+
+export const validadeCampaignForm = (campaign: Campaign) => {
+  campaign.name = trimAndSubstring(campaign.name)
+  campaign.description = campaign.description.substring(0, campaignMaxDescriptionLength)
 }

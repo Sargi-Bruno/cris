@@ -19,6 +19,54 @@ const router = createRouter({
       }
     },
     {
+      path: '/campanhas',
+      name: 'campaigns-list',
+      component: () => import('../views/campaigns/campaigns-list/CampaignsList.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/criar-campanha',
+      name: 'campaign-create',
+      component: () => import('../views/campaigns/campaign-create-edit/CampaignCreate.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/editar-campanha/:id',
+      name: 'campaign-edit',
+      component: () => import('../views/campaigns/campaign-create-edit/CampaignEdit.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/campanha/:id',
+      name: 'campaign-page',
+      component: () => import('../views/campaigns/campaign-page/CampaignPage.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/campanha/entrar/:id',
+      name: 'campaign-join',
+      component: () => import('../views/campaigns/campaign-join/CampaignJoin.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/escudo-do-mestre/:id',
+      name: 'master-screen',
+      component: () => import('../views/master-screen/MasterScreen.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/novo-agente',
       name: 'character-creation',
       component: () => import('../views/character-creation/CharacterCreation.vue')
@@ -35,7 +83,7 @@ const router = createRouter({
       component: () => import('../views/contact/ContactView.vue')
     },
     {
-      path: '/:catchAll(.*)',
+      path: '/:catchAll(.*)*',
       name: 'not-found',
       component: () => import('../views/not-found/NotFoundView.vue')
     },

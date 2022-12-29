@@ -81,12 +81,10 @@ const handleCloseModal = () => {
 const handleNewAgent = () => {
   if(characters.value.length > charLimit.value) return
 
-  loading.value = true
   router.push({ name: 'character-creation'})
 }
 
 const handleOpenSheet = (charId: string) => {
-  loading.value = true
   router.push({ name: 'character-sheet', params: { id: charId }})
 }
 
@@ -129,7 +127,7 @@ const dismissToastInfo = () => {
         :disabled="characters.length >= charLimit"
         @click="handleNewAgent"
       >
-        Novo agente
+        Novo Agente
       </button>
       <div>
         <h3 v-if="!betaTester">

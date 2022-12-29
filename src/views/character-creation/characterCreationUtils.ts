@@ -62,7 +62,8 @@ export const characterDefaultValue: Character = {
   deathMode: false,
   madnessMode: false,
   sheetPictureURL: "",
-  sheetPictureFullPath: ""
+  sheetPictureFullPath: "",
+  campaignId: ""
 }
 
 export const changeAttribute = (character: Character, payload: { value: number, attribute: AttrKeys }) => {

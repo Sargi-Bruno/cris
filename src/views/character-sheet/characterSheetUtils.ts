@@ -1,4 +1,4 @@
-import { CursedItem } from './../../types';
+import { CursedItem } from './../../types'
 import Skills from "../../data/skills"
 import { v4 as uuidv4 } from 'uuid'
 import { DiceRoll } from '@dice-roller/rpg-dice-roller'
@@ -81,7 +81,8 @@ export const characterDefaultValue: Character = {
   deathMode: false,
   madnessMode: false,
   sheetPictureURL: '',
-  sheetPictureFullPath: ''
+  sheetPictureFullPath: '',
+  campaignId: ''
 }
 
 export const attackDefaultValue: Attack = {
@@ -653,8 +654,11 @@ export const updateCharNexStats = (character: Character, previousNex: string) =>
     character.peTurn = (parseInt(character.peTurn as string) - peTurn).toString()
   }
 
+  if(character.currentPv < 0) character.currentPv = 0
+  if(character.currentPe < 0) character.currentPe = 0
+  if(character.currentSan < 0) character.currentSan = 0
   if(character.maxPv < 1) character.maxPv = 1
-  if(character.maxPe < 0) character.maxPe = 0
+  if(character.maxPe < 1) character.maxPe = 1
   if(character.maxSan < 1) character.maxSan = 1
   if(character.ritualsDc < 0) character.ritualsDc = 0
   if(parseInt(character.peTurn) < 1) character.peTurn = '1'

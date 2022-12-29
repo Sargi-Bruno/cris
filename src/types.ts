@@ -245,6 +245,7 @@ export interface Character {
   madnessMode: boolean
   sheetPictureURL: string
   sheetPictureFullPath: string
+  campaignId?: string
 }
 
 export interface ToastInfo {
@@ -262,6 +263,25 @@ export interface ToastRoll {
   alive: boolean
 }
 
+export interface Roll {
+  title: string 
+  total: number
+  output: string
+  notation: string
+}
+
+export interface AttackRoll {
+  title: string
+  totalAttack: number
+  totalDamage: number
+  critical: number
+  attackTooltip: string
+  damageTooltip: string
+  criticalTooltip: string
+  attackRollTooltip: string
+  damageRollTooltip: string
+}
+
 export interface ToastAttackInterface {
   title: string
   totalAttack: number
@@ -273,6 +293,32 @@ export interface ToastAttackInterface {
   attackRollTooltip: string
   damageRollTooltip: string
   alive: boolean
+}
+
+export interface CampaignLogMessage {
+  sender: string
+  timestamp: number
+  content: ToastRoll | ToastAttackInterface
+  contentType: 'roll' | 'attackRoll'
+}
+
+export interface CampaignLog {
+  id?: string
+  uid: string
+  campaignLogMessages: CampaignLogMessage[]
+}
+
+export interface Campaign {
+  id?: string
+  name: string
+  description: string
+  timestamp: Timestamp
+  uid: string
+  dmName: string
+  joinId: string
+  campaignLogId: string
+  usersId: string[]
+  charactersId: string[]
 }
 
 const characterStringKeysList = ['name', 'player', 'backgroundName', 'className'] as const

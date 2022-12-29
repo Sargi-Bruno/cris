@@ -8,6 +8,7 @@ const props = defineProps<{
   currentValue: number,
   marks?: boolean[],
   markMode?: boolean,
+  masterScreen?: boolean,
 }>()
 
 const emit = defineEmits(['handleChangeCharNumber', 'handleChangeCharNumberButton', 'handleChangeCharMark', 'handleChangeMarkModeToTrue', 'handleMarkHeal'])
@@ -72,16 +73,19 @@ watch(() => props.currentValue, () => {
 </script>
 
 <template>
-  <div class="info-bar-container">
-    <div class="info-bar-label">
+  <div :class="[masterScreen ? 'master-info-bar-container' : 'info-bar-container']">
+    <div class="info-bar-label" :class="{ 'master-info-bar-label' : masterScreen}">
       {{ typeInfo[type].labelBarMode }}
     </div>
     <div v-if="!markMode">
-      <div class="info-bar">
+      <div class="info-bar" :class="{ 'master-info-bar' : masterScreen}">
         <div class="info-bar-fill">
         </div>
-        <div class="info-bar-components">
-          <div class="buttons-container">
+        <div class="info-bar-components" :class="{ 'master-info-bar-components' : masterScreen}">
+          <div 
+            v-if="!masterScreen"
+            class="buttons-container"
+          >
             <button 
               class="info-bar-button button-naked" 
               :disabled="disabledSheet"
@@ -109,22 +113,27 @@ watch(() => props.currentValue, () => {
             <input 
               type="number" 
               class="info-bar-input left-input"
+              :class="{ 'master-info-bar-input' : masterScreen}"
               :disabled="disabledSheet"
               :value="currentValue"
               @blur="e => handleChangeCharNumber(e, typeInfo[type].currentValue)"
             >
-            <div class="input-divider">
+            <div class="input-divider" :class="{ 'master-input-divider' : masterScreen}">
               /
             </div>
             <input 
               type="number" 
               class="info-bar-input"
+              :class="{ 'master-info-bar-input' : masterScreen}"
               :disabled="disabledSheet"
               :value="maxValue"
               @blur="e => handleChangeCharNumber(e, typeInfo[type].maxValue)"
             >
           </div>
-          <div class="buttons-container">
+          <div
+            v-if="!masterScreen"
+            class="buttons-container"
+          >
             <button 
               class="info-bar-button button-naked" 
               :disabled="disabledSheet"
@@ -150,11 +159,11 @@ watch(() => props.currentValue, () => {
       </div>
     </div>
     <div v-else>
-      <div class="info-bar">
+      <div class="info-bar" :class="{ 'master-info-bar' : masterScreen}">
         <div class="info-bar-fill">
         </div>
-        <div class="info-bar-components">
-          <div class="marks-container">
+        <div class="info-bar-components" :class="{ 'master-info-bar-components-mark' : masterScreen}">
+          <div class="marks-container" :class="{ 'master-marks-container' : masterScreen}">
             <div
               v-for="(mark, i) in marks"
               :key="i"
@@ -162,15 +171,19 @@ watch(() => props.currentValue, () => {
             >
               <button 
                 class="mark-button button-naked"
+                :class="{ 'master-mark-button' : masterScreen}"
                 @click="() => $emit('handleChangeCharMark', type, i)"
               >
-                <div class="mark-button-circle">
-                  <div :class="{ 'mark-button-fill' : mark }"></div>
+                <div class="mark-button-circle" :class="{ 'master-mark-button-circle' : masterScreen}">
+                  <div :class="{ 'mark-button-fill' : mark, 'master-mark-button-fill' : masterScreen }"></div>
                 </div>
               </button>
             </div>
           </div>
-          <div class="heal-button-wrapper">
+          <div 
+            v-if="!masterScreen"
+            class="heal-button-wrapper"
+          >
             <button 
               class="heal-button button-naked"
               @click="() => $emit('handleMarkHeal', type)"
@@ -182,16 +195,18 @@ watch(() => props.currentValue, () => {
             <input 
               type="number" 
               class="info-bar-input-mark left-input"
+              :class="{ 'master-info-bar-input' : masterScreen}"
               :disabled="disabledSheet"
               :value="currentValue"
               @blur="e => handleChangeCharNumber(e, typeInfo[type].currentValue)"
             >
-            <div class="input-divider">
+            <div class="input-divider" :class="{ 'master-input-divider' : masterScreen}">
               /
             </div>
             <input 
               type="number" 
               class="info-bar-input-mark"
+              :class="{ 'master-info-bar-input' : masterScreen}"
               :disabled="disabledSheet"
               :value="maxValue"
               @blur="e => handleChangeCharNumber(e, typeInfo[type].maxValue)"
@@ -208,16 +223,25 @@ watch(() => props.currentValue, () => {
   margin-left: 2rem;
   margin-right: 1rem;
 }
+.master-info-bar-container {
+  margin: 0;
+}
 .info-bar-label {
   text-align: center;
   color: var(--color-off-white);
   font-size: 14px;
   font-weight: bold;
 }
+.master-info-bar-label {
+  font-size: 10px;
+}
 .info-bar {
   border: 1px solid grey;
   height: 2.5rem;
   position: relative;
+}
+.master-info-bar {
+  height: 1.5rem;
 }
 .info-bar-fill {
   position: absolute;
@@ -233,6 +257,13 @@ watch(() => props.currentValue, () => {
   height: 2.5rem;
   padding-left: .25rem;
   padding-right: .25rem;
+}
+.master-info-bar-components {
+  height: 1.5rem;
+  justify-content: center;
+}
+.master-info-bar-components-mark {
+  height: 1.5rem;
 }
 .buttons-container {
   display: flex;
@@ -274,6 +305,9 @@ watch(() => props.currentValue, () => {
   align-items: center;
   justify-content: center;
 }
+.master-marks-container {
+  height: 1.5rem;
+}
 .mark-container {
   display: flex;
   align-items: center;
@@ -283,6 +317,11 @@ watch(() => props.currentValue, () => {
 .mark-button {
   height: 1.75rem;
   width: 1.75rem;
+}
+.master-mark-button {
+  height: 1rem;
+  width: 1rem;
+  cursor: default;
 }
 .mark-button-circle {
   height: 1.5rem;
@@ -294,11 +333,19 @@ watch(() => props.currentValue, () => {
   align-items: center;
   justify-content: center;
 }
+.master-mark-button-circle {
+  height: .75rem;
+  width: .75rem;
+}
 .mark-button-fill {
   width: .5rem;
   height: .5rem;
   background-color: var(--color-off-white);
   border-radius: 50%;
+}
+.master-mark-button-fill {
+  width: .25rem;
+  height: .25rem;
 }
 .left-input {
   text-align: right;
@@ -306,6 +353,9 @@ watch(() => props.currentValue, () => {
 .input-divider {
   color: var(--color-white);
   font-size: 20px;
+}
+.master-input-divider {
+  font-size: 16px;
 }
 .invert-icon {
   transform: rotateY(180deg)
@@ -331,5 +381,9 @@ watch(() => props.currentValue, () => {
   color: var(--color-white);
   padding-top: .15rem;
   border: none;
+}
+.master-info-bar-input {
+  font-size: 14px;
+  height: 1.5rem;
 }
 </style>

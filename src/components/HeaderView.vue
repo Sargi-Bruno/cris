@@ -19,14 +19,14 @@ const handleLogout = () => {
   router.push({ name: 'home' })
 }
 
-const handleAgentsSignIn = () => {
+const handleAlternativeSignIn = (route: string) => {
   if(disabledAgentsButton.value) return
 
   const provider = new GoogleAuthProvider()
 
   signInWithPopup(auth, provider)
     .then(() => {
-      router.push({ name: 'character-list' })
+      router.push({ name: route })
     })
 }
 
@@ -62,12 +62,25 @@ onMounted(() => {
         <h3 
           v-else
           class="agents-login"
-          @click="handleAgentsSignIn"
+          @click="handleAlternativeSignIn('character-list')"
         >
           Agentes
         </h3>
+        <router-link 
+          v-if="isLoggedIn"
+          :to="{ name: 'campaigns-list' }"
+        >
+          Campanhas
+        </router-link>
+        <h3 
+          v-else
+          class="agents-login"
+          @click="handleAlternativeSignIn('campaigns-list')"
+        >
+          Campanhas
+        </h3>
         <router-link :to="{ name: 'contact' }">
-          Créditos e contato
+          Créditos
         </router-link>
         <a href="https://jamboeditora.com.br" target="_blank">
           <h3 class="agents-login">
@@ -121,7 +134,7 @@ onMounted(() => {
 .nav-container {
   display: flex;
   justify-content: space-between;
-  width: 50%;
+  width: 60%;
 }
 .nav-container a {
   color: var(--color-white);

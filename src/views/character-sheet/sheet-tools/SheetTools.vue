@@ -53,6 +53,7 @@ const handleAddAgent = () => {
 .sheet-tools-container {
   display: flex;
   margin-top: auto;
+  margin-left: auto;
 }
 .share-button {
   display: flex;

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, getDoc, doc, updateDoc, collection, query, where, getDocs, serverTimestamp, addDoc } from 'firebase/firestore'
+import { getFirestore, getDoc, doc, updateDoc, collection, query, where, getDocs, serverTimestamp, addDoc, onSnapshot } from 'firebase/firestore'
 import { getStorage, ref as refFirebase, getBlob, uploadBytes, getDownloadURL } from "firebase/storage"
 import { v4 as uuidv4 } from 'uuid'
 import ToastNotification from '../../components/ToastNotification.vue'
@@ -20,6 +20,8 @@ import LoadingView from '../../components/LoadingView.vue'
 import SheetTools from './sheet-tools/SheetTools.vue'
 import SheetHeader from './sheet-header/SheetHeader.vue'
 import PictureModal from './sheet-modals/picture-modal/PictureModal.vue'
+import SheetCampaign from './sheet-campaign/SheetCampaign.vue'
+import CampaignLogView from '../../components/CampaignLog.vue'
 import _ from 'lodash'
 import {
   Character,
@@ -49,6 +51,9 @@ import {
   NexKeys,
   Timestamp,
   Ammunition,
+Campaign,
+CampaignLog,
+CampaignLogMessage,
 } from '../../types'
 import { 
   characterDefaultValue, 
@@ -81,7 +86,6 @@ import {
 } from './characterSheetUtils'
 import { useSound } from '@vueuse/sound'
 import diceSound from '../../assets/dice-roll.mp3'
-import router from '../../router'
 
 const { play } = useSound(diceSound)
 
@@ -104,14 +108,18 @@ const auth = getAuth()
 const firestore = getFirestore()
 const storage = getStorage()
 const route = useRoute()
+const router = useRouter()
 const characterId = route.params.id as string
 const loading = ref(true)
+const campaign = ref<Campaign>()
+const campaignLog = ref<CampaignLog>()
 const editPower = ref<Power>()
 const editRitual = ref<Ritual>()
 const editItem = ref<Weapon | Protection | Misc | Ammunition | CursedItem>()
 const character = ref<Character>(characterDefaultValue)
 const disabledSheet = ref(true)
 const charAdded = ref(false)
+const campaignLogOpen = ref(false)
 
 const toastInfo = ref<ToastInfo>({
   message: '',
@@ -146,10 +154,10 @@ const currentModal = ref(0)
 const currentEditModal = ref(0)
 const currentSkill = ref<Skill>()
 
-onMounted(async() => {
+onMounted(async () => {
   const querySnapshot = await getDoc(doc(firestore, 'characters', characterId))
 
-  if(!querySnapshot.data()) router.push({ name: 'home' })
+  if(!querySnapshot.data()) router.push({ name: 'not-found' })
 
   if((querySnapshot?.data()?.uid as string) === auth?.currentUser?.uid) disabledSheet.value = false
 
@@ -180,9 +188,45 @@ onMounted(async() => {
   if(!character.value.sheetPictureURL) {
     character.value.sheetPictureURL = ''
     character.value.sheetPictureFullPath = ''
+    updateCharacter()
+  }
+
+  if(character.value.campaignId === undefined) {
+    character.value.campaignId = ''
   }
   // end remove
 
+  // Campaign fetch
+  if(character.value.campaignId) {
+    const campaignQuerySnapshot = await getDoc(doc(firestore, 'campaigns', character.value.campaignId))
+
+    campaign.value = campaignQuerySnapshot.data() as Campaign
+    campaign.value.id = campaignQuerySnapshot.id
+
+    const campaignLogQuerySnapshot = await getDoc(doc(firestore, 'campaignLogs', campaign.value.campaignLogId))
+
+    campaignLog.value = campaignLogQuerySnapshot.data() as CampaignLog
+    campaignLog.value.id = campaignLogQuerySnapshot.id
+
+    // Campaign Listeners
+    const campaignLogId = campaignLog.value?.id || ''
+
+    onSnapshot(doc(firestore, 'campaignLogs', campaignLogId), (doc) => {
+      if(!campaignLog.value) return
+      if(!doc.data()) return
+
+      campaignLog.value.campaignLogMessages = (doc.data() as CampaignLog).campaignLogMessages
+    })
+
+    onSnapshot(doc(firestore, 'campaigns', campaign.value.id), (doc) => {
+      const campaign = doc.data() as Campaign
+
+      const charId = character.value.id as string
+
+      if(!campaign.charactersId.includes(charId)) location.reload()
+    })
+  }
+  
   loading.value = false
 })
 
@@ -223,7 +267,10 @@ const handleShowDiceToast = (toast: ToastRoll, title: string, total: number, out
   toast.total = total
   toast.output = output
   toast.notation = notation
-  toast.alive = true
+
+  handleAddRollCampaignLog(toast, 'roll')
+
+  if(!campaignLogOpen.value) toast.alive = true
 }
 
 const handleShowAttackToast = (
@@ -249,7 +296,10 @@ const handleShowAttackToast = (
   toast.attackRollTooltip = attackRollTooltip
   toast.damageRollTooltip = damageRollTooltip
   toast.criticalTooltip = criticalTooltip
-  toast.alive = true
+
+  handleAddRollCampaignLog(toast, 'attackRoll')
+  
+  if(!campaignLogOpen.value) toast.alive = true
 }
 
 const handleChangeCharText = (payload: { e: Event, key: CharacterStringKeys }) => {
@@ -598,17 +648,19 @@ const handleAddAgent = async () => {
     const newChar = _.cloneDeep(character.value)
     newChar.uid = auth.currentUser.uid
     newChar.timestamp = (serverTimestamp() as unknown) as Timestamp
+
+    if (character.value.sheetPictureURL !== '') {
+      const storageRef = refFirebase(storage, `images/${uuidv4()}`)
+      const copyImgRef = refFirebase(storage, character.value.sheetPictureFullPath)
+      const blobValue = await getBlob(copyImgRef)
+
+      uploadBytes(storageRef, blobValue).then(async (snapshot) => {
+        const downloadURL = await getDownloadURL(snapshot.ref)
+        newChar.sheetPictureURL = downloadURL
+        newChar.sheetPictureFullPath = snapshot.metadata.fullPath
+      })
+    }
     
-    const storageRef = refFirebase(storage, `images/${uuidv4()}`)
-    const copyImgRef = refFirebase(storage, character.value.sheetPictureFullPath)
-    const blobValue = await getBlob(copyImgRef)
-
-    uploadBytes(storageRef, blobValue).then(async (snapshot) => {
-      const downloadURL = await getDownloadURL(snapshot.ref)
-      newChar.sheetPictureURL = downloadURL
-      newChar.sheetPictureFullPath = snapshot.metadata.fullPath
-    })
-
     await addDoc(collection(firestore, 'characters'), newChar)
 
     dismissToastRoll()
@@ -623,6 +675,32 @@ const handleAddAgent = async () => {
     toastInfo.value.type = 'error'
     toastInfo.value.alive = true
   }
+}
+
+const handleAddRollCampaignLog = (toast: ToastRoll | ToastAttackInterface, contentType: 'roll' | 'attackRoll') => {
+  if(!campaign.value) return
+  if(!campaignLog.value) return
+
+  const newLog: CampaignLogMessage = {
+    sender: character.value.name,
+    timestamp: new Date().getTime(),
+    content: toast,
+    contentType: contentType
+  }
+
+  campaignLog.value.campaignLogMessages.push(newLog)
+
+  if(campaignLog.value.campaignLogMessages.length > 100) campaignLog.value.campaignLogMessages.pop()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  updateDoc(doc(firestore, 'campaignLogs', campaignLog.value.id as string), campaignLog.value as any)
+}
+
+const handleOpenCampaignLog = () => {
+  dismissToastInfo()
+  dismissToastRoll()
+  dismissToastAttack()
+  campaignLogOpen.value = !campaignLogOpen.value
 }
 
 watch(() => toastInfo.value.alive, () => {
@@ -640,6 +718,12 @@ watch(() => toastInfo.value.alive, () => {
         :disabled-sheet="disabledSheet"
         @handle-change-char-text="handleChangeCharText"
         @handle-open-change-picture-modal="handleOpenChangePictureModal"
+      />
+      <SheetCampaign 
+        v-if="campaign"
+        :campaign="campaign"
+        :campaign-log="(campaignLog as CampaignLog)"
+        @handle-open-campaign-log="handleOpenCampaignLog"
       />
       <SheetTools 
         :disabled-sheet="disabledSheet" 
@@ -748,6 +832,11 @@ watch(() => toastInfo.value.alive, () => {
           @dismiss="dismissToastAttack"
         />
       </transition>
+      <CampaignLogView
+        v-if="campaignLogOpen"
+        :campaign-log="(campaignLog as CampaignLog)"
+        @handle-close-campaign-log="() => campaignLogOpen = false"
+      />
     </div>
   </div>
   <div v-else>
@@ -765,7 +854,6 @@ watch(() => toastInfo.value.alive, () => {
   margin-right: .5rem;
   margin-left: 1rem;
   display: flex;
-  justify-content: space-between;
 }
 .character-sheet {
   display: flex;

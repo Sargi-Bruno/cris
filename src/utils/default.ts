@@ -1,4 +1,4 @@
-import { Ammunition } from './../types';
+import { Ammunition, Campaign } from './../types';
 import { Power, Ritual, Misc, Protection, Weapon, CursedItem } from '../types'
 
 export const powerDefault: Power = {
@@ -70,4 +70,19 @@ export const cursedItemDefault: CursedItem = {
   category: 'II',
   slots: '1',
   itemType: 'cursedItem',
+}
+
+export const campaignDefault: Campaign = {
+  name: '',
+  description: '',
+  timestamp: {
+    seconds: 0,
+    nanoseconds: 0,
+  },
+  uid: '',
+  charactersId: [],
+  campaignLogId: '',
+  dmName: '',
+  usersId: [],
+  joinId: ''
 }
