@@ -126,7 +126,7 @@ const handleRollMasterDices = (value: string) => {
 
     campaignLog.value.campaignLogMessages.push(newLog)
 
-    if(campaignLog.value.campaignLogMessages.length > 100) campaignLog.value.campaignLogMessages.pop()
+    if(campaignLog.value.campaignLogMessages.length > 200) campaignLog.value.campaignLogMessages.shift()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateDoc(doc(firestore, 'campaignLogs', campaignLog.value.id as string), campaignLog.value as any)

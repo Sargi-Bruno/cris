@@ -44,12 +44,12 @@ const paranormalPowers: Array<ParanormalPower> = [
   {
     name: 'Campo Protetor',
     element: 'Energia',
-    description: '<p>Você consegue gerar um campo de Energia que o protege de perigos. Quando usa a ação esquiva, você recebe +5 em Defesa. <em>Pré-requisito:</em> Energia 1.</p><p><span>Afinidade:</span> você recebe +5 em Reflexo e, quando passa em um teste de Reflexo que reduziria o dano à metade, em vez disso não sofre nenhum dano.</p>'
+    description: '<p>Você consegue gerar um campo de Energia que o protege de perigos. Quando usa a ação esquiva, você pode gastar 1 PE para receber +5 em Defesa. <em>Pré-requisito:</em> Energia 1.</p><p><span>Afinidade:</span> quando usa este poder, você também recebe +5 em Reflexo e, até o início de seu próximo turno, se passar em um teste de Reflexo que reduziria o dano à metade, em vez disso não sofre nenhum dano.</p>'
   },
   {
     name: 'Causalidade Fortuita',
     element: 'Energia',
-    description: '<p>A Energia o conduz rumo à descobertas. Em cenas de investigação, a DT para procurar pistas diminui em –5 para você até você encontrar uma pista.</p><p><span>Afinidade:</span> a DT para procurar pistas sempre diminui em –5 para você.</p>'
+    description: '<p>A Energia o conduz rumo à descobertas. Em cenas de investigação, a DT para procurar pistas diminui em -5 para você até você encontrar uma pista.</p><p><span>Afinidade:</span> a DT para procurar pistas sempre diminui em –5 para você.</p>'
   },
   {
     name: 'Golpe de Sorte',
